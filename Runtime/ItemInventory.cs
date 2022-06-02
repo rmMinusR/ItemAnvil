@@ -58,10 +58,15 @@ public sealed class ItemInventory : MonoBehaviour
         return contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
     }
 
+    public IEnumerator<ReadOnlyItemStack> GetContents()
+    {
+        foreach (ItemStack s in contents) yield return s;
+    }
 
-    //Technically breaks the encapsulation contract, but clearly defines which is mutable and which isn't.
-
-    internal IEnumerator<ItemStack> GetContents() { foreach (ItemStack s in contents) yield return s.Clone(); }
-
-    internal IReadOnlyList<ItemStack> GetMutableContents() => contents;
+    public List<ItemStack> CloneContents()
+    {
+        List<ItemStack> list = new List<ItemStack>();
+        foreach (ItemStack s in contents) list.Add(s.Clone());
+        return list;
+    }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public sealed class ItemStack : ICloneable
+public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 {
     public Item itemType;
     [Min(0)] public int quantity = 1;
@@ -34,7 +34,19 @@ public sealed class ItemStack : ICloneable
         src.quantity = 0;
     }
 
-    public ItemStack Clone() => new ItemStack(itemType, quantity);
+    #region Interface compatability
 
+    public ItemStack Clone() => new ItemStack(itemType, quantity);
     object ICloneable.Clone() => Clone();
+
+    public Item GetItemType() => itemType;
+    public int GetQuantity() => quantity;
+
+    #endregion
+}
+
+public interface ReadOnlyItemStack
+{
+    public Item GetItemType();
+    public int GetQuantity();
 }

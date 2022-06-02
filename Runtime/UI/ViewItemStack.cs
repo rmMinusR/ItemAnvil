@@ -20,9 +20,9 @@ public sealed class ViewItemStack : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text count;
     [SerializeField] private string countFormat = "x{0}";
-    [SerializeField] private TMP_Text price;
+    [SerializeField] private TMP_Text sellPrice;
+    [SerializeField] private TMP_Text buyPrice;
     [SerializeField] private string priceFormat = "${0}";
-    [SerializeField] private bool isPriceSell;
 
     //TODO update only when inventory changes
 
@@ -45,21 +45,19 @@ public sealed class ViewItemStack : MonoBehaviour
         {
             WriteIcon(null);
             WriteCount("NO ITEM");
-            WritePrice("NO ITEM");
-            return;
+            WriteSellPrice("NO ITEM");
+            WriteBuyPrice ("NO ITEM");
         }
-
-        WriteIcon( itemType.displayIcon );
-
-        WritePrice(isPriceSell ? itemType.sellPrice : itemType.buyPrice);
-
-        if (inventory == null)
+        else
         {
-            WriteCount("NO INV");
-            return;
-        }
+            WriteIcon( itemType.displayIcon );
 
-        WriteCount( inventory.Count(itemType) );
+            WriteSellPrice(itemType.sellPrice);
+            WriteBuyPrice (itemType.buyPrice );
+
+            if (inventory == null) WriteCount("NO INV");
+            else WriteCount(inventory.Count(itemType));
+        }
     }
 
     public void WriteStack(ItemStack src)
@@ -67,7 +65,8 @@ public sealed class ViewItemStack : MonoBehaviour
         itemType = src.itemType;
         WriteIcon(src.itemType.displayIcon);
         WriteCount(src.quantity);
-        WritePrice(isPriceSell ? src.itemType.sellPrice : src.itemType.buyPrice);
+        WriteSellPrice(src.itemType.sellPrice);
+        WriteBuyPrice (src.itemType.buyPrice );
     }
 
     private void WriteIcon(Sprite sprite)
@@ -85,13 +84,23 @@ public sealed class ViewItemStack : MonoBehaviour
         if (count != null) count.text = text;
     }
     
-    private void WritePrice(int price)
+    private void WriteSellPrice(int price)
     {
-        WritePrice(string.Format(priceFormat, price));
+        WriteSellPrice(string.Format(priceFormat, price));
     }
 
-    private void WritePrice(string text)
+    private void WriteSellPrice(string text)
     {
-        if (price != null) price.text = text;
+        if (sellPrice != null) sellPrice.text = text;
+    }
+    
+    private void WriteBuyPrice(int price)
+    {
+        WriteBuyPrice(string.Format(priceFormat, price));
+    }
+
+    private void WriteBuyPrice(string text)
+    {
+        if (buyPrice != null) buyPrice.text = text;
     }
 }

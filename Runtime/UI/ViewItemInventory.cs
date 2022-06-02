@@ -32,11 +32,8 @@ public sealed class ViewItemInventory : MonoBehaviour
     public void UpdateUI()
     {
         //Build which ItemStacks to show
-        List<ItemStack> stacks = new List<ItemStack>();
-        if (inventory != null) {
-            IEnumerator<ItemStack> e = inventory.GetContents();
-            while (e.MoveNext()) stacks.Add(e.Current);
-        }
+        //TODO can we do this more efficiently with enumerators?
+        List<ItemStack> stacks = inventory.CloneContents();
         stacks.RemoveAll(s => !s.itemType.showInMainInventory);
         stacks.RemoveAll(s => doNotShow.Contains(s.itemType));
 

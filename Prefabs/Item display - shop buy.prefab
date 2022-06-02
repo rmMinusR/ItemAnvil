@@ -147,7 +147,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBuy: 1
-  currencyItem: {fileID: 11400000, guid: c0dfddcd15105cb4fafca1547f9f7a17, type: 2}
+  playerInv: {fileID: 0}
+  currencyItem: {fileID: 0}
   onLMB:
     m_PersistentCalls:
       m_Calls:
@@ -187,6 +188,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: price
+      value: 
+      objectReference: {fileID: 2949878120107387491}
+    - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: buyPrice
       value: 
       objectReference: {fileID: 2949878120107387491}
     - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
