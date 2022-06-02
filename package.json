@@ -1,0 +1,15 @@
+{
+  "name": "com.rmminusr.items",
+  "version": "0.1.0",
+  "license": "MIT License",
+  "author": {
+    "name": "Robert Christensen / rmMinusR",
+    "url": "https://rmMinusR.com/"
+  },
+  "displayName": "Item and Inventory System",
+  "description": "TODO",
+  "hideInEditor": false,
+  "dependencies": {
+    "com.unity.textmeshpro": ""
+  }
+}
