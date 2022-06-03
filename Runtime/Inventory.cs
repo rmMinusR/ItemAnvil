@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class ItemInventory : MonoBehaviour
+public sealed class Inventory : MonoBehaviour
 {
     [SerializeField] private List<ItemStack> contents;
 
@@ -12,6 +12,10 @@ public sealed class ItemInventory : MonoBehaviour
     {
         ItemStack existingStack = contents.Find(stack => stack.CanMerge(newStack));
         if(existingStack != null) ItemStack.Merge(newStack, existingStack);
+        else contents.Add(newStack.Clone());
+
+        //Prevent covariants
+        newStack.quantity = 0;
     }
 
     public bool TryRemove(Item typeToRemove, int totalToRemove)

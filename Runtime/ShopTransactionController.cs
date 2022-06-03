@@ -10,9 +10,9 @@ public sealed class ShopTransactionController : MonoBehaviour, IPointerClickHand
     [SerializeField] private bool isBuy;
 
     [Space]
-    [SerializeField] private ItemInventory playerInv;
+    [SerializeField] private Inventory playerInv;
     private ViewItemStack view;
-    private ItemInventory shopInv;
+    private Inventory shopInv;
     [SerializeField] private Item currencyItem;
 
     [Space]
@@ -22,8 +22,8 @@ public sealed class ShopTransactionController : MonoBehaviour, IPointerClickHand
     private void Start()
     {
         view = GetComponent<ViewItemStack>();
-        shopInv = view.inventory != null ? view.inventory : view.GetComponentInParent<ViewItemInventory>().inventory;
-        if (playerInv == null) playerInv = GameObject.FindWithTag("Player").GetComponent<ItemInventory>();
+        shopInv = view.inventory != null ? view.inventory : view.GetComponentInParent<ViewInventory>().inventory;
+        if (playerInv == null) playerInv = GameObject.FindWithTag("Player").GetComponent<Inventory>();
         Debug.Assert(playerInv != null);
     }
 

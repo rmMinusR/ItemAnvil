@@ -1,6 +1,6 @@
 {
   "name": "com.rmminusr.items",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT License",
   "author": {
     "name": "Robert Christensen / rmMinusR",
@@ -11,5 +11,17 @@
   "hideInEditor": false,
   "dependencies": {
     "com.unity.textmeshpro": ""
-  }
+  },
+  "samples": [
+    {
+	  "displayName": "Player Inventory",
+	  "description": "Contains a simple setup for player inventory and UI",
+	  "path": "Samples~/Player Inventory"
+	},
+    {
+	  "displayName": "Shop",
+	  "description": "Contains a simple shop setup, allowing the player to buy with safe, covariant-proof transactions",
+	  "path": "Samples~/Shop"
+	}
+  ]
 }

@@ -9,7 +9,7 @@ public sealed class ViewItemStack : MonoBehaviour
 {
     [Header("Data source")]
     public Item itemType;
-    public ItemInventory inventory;
+    public Inventory inventory;
 
 #if USING_INSPECTORSUGAR
     [InspectorReadOnly]

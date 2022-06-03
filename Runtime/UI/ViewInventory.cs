@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class ViewItemInventory : MonoBehaviour
+public sealed class ViewInventory : MonoBehaviour
 {
-    public ItemInventory inventory;
+    public Inventory inventory;
     [SerializeField] private ViewItemStack itemStackUIPrefab;
     [SerializeField] private Item[] doNotShow;
 

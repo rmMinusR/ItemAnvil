@@ -13,7 +13,7 @@ public abstract class Item : ScriptableObject
     [Header("Display settings")]
     public string displayName = "Item";
     public Sprite displayIcon;
-    [TextArea] public string displayTooltip = "Hi, I'm an item!\nHi Item, I'm Fred Gourdon!";
+    [TextArea] public string displayTooltip;
     public bool showInMainInventory = true;
 
     [Space]

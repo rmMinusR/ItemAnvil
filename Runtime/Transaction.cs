@@ -6,21 +6,21 @@ using UnityEngine;
 [Serializable]
 public class Transaction : ICloneable
 {
-    [SerializeField] private ItemInventory inventoryA;
+    [SerializeField] private Inventory inventoryA;
     [SerializeField] private ItemStack[] itemsAtoB;
 
-    [SerializeField] private ItemInventory inventoryB;
+    [SerializeField] private Inventory inventoryB;
     [SerializeField] private ItemStack[] itemsBtoA;
 
     [SerializeField] [InspectorReadOnly] private bool hasValidated;
 
     //IEnumerable here is usually an ItemStack[] or List<ItemStack>
-    public Transaction(ItemInventory inventoryA, IEnumerable<ItemStack> itemsAtoB, ItemInventory inventoryB, IEnumerable<ItemStack> itemsBtoA)
+    public Transaction(Inventory inventoryA, IEnumerable<ItemStack> itemsAtoB, Inventory inventoryB, IEnumerable<ItemStack> itemsBtoA)
     {
         this.inventoryA = inventoryA;
-        this.itemsAtoB = itemsAtoB.ToArray();
+        this.itemsAtoB = itemsAtoB.Select(s => s.Clone()).ToArray();
         this.inventoryB = inventoryB;
-        this.itemsBtoA = itemsBtoA.ToArray();
+        this.itemsBtoA = itemsBtoA.Select(s => s.Clone()).ToArray();
         hasValidated = false;
     }
 
@@ -33,7 +33,7 @@ public class Transaction : ICloneable
     public void DoExchange()
     {
 #if UNITY_EDITOR
-        Debug.Assert(IsValid());
+        Debug.Assert(hasValidated || IsValid());
 #endif
 
         //FIXME: If itemsAtoB has duplicate type, or itemsBtoA has duplicate type, breaks rollback-on-fail contract (exception safety level 2) because items will still be removed
@@ -42,7 +42,7 @@ public class Transaction : ICloneable
         bool stillValid = true;
         foreach (ItemStack i in itemsAtoB) stillValid &= inventoryA.TryRemove(i.itemType, i.quantity);
         foreach (ItemStack i in itemsBtoA) stillValid &= inventoryB.TryRemove(i.itemType, i.quantity);
-        
+
         Debug.Assert(stillValid);
 
         //Add items provided transaction was valid
