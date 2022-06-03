@@ -29,8 +29,8 @@ public sealed class ShopTransactionController : MonoBehaviour, IPointerClickHand
 
     public void TryBuy(int quantity)
     {
-        Transaction transaction = new Transaction(playerInv, new ItemStack[] { new ItemStack(currencyItem , view.itemType.buyPrice) },
-                                                  shopInv,   new ItemStack[] { new ItemStack(view.itemType, 1                     ) });
+        Transaction transaction = new Transaction(playerInv, new ItemStack[] { new ItemStack(currencyItem , view.itemType.GetProperty<Marketable>().buyPrice) },
+                                                  shopInv,   new ItemStack[] { new ItemStack(view.itemType, 1                                               ) });
         transaction = transaction.CloneAndMultiply(quantity);
 
         if (transaction.IsValid())
@@ -41,8 +41,8 @@ public sealed class ShopTransactionController : MonoBehaviour, IPointerClickHand
 
     public void TrySell(int quantity)
     {
-        Transaction transaction = new Transaction(playerInv, new ItemStack[] { new ItemStack(view.itemType, 1                      ) },
-                                                  shopInv,   new ItemStack[] { new ItemStack(currencyItem , view.itemType.sellPrice) });
+        Transaction transaction = new Transaction(playerInv, new ItemStack[] { new ItemStack(view.itemType, 1                                                ) },
+                                                  shopInv,   new ItemStack[] { new ItemStack(currencyItem , view.itemType.GetProperty<Marketable>().sellPrice) });
         transaction = transaction.CloneAndMultiply(quantity);
 
         if (transaction.IsValid())

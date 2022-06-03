@@ -41,32 +41,47 @@ public sealed class ViewItemStack : MonoBehaviour
 
     private void ActiveUpdate()
     {
-        if(itemType == null)
+        if(itemType != null)
+        {
+            if (inventory == null) WriteCount("NO INV");
+            else WriteCount(inventory.Count(itemType));
+        }
+
+        WriteType(itemType);
+    }
+
+    public void WriteStack(ItemStack src)
+    {
+        WriteCount(src.quantity);
+        WriteType(src.itemType);
+    }
+
+    private void WriteType(Item type)
+    {
+        itemType = type;
+
+        if (type == null)
         {
             WriteIcon(null);
-            WriteCount("NO ITEM");
+            sellPrice.gameObject.SetActive(true);
+            buyPrice .gameObject.SetActive(true);
             WriteSellPrice("NO ITEM");
             WriteBuyPrice ("NO ITEM");
         }
         else
         {
-            WriteIcon( itemType.displayIcon );
+            WriteIcon(type.displayIcon);
 
-            WriteSellPrice(itemType.sellPrice);
-            WriteBuyPrice (itemType.buyPrice );
+            if (type.TryGetProperty(out Marketable m)) //TODO convert to object chaining?
+            {
+                sellPrice.gameObject.SetActive(m.isSellable);
+                buyPrice .gameObject.SetActive(m.isBuyable );
 
-            if (inventory == null) WriteCount("NO INV");
-            else WriteCount(inventory.Count(itemType));
+                WriteSellPrice(m.sellPrice);
+                WriteBuyPrice (m.buyPrice );
+            }
         }
-    }
 
-    public void WriteStack(ItemStack src)
-    {
-        itemType = src.itemType;
-        WriteIcon(src.itemType.displayIcon);
-        WriteCount(src.quantity);
-        WriteSellPrice(src.itemType.sellPrice);
-        WriteBuyPrice (src.itemType.buyPrice );
     }
 
     private void WriteIcon(Sprite sprite)
