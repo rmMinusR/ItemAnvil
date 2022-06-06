@@ -17,7 +17,13 @@ public sealed class Inventory : MonoBehaviour
             if (newStack.quantity == 0) return;
         }
 
-        if (newStack.quantity != 0) contents.Add(newStack.Clone());
+        //Awful fix, but it plays nice with stacking rules
+        while (newStack.quantity > 0)
+        {
+            ItemStack s = new ItemStack(newStack.itemType, 0);
+            contents.Add(s);
+            ItemStack.TryMerge(newStack, s);
+        }
 
         //Prevent covariants
         newStack.quantity = 0;
