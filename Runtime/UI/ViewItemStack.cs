@@ -63,8 +63,8 @@ public sealed class ViewItemStack : MonoBehaviour
         if (type == null)
         {
             WriteIcon(null);
-            sellPrice.gameObject.SetActive(true);
-            buyPrice .gameObject.SetActive(true);
+            if (sellPrice != null) sellPrice.gameObject.SetActive(true);
+            if (buyPrice  != null) buyPrice .gameObject.SetActive(true);
             WriteSellPrice("NO ITEM");
             WriteBuyPrice ("NO ITEM");
         }
@@ -74,11 +74,16 @@ public sealed class ViewItemStack : MonoBehaviour
 
             if (type.TryGetProperty(out Marketable m)) //TODO convert to object chaining?
             {
-                sellPrice.gameObject.SetActive(m.isSellable);
-                buyPrice .gameObject.SetActive(m.isBuyable );
+                if (sellPrice != null) sellPrice.gameObject.SetActive(m.isSellable);
+                if (buyPrice  != null) buyPrice .gameObject.SetActive(m.isBuyable );
 
                 WriteSellPrice(m.sellPrice);
                 WriteBuyPrice (m.buyPrice );
+            }
+            else
+            {
+                if (sellPrice != null) sellPrice.gameObject.SetActive(false);
+                if (buyPrice  != null) buyPrice .gameObject.SetActive(false);
             }
         }
 

@@ -6,11 +6,17 @@ using UnityEngine;
 [Serializable]
 public class Transaction : ICloneable
 {
+#if USING_INSPECTORSUGAR
+    [InspectorReadOnly]
+#endif
     [SerializeField] private Inventory inventoryA;
-    [SerializeField] private ItemStack[] itemsAtoB;
+    [SerializeField] private ItemStack[] itemsAToB;
 
+#if USING_INSPECTORSUGAR
+    [InspectorReadOnly]
+#endif
     [SerializeField] private Inventory inventoryB;
-    [SerializeField] private ItemStack[] itemsBtoA;
+    [SerializeField] private ItemStack[] itemsBToA;
 
     [SerializeField] [InspectorReadOnly] private bool hasValidated;
 
@@ -18,16 +24,16 @@ public class Transaction : ICloneable
     public Transaction(Inventory inventoryA, IEnumerable<ItemStack> itemsAtoB, Inventory inventoryB, IEnumerable<ItemStack> itemsBtoA)
     {
         this.inventoryA = inventoryA;
-        this.itemsAtoB = itemsAtoB.Select(s => s.Clone()).ToArray();
+        this.itemsAToB = itemsAtoB.Select(s => s.Clone()).ToArray();
         this.inventoryB = inventoryB;
-        this.itemsBtoA = itemsBtoA.Select(s => s.Clone()).ToArray();
+        this.itemsBToA = itemsBtoA.Select(s => s.Clone()).ToArray();
         hasValidated = false;
     }
 
     public bool IsValid()
     {
-        return hasValidated = (   itemsAtoB.All(i => inventoryA.Count(i.itemType) >= i.quantity)
-                               && itemsBtoA.All(i => inventoryB.Count(i.itemType) >= i.quantity));
+        return hasValidated = (   itemsAToB.All(i => inventoryA.Count(i.itemType) >= i.quantity)
+                               && itemsBToA.All(i => inventoryB.Count(i.itemType) >= i.quantity));
     }
 
     public void DoExchange()
@@ -40,32 +46,32 @@ public class Transaction : ICloneable
 
         //Remove items
         bool stillValid = true;
-        foreach (ItemStack i in itemsAtoB) stillValid &= inventoryA.TryRemove(i.itemType, i.quantity);
-        foreach (ItemStack i in itemsBtoA) stillValid &= inventoryB.TryRemove(i.itemType, i.quantity);
+        foreach (ItemStack i in itemsAToB) stillValid &= inventoryA.TryRemove(i.itemType, i.quantity);
+        foreach (ItemStack i in itemsBToA) stillValid &= inventoryB.TryRemove(i.itemType, i.quantity);
 
         Debug.Assert(stillValid);
 
         //Add items provided transaction was valid
         if (stillValid)
         {
-            foreach (ItemStack i in itemsAtoB) inventoryB.AddItem(i);
-            foreach (ItemStack i in itemsBtoA) inventoryA.AddItem(i);
+            foreach (ItemStack i in itemsAToB) inventoryB.AddItem(i);
+            foreach (ItemStack i in itemsBToA) inventoryA.AddItem(i);
         }
 
         //Clear data to make sure this can't be executed twice
-        itemsAtoB = new ItemStack[] { };
-        itemsBtoA = new ItemStack[] { };
+        itemsAToB = new ItemStack[] { };
+        itemsBToA = new ItemStack[] { };
     }
 
     public object Clone()
     {
-        return new Transaction(inventoryA, itemsAtoB, inventoryB, itemsBtoA);
+        return new Transaction(inventoryA, itemsAToB, inventoryB, itemsBToA);
     }
 
     //Like Clone(), except it also multiplies the trade by a given amount
     public Transaction CloneAndMultiply(int scale)
     {
-        return new Transaction(inventoryA, itemsAtoB.Select(i => new ItemStack(i.itemType, i.quantity*scale)),
-                               inventoryB, itemsBtoA.Select(i => new ItemStack(i.itemType, i.quantity*scale)));
+        return new Transaction(inventoryA, itemsAToB.Select(i => new ItemStack(i.itemType, i.quantity*scale)),
+                               inventoryB, itemsBToA.Select(i => new ItemStack(i.itemType, i.quantity*scale)));
     }
 }

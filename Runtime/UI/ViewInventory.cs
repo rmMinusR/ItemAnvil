@@ -7,7 +7,7 @@ public sealed class ViewInventory : MonoBehaviour
 {
     public Inventory inventory;
     [SerializeField] private ViewItemStack itemStackUIPrefab;
-    [SerializeField] private Item[] doNotShow;
+    [SerializeField] private Item[] doNotShow; //TODO proper filtering
 
     [SerializeField] private GameObject emptyHint;
 

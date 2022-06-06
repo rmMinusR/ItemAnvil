@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad10b4ca1338979418607bd7ce45ee47, type: 3}
+  m_Script: {fileID: 11500000, guid: ab2c9e3e655f987449c538347da1357a, type: 3}
   m_Name: Example Currency
   m_EditorClassIdentifier: 
   displayName: Example Currency
-  displayIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  displayIcon: {fileID: 21300000, guid: 3e559ba22869a384eb60d85b42a3368f, type: 3}
   displayTooltip: The money kind
   showInMainInventory: 1
-  buyPrice: 1
-  sellPrice: 1
+  properties: []
+  references:
+    version: 1

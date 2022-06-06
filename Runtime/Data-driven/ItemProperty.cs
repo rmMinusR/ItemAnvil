@@ -1,6 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
+
+/// <summary>
+/// Describes an active property of an Item. These should generally be additive, not subtractive.
+/// </summary>
+
 [Serializable]
 public abstract class ItemProperty
 {

@@ -419,7 +419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contents:
   - itemType: {fileID: 11400000, guid: fc919debdaa5fac479203cce573b4da6, type: 2}
-    quantity: 0
+    quantity: 10
 --- !u!4 &951530250
 Transform:
   m_ObjectHideFlags: 0

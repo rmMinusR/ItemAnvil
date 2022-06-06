@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ using UnityEngine;
 /// MUST be created through Unity and passed in by Inspector, can not by created or retrieved through code.
 /// </summary>
 /// <seealso cref="ItemStack"/>
-/// <author>Robert Christensen</author>
+/// <seealso cref="ItemProperty"/>
 
-[CreateAssetMenu(fileName = "New Item Type", menuName = "Item Type")]
+[CreateAssetMenu(fileName = "New Item", menuName = "Item")]
 public sealed class Item : ScriptableObject
 {
     [Header("Display settings")]
@@ -19,15 +20,33 @@ public sealed class Item : ScriptableObject
     [TextArea] public string displayTooltip;
     public bool showInMainInventory = true;
 
-    [Space]
-    
-    [SerializeReference] private ItemProperty[] properties;
+    [HideInInspector] //Skip in default draw pass, we'll render this manually after
+    [SerializeField] private List<ItemPropertyWrapper> properties;
+
+    #region Helpers for dealing with properties
+
+    [Serializable]
+    internal struct ItemPropertyWrapper
+    {
+        [SerializeReference] public ItemProperty value;
+    }
 
     public T GetProperty<T>() where T : ItemProperty
     {
-        foreach (ItemProperty i in properties)
+        foreach (ItemPropertyWrapper i in properties)
         {
-            if (i is T t) return t;
+            if (i.value is T t) return t;
+        }
+        return null;
+    }
+
+    private bool TypeMatches(Type sub, Type super) => sub == super || sub.IsSubclassOf(super);
+
+    public ItemProperty GetProperty(Type type)
+    {
+        foreach (ItemPropertyWrapper i in properties)
+        {
+            if (TypeMatches(i.value.GetType(), type)) return i.value;
         }
         return null;
     }
@@ -37,11 +56,16 @@ public sealed class Item : ScriptableObject
         return properties.Select(i => i as T).Where(i => i != null);
     }
 
+    public IEnumerable<ItemProperty> GetProperties(Type type)
+    {
+        return properties.Select(i => i.value).Where(i => TypeMatches(i.GetType(), type));
+    }
+
     public bool TryGetProperty<T>(out T val) where T : ItemProperty
     {
-        foreach (ItemProperty i in properties)
+        foreach (ItemPropertyWrapper i in properties)
         {
-            if (i is T t)
+            if (i.value is T t)
             {
                 val = t;
                 return true;
@@ -51,4 +75,40 @@ public sealed class Item : ScriptableObject
         val = null;
         return false;
     }
+
+    public bool TryGetProperty(Type type, out ItemProperty val)
+    {
+        foreach (ItemPropertyWrapper i in properties)
+        {
+            if (i.value != null && TypeMatches(i.value.GetType(), type))
+            {
+                val = i.value;
+                return true;
+            }
+        }
+
+        val = null;
+        return false;
+    }
+
+    public bool AddProperty(ItemProperty val, bool overwrite = false)
+    {
+        bool alreadyExists = TryGetProperty(val.GetType(), out ItemProperty p);
+
+        if (alreadyExists && overwrite) RemoveProperty(p);
+
+        if (!alreadyExists || overwrite)
+        {
+            properties.Add(new ItemPropertyWrapper { value = val });
+            return true;
+        }
+        else return false;
+    }
+
+    public void RemoveProperty(ItemProperty val)
+    {
+        properties.RemoveAll(i => i.value == val);
+    }
+
+    #endregion
 }
