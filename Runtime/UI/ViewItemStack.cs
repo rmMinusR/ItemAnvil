@@ -63,6 +63,7 @@ public sealed class ViewItemStack : MonoBehaviour
         if (type == null)
         {
             WriteIcon(null);
+            WriteCount("NO ITEM");
             if (sellPrice != null) sellPrice.gameObject.SetActive(true);
             if (buyPrice  != null) buyPrice .gameObject.SetActive(true);
             WriteSellPrice("NO ITEM");
