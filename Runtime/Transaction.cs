@@ -68,10 +68,9 @@ public class Transaction : ICloneable
         return new Transaction(inventoryA, itemsAToB, inventoryB, itemsBToA);
     }
 
-    //Like Clone(), except it also multiplies the trade by a given amount
-    public Transaction CloneAndMultiply(int scale)
+    public void MultiplyInPlace(int scale)
     {
-        return new Transaction(inventoryA, itemsAToB.Select(i => new ItemStack(i.itemType, i.quantity*scale)),
-                               inventoryB, itemsBToA.Select(i => new ItemStack(i.itemType, i.quantity*scale)));
+        foreach (ItemStack s in itemsAToB) s.quantity *= scale;
+        foreach (ItemStack s in itemsBToA) s.quantity *= scale;
     }
 }

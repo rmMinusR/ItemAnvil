@@ -10,9 +10,14 @@ public sealed class Inventory : MonoBehaviour
 
     public void AddItem(ItemStack newStack)
     {
-        ItemStack existingStack = contents.Find(stack => stack.CanMerge(newStack));
-        if(existingStack != null) ItemStack.Merge(newStack, existingStack);
-        else contents.Add(newStack.Clone());
+        //Try to merge with an existing stack
+        foreach (ItemStack existing in contents)
+        {
+            ItemStack.TryMerge(newStack, existing);
+            if (newStack.quantity == 0) return;
+        }
+
+        if (newStack.quantity != 0) contents.Add(newStack.Clone());
 
         //Prevent covariants
         newStack.quantity = 0;

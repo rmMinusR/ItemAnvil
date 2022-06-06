@@ -21,7 +21,7 @@ public sealed class Item : ScriptableObject
     public bool showInMainInventory = true;
 
     [HideInInspector] //Skip in default draw pass, we'll render this manually after
-    [SerializeField] private List<ItemPropertyWrapper> properties;
+    [SerializeField] private List<ItemPropertyWrapper> properties = new List<ItemPropertyWrapper>();
 
     #region Helpers for dealing with properties
 
@@ -53,12 +53,18 @@ public sealed class Item : ScriptableObject
 
     public IEnumerable<T> GetProperties<T>() where T : ItemProperty
     {
-        return properties.Select(i => i as T).Where(i => i != null);
+        foreach (ItemPropertyWrapper w in properties)
+        {
+            if (w.value is T t) yield return t;
+        }
     }
 
     public IEnumerable<ItemProperty> GetProperties(Type type)
     {
-        return properties.Select(i => i.value).Where(i => TypeMatches(i.GetType(), type));
+        foreach (ItemPropertyWrapper w in properties)
+        {
+            if (TypeMatches(w.value.GetType(), type)) yield return w.value;
+        }
     }
 
     public bool TryGetProperty<T>(out T val) where T : ItemProperty

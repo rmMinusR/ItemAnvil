@@ -4,8 +4,8 @@ using UnityEngine;
 [Serializable]
 public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 {
-    public Item itemType;
-    [Min(0)] public int quantity = 1;
+    [SerializeField] private Item _itemType;
+    [SerializeField] [Min(0)] private int _quantity = 1;
     //If we had metadata, it would go here
 
     public ItemStack() : this(null, 1) { }
@@ -14,39 +14,53 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
     public ItemStack(Item itemType, int quantity)
     {
-        this.itemType = itemType;
-        this.quantity = quantity;
+        this._itemType = itemType;
+        this._quantity = quantity;
     }
 
-    public bool CanMerge(ItemStack other)
+    public static bool TryMerge(ItemStack src, ItemStack dst)
     {
-        //Note: Must be reflective, symmetric, and transitive
+        if (src._itemType != dst._itemType) return false;
 
-        return this.itemType == other.itemType;
-        //If we had metadata, we'd also need to check against it here
-    }
+        int totalAmt = src._quantity + dst._quantity;
 
-    public static void Merge(ItemStack src, ItemStack dst)
-    {
-        Debug.Assert(src.CanMerge(dst));
+        dst._quantity = totalAmt;
+        //TODO Could do better decoupling
+        if (dst._itemType.TryGetProperty(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
+        src._quantity = totalAmt-dst._quantity;
 
-        dst.quantity += src.quantity;
-        src.quantity = 0;
+        return true;
     }
 
     #region Interface compatability
 
-    public ItemStack Clone() => new ItemStack(itemType, quantity);
+    public ItemStack Clone() => new ItemStack(_itemType, _quantity);
     object ICloneable.Clone() => Clone();
 
-    public Item GetItemType() => itemType;
-    public int GetQuantity() => quantity;
+    public Item itemType
+    {
+        get => _itemType;
+        set => _itemType = value;
+    }
+
+    public int quantity
+    {
+        get => _quantity;
+        set => _quantity = value;
+    }
 
     #endregion
 }
 
 public interface ReadOnlyItemStack
 {
-    public Item GetItemType();
-    public int GetQuantity();
+    public Item itemType
+    {
+        get;
+    }
+
+    public int quantity
+    {
+        get;
+    }
 }

@@ -53,7 +53,7 @@ public sealed class ViewItemStack : MonoBehaviour
     public void WriteStack(ItemStack src)
     {
         WriteCount(src.quantity);
-        WriteType(src.itemType);
+        WriteType (src.itemType);
     }
 
     private void WriteType(Item type)
