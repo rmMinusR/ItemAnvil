@@ -8,6 +8,7 @@ public sealed class Inventory : MonoBehaviour
 {
     [SerializeField] private List<ItemStack> contents;
 
+    public void AddItem(Item itemType, int quantity) => AddItem(new ItemStack(itemType, quantity));
     public void AddItem(ItemStack newStack)
     {
         //Try to merge with an existing stack
