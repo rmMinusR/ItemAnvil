@@ -22,6 +22,11 @@
 	  "displayName": "Shop",
 	  "description": "Contains a simple shop setup, allowing the player to buy with safe, covariant-proof transactions",
 	  "path": "Samples~/Shop"
+	},
+    {
+	  "displayName": "Metallurgy",
+	  "description": "A more complex setup with a shop and crafting, like what might be found in a blacksmithing game.",
+	  "path": "Samples~/Metallurgy"
 	}
   ]
 }

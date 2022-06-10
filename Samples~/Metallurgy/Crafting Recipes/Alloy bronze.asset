@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760a1624ac8cb804db0f7281098ad6f5, type: 3}
+  m_Name: Alloy bronze
+  m_EditorClassIdentifier: 
+  inputs:
+  - _itemType: {fileID: 11400000, guid: 097017a55c2a90644abcaf065b25c00b, type: 2}
+    _quantity: 3
+  - _itemType: {fileID: 11400000, guid: 10839daf06478c24b8002d5d97e8b0c8, type: 2}
+    _quantity: 1
+  outputs:
+  - _itemType: {fileID: 11400000, guid: 831af5d5a3f69da4aaa859027f294471, type: 2}
+    _quantity: 4

@@ -10,28 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab2c9e3e655f987449c538347da1357a, type: 3}
-  m_Name: Tea
+  m_Name: Bronze Ingot
   m_EditorClassIdentifier: 
-  displayName: Coffee
-  displayIcon: {fileID: 21300000, guid: a2b789cc0c8861044bade6c8e456bd67, type: 3}
-  displayTooltip: Hot. Stacking them while still full would probably be a bad idea...
+  displayName: Bronze Ingot
+  displayIcon: {fileID: 21300000, guid: 6d13bd3164c640f41bb3ccfe72c4561d, type: 3}
+  displayTooltip: Alloyed from copper and tin.
   showInMainInventory: 1
   properties:
   - value:
       id: 0
-  - value:
-      id: 1
   references:
     version: 1
     00000000:
       type: {class: Marketable, ns: , asm: ItemSystem}
       data:
-        currency: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
+        currency: {fileID: 11400000, guid: 60f1b8476456c9b4198ba70382457760, type: 2}
         isBuyable: 1
-        buyPrice: 40
-        isSellable: 0
-        sellPrice: 0
-    00000001:
-      type: {class: MaxStackSize, ns: , asm: ItemSystem}
-      data:
-        size: 1
+        buyPrice: 125
+        isSellable: 1
+        sellPrice: 100
