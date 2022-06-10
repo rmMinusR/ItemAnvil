@@ -11,6 +11,8 @@ public sealed class Inventory : MonoBehaviour
     public void AddItem(Item itemType, int quantity) => AddItem(new ItemStack(itemType, quantity));
     public void AddItem(ItemStack newStack)
     {
+        Debug.Log(this + " adding " + newStack.itemType + " x" + newStack.quantity, this);
+
         //Try to merge with an existing stack
         foreach (ItemStack existing in contents)
         {
@@ -32,6 +34,8 @@ public sealed class Inventory : MonoBehaviour
 
     public bool TryRemove(Item typeToRemove, int totalToRemove)
     {
+        Debug.Log(this + " removing " + typeToRemove + " x" + totalToRemove, this);
+
         List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
         
         //NOTE: Not threadsafe
