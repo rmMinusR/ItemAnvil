@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Data container for how items should look and act. One of these must exist per item type.
+/// Data structure describing how items should look and act. One of these must exist per item type.
 /// MUST be created through Unity and passed in by Inspector, can not by created or retrieved through code.
 /// </summary>
 /// <seealso cref="ItemStack"/>

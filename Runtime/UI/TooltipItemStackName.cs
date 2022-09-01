@@ -13,7 +13,11 @@ public sealed class TooltipItemStackName
 {
     [SerializeField] private GameObject root;
     [SerializeField] private TMP_Text text;
-    [SerializeField] [InspectorReadOnly] private ViewItemStack dataSource;
+
+#if USING_INSPECTORSUGAR
+    [InspectorReadOnly]
+#endif
+    [SerializeField] private ViewItemStack dataSource;
 
     protected override void UpdateTarget(Tooltippable newTarget)
     {
