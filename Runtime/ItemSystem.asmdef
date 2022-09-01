@@ -16,7 +16,7 @@
     "versionDefines": [
         {
             "name": "com.rmminusr.tooltips",
-            "expression": "0.1",
+            "expression": "0.2",
             "define": "USING_TOOLTIPS"
         },
         {

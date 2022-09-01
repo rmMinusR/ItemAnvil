@@ -145,9 +145,9 @@ GameObject:
   - component: {fileID: 8404864555278384925}
   - component: {fileID: 8404864555278384922}
   - component: {fileID: 850478763162269824}
-  - component: {fileID: 2898835097709720888}
+  - component: {fileID: -4232041595824965192}
   m_Layer: 5
-  m_Name: Item display - square
+  m_Name: Item display - for grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -208,14 +208,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: {fileID: 0}
   inventory: {fileID: 0}
-  isDelegate: 0
+  suppressActiveUpdate: 0
   icon: {fileID: 8404864556372771996}
   count: {fileID: 8404864555214715752}
   countFormat: '{0}'
-  price: {fileID: 0}
+  sellPrice: {fileID: 0}
+  buyPrice: {fileID: 0}
   priceFormat: '{0:C0}'
-  isPriceSell: 0
---- !u!114 &2898835097709720888
+--- !u!114 &-4232041595824965192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,12 +224,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8404864555278384924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efbcb9a9fc7d6f940adccbf10d964f1f, type: 3}
+  m_Script: {fileID: 11500000, guid: eb5f5ac5bffd9664da6d8ad27e12f175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipRenderer: {fileID: 0}
-  currentlyActive: 0
-  dataSource: {fileID: 850478763162269824}
 --- !u!1 &8404864556372771998
 GameObject:
   m_ObjectHideFlags: 0

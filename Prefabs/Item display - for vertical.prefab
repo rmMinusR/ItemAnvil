@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 5260930331247484193}
   - component: {fileID: 5260930331247484198}
   - component: {fileID: 3921234939269012156}
-  - component: {fileID: 1557186240361142020}
+  - component: {fileID: -2370294232265034537}
   m_Layer: 5
   m_Name: Item display - for vertical
   m_TagString: Untagged
@@ -251,7 +251,7 @@ MonoBehaviour:
   sellPrice: {fileID: 0}
   buyPrice: {fileID: 0}
   priceFormat: '{0:C0}'
---- !u!114 &1557186240361142020
+--- !u!114 &-2370294232265034537
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,12 +260,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5260930331247484192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efbcb9a9fc7d6f940adccbf10d964f1f, type: 3}
+  m_Script: {fileID: 11500000, guid: eb5f5ac5bffd9664da6d8ad27e12f175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipRenderer: {fileID: 0}
-  currentlyActive: 0
-  dataSource: {fileID: 3921234939269012156}
 --- !u!1 &5260930332343461538
 GameObject:
   m_ObjectHideFlags: 0
