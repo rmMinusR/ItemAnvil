@@ -19,9 +19,9 @@
 	  "path": "Samples~/Player Inventory"
 	},
     {
-	  "displayName": "Shop",
+	  "displayName": "Tea Shop",
 	  "description": "Contains a simple shop setup, allowing the player to buy with safe, covariant-proof transactions",
-	  "path": "Samples~/Shop"
+	  "path": "Samples~/Tea Shop"
 	},
     {
 	  "displayName": "Metallurgy",
