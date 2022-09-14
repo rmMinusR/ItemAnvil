@@ -20,6 +20,9 @@ public sealed class Item : ScriptableObject
     [TextArea] public string displayTooltip;
     public bool showInMainInventory = true;
 
+    [Space]
+    public List<ItemCategory> categories;
+
     [HideInInspector] //Skip in default draw pass, we'll render this manually after
     [SerializeField] private List<ItemPropertyWrapper> properties = new List<ItemPropertyWrapper>();
 
