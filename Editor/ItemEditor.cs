@@ -107,7 +107,7 @@ public class ItemEditor : Editor
         if (__propertyTypeCache == null)
         {
             __propertyTypeCache = new List<Type>();
-            __propertyTypeCache.AddRange(TypeCache.GetTypesDerivedFrom(typeof(ItemProperty)).Where(t => !t.IsAbstract));
+            __propertyTypeCache.AddRange(TypeCache.GetTypesDerivedFrom<ItemProperty>().Where(t => !t.IsAbstract));
         }
 
         return __propertyTypeCache;

@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public sealed class FilterMatchItemType : ItemStackFilter
+public sealed class FilterMatchExact : ItemStackFilter
 {
     [SerializeField] private Item itemType;
 
