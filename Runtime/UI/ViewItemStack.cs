@@ -12,7 +12,7 @@ public sealed class ViewItemStack : MonoBehaviour
     public Inventory inventory;
 
 #if USING_INSPECTORSUGAR
-    [InspectorReadOnly]
+    [InspectorReadOnly] [SerializeField]
 #endif
     public bool suppressActiveUpdate = false;
 

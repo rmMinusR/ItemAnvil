@@ -15,9 +15,9 @@ public sealed class ViewInventory : MonoBehaviour
     [SerializeField] private Transform stackViewParent;
 
 #if USING_INSPECTORSUGAR
-    [InspectorReadOnly]
+    [InspectorReadOnly] [SerializeField]
 #endif
-    [SerializeField] private List<ViewItemStack> stackViews;
+    private List<ViewItemStack> stackViews;
 
     private void Start()
     {

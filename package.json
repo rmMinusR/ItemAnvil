@@ -7,7 +7,7 @@
     "url": "https://rmMinusR.com/"
   },
   "displayName": "Item and Inventory System",
-  "description": "TODO",
+  "description": "Drag-and-drop designer-friendly item ecosystem, using Component-like properties to add modular functionality.",
   "hideInEditor": false,
   "dependencies": {
     "com.unity.textmeshpro": ""

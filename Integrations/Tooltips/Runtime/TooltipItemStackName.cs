@@ -4,20 +4,15 @@ using Tooltips;
 using UnityEditor;
 using UnityEngine;
 
-public sealed class TooltipItemStackName
-#if USING_TOOLTIPS
-    : ContentPart
-#else
-    : MonoBehaviour
-#endif
+public sealed class TooltipItemStackName : ContentPart
 {
     [SerializeField] private GameObject root;
     [SerializeField] private TMP_Text text;
 
 #if USING_INSPECTORSUGAR
-    [InspectorReadOnly]
+    [InspectorReadOnly] [SerializeField]
 #endif
-    [SerializeField] private ViewItemStack dataSource;
+    private ViewItemStack dataSource;
 
     protected override void UpdateTarget(Tooltippable newTarget)
     {
