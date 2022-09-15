@@ -6,11 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Crafting Recipe", menuName = "Crafting Recipe")]
 public class CraftingRecipe : ScriptableObject
 {
-    [SerializeField] private ItemStack[] inputs;
+    [SerializeField] private ItemFilter[] inputs;
     [SerializeField] private ItemStack[] outputs;
 
     //IEnumerable here is usually an ItemStack[] or List<ItemStack>
-    public CraftingRecipe(IEnumerable<ItemStack> inputs, IEnumerable<ItemStack> outputs)
+    public CraftingRecipe(IEnumerable<ItemFilter> inputs, IEnumerable<ItemStack> outputs)
     {
         this.inputs  = inputs .Select(s => s.Clone()).ToArray();
         this.outputs = outputs.Select(s => s.Clone()).ToArray();
@@ -30,7 +30,7 @@ public class CraftingRecipe : ScriptableObject
     public virtual bool IsValid(Inventory crafter, int multiplier)
     {
         //FIXME: If inputs has duplicate type, this incorrectly return true
-        return inputs.All(i => crafter.Count(i.itemType) >= i.quantity * multiplier);
+        return inputs.All(i => crafter.Count(i) >= i.quantity * multiplier);
     }
 
     protected virtual bool DoExchange(Inventory crafter, int multiplier)

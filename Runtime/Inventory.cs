@@ -78,6 +78,11 @@ public sealed class Inventory : MonoBehaviour
         return contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
     }
 
+    public int Count(ItemFilter filter)
+    {
+        return contents.Where(stack => filter.Matches(stack)).Sum(stack => stack.quantity);
+    }
+
     public IEnumerator<ReadOnlyItemStack> GetContents()
     {
         foreach (ItemStack s in contents) yield return s;

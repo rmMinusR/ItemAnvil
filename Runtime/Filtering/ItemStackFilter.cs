@@ -2,7 +2,9 @@
 using UnityEngine;
 
 [Serializable]
-public abstract class ItemStackFilter
+public abstract class ItemFilter
 {
-	public abstract bool Matches(ItemStack itemStack);
+    public abstract bool Matches(ItemStack itemStack);
+
+    public abstract ItemFilter Clone();
 }
