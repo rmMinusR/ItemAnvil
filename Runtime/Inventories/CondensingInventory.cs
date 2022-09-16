@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class Inventory : MonoBehaviour
+public sealed class CondensingInventory : MonoBehaviour, Inventory
 {
     [SerializeField] private List<ItemStack> contents;
 

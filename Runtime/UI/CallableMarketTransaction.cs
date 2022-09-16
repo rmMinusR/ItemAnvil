@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHandler
 {
     [Space]
-    [SerializeField] private Inventory inventoryA;
-    [SerializeField] private Inventory inventoryB;
+    [SerializeField] private CondensingInventory inventoryA;
+    [SerializeField] private CondensingInventory inventoryB;
     private ViewItemStack view;
     [SerializeField] private Item itemType;
     [SerializeField] private Item currencyItem;
@@ -21,7 +21,7 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
     {
         view = GetComponent<ViewItemStack>();
         if (view != null) itemType = view.itemType;
-        if (inventoryA == null) inventoryA = GameObject.FindWithTag("Player").GetComponent<Inventory>();
+        if (inventoryA == null) inventoryA = GameObject.FindWithTag("Player").GetComponent<CondensingInventory>();
         if (inventoryB == null) inventoryB = view.inventory != null ? view.inventory : view.GetComponentInParent<ViewInventory>().inventory;
         Debug.Assert(inventoryA != null);
     }

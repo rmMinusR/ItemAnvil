@@ -9,7 +9,7 @@ public sealed class ViewItemStack : MonoBehaviour
 {
     [Header("Data source")]
     public Item itemType;
-    public Inventory inventory;
+    public CondensingInventory inventory;
 
 #if USING_INSPECTORSUGAR
     [InspectorReadOnly] [SerializeField]

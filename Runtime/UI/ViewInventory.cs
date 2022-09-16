@@ -5,7 +5,7 @@ using UnityEngine;
 
 public sealed class ViewInventory : MonoBehaviour
 {
-    public Inventory inventory;
+    public CondensingInventory inventory;
     [SerializeField] private ViewItemStack itemStackUIPrefab;
     [SerializeField] private Item[] doNotShow; //TODO proper filtering
 

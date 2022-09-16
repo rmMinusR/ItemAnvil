@@ -16,7 +16,7 @@ public class CraftingRecipe : ScriptableObject
         this.outputs = outputs.Select(s => s.Clone()).ToArray();
     }
 
-    public bool TryExchange(Inventory crafter, int multiplier)
+    public bool TryExchange(CondensingInventory crafter, int multiplier)
     {
         if(IsValid(crafter, multiplier))
         {
@@ -27,13 +27,13 @@ public class CraftingRecipe : ScriptableObject
         return false;
     }
 
-    public virtual bool IsValid(Inventory crafter, int multiplier)
+    public virtual bool IsValid(CondensingInventory crafter, int multiplier)
     {
         //FIXME: If inputs has duplicate type, this incorrectly return true
         return inputs.All(i => crafter.Count(i.itemType) >= i.quantity * multiplier);
     }
 
-    protected virtual bool DoExchange(Inventory crafter, int multiplier)
+    protected virtual bool DoExchange(CondensingInventory crafter, int multiplier)
     {
         bool stillValid = true;
 #if UNITY_EDITOR
