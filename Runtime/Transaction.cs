@@ -16,7 +16,7 @@ public sealed class Transaction : ICloneable
         this.itemsBToA = itemsBtoA.Select(s => s.Clone()).ToArray();
     }
 
-    public bool TryExchange(CondensingInventory inventoryA, CondensingInventory inventoryB)
+    public bool TryExchange(Inventory inventoryA, Inventory inventoryB)
     {
         if (IsValid(inventoryA, inventoryB))
         {
@@ -26,13 +26,13 @@ public sealed class Transaction : ICloneable
         return false;
     }
 
-    public bool IsValid(CondensingInventory inventoryA, CondensingInventory inventoryB)
+    public bool IsValid(Inventory inventoryA, Inventory inventoryB)
     {
         return itemsAToB.All(i => inventoryA.Count(i.itemType) >= i.quantity)
             && itemsBToA.All(i => inventoryB.Count(i.itemType) >= i.quantity);
     }
 
-    private bool DoExchange(CondensingInventory inventoryA, CondensingInventory inventoryB)
+    private bool DoExchange(Inventory inventoryA, Inventory inventoryB)
     {
         bool stillValid = true;
 #if UNITY_EDITOR

@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-public interface Inventory
+[Serializable]
+public abstract class Inventory
 {
-    public void AddItem(Item itemType, int quantity);
-    public void AddItem(ItemStack newStack);
+    public abstract void AddItem(Item itemType, int quantity);
+    public abstract void AddItem(ItemStack newStack);
 
-    public bool TryRemove(Item typeToRemove, int totalToRemove);
-    public int RemoveAll(Item typeToRemove);
+    public abstract bool TryRemove(Item typeToRemove, int totalToRemove);
+    public abstract int RemoveAll(Item typeToRemove);
     
-    public int Count(Item itemType);
+    public abstract int Count(Item itemType);
 
-    public IEnumerator<ReadOnlyItemStack> GetContents();
+    public abstract IEnumerable<ReadOnlyItemStack> GetContents();
 
-    public List<ItemStack> CloneContents();
+    public abstract List<ItemStack> CloneContents();
 }

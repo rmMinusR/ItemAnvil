@@ -4,7 +4,8 @@
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:1326adb9ebbec114688cb434f208c4f7",
-        "GUID:663cc89300c65114f96af19af68e5688"
+        "GUID:663cc89300c65114f96af19af68e5688",
+        "GUID:49b49c76ee64f6b41bf28ef951cb0e50"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -23,6 +24,11 @@
             "name": "com.rmminusr.inspectorsugar",
             "expression": "0.1",
             "define": "USING_INSPECTORSUGAR"
+        },
+        {
+            "name": "com.mackysoft.serializereference-extensions",
+            "expression": "0.1",
+            "define": "USING_SUBCLASS_SELECTOR"
         }
     ],
     "noEngineReferences": false
