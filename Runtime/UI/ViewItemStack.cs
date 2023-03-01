@@ -16,6 +16,9 @@ public sealed class ViewItemStack : MonoBehaviour
 #endif
     public bool suppressActiveUpdate = false;
 
+    [Space]
+    [SerializeField] private Sprite blankSprite;
+
     [Header("Render targets")]
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text count;
@@ -53,8 +56,19 @@ public sealed class ViewItemStack : MonoBehaviour
 
     public void WriteStack(ReadOnlyItemStack src)
     {
-        WriteCount(src.quantity);
-        WriteType (src.itemType);
+        if (src != null && src.itemType != null)
+        {
+            //Has data, show
+            WriteCount(src.quantity);
+            WriteType (src.itemType);
+        }
+        else
+        {
+            //No data, show blank
+            WriteCount("");
+            itemType = null;
+            WriteIcon(blankSprite);
+        }
     }
 
     private void WriteType(Item type)

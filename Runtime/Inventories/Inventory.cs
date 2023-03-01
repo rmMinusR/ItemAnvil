@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 public abstract class Inventory
 {
-    public abstract void AddItem(Item itemType, int quantity);
+    public virtual void AddItem(Item itemType, int quantity) => AddItem(new ItemStack(itemType, quantity));
     public abstract void AddItem(ItemStack newStack);
 
     public abstract bool TryRemove(Item typeToRemove, int totalToRemove);

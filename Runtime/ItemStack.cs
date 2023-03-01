@@ -8,7 +8,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
     [SerializeField] [Min(0)] private int _quantity = 1;
     //If we had metadata, it would go here
 
-    public ItemStack() : this(null, 1) { }
+    public ItemStack() : this(null, 0) { }
 
     public ItemStack(Item itemType) : this(itemType, 1) { }
 

@@ -6,13 +6,10 @@ using UnityEngine;
 [Serializable]
 public sealed class CondensingInventory : Inventory
 {
-    [SerializeField] private List<ItemStack> contents;
+    [SerializeField] private List<ItemStack> contents = new List<ItemStack>();
 
-    public override void AddItem(Item itemType, int quantity) => AddItem(new ItemStack(itemType, quantity));
     public override void AddItem(ItemStack newStack)
     {
-        Debug.Log(this + " adding " + newStack.itemType + " x" + newStack.quantity);
-
         //Try to merge with an existing stack
         foreach (ItemStack existing in contents)
         {

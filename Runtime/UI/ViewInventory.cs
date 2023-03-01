@@ -37,7 +37,7 @@ public sealed class ViewInventory : MonoBehaviour
         List<ReadOnlyItemStack> stacks = new List<ReadOnlyItemStack>(inventoryHolder.inventory.GetContents());
         stacks.RemoveAll(s => !s.itemType?.showInMainInventory ?? false);
         stacks.RemoveAll(s => doNotShow.Contains(s.itemType));
-
+        
         //Ensure we have the same number of UI elements as ItemStacks
         //TODO can be optimized
         while (stackViews.Count < stacks.Count)
