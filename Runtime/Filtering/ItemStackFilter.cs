@@ -1,10 +1,17 @@
 ﻿using System;
-using UnityEngine;
 
 [Serializable]
-public abstract class ItemFilter
+public class ItemStackFilter
 {
-    public abstract bool Matches(ItemStack itemStack);
+    public int quantity;
+    public ItemFilter typeFilter;
 
-    public abstract ItemFilter Clone();
+    public ItemStackFilter Clone()
+    {
+        return new ItemStackFilter()
+        {
+            quantity = quantity,
+            typeFilter = typeFilter
+        };
+    }
 }

@@ -6,11 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Crafting Recipe", menuName = "Crafting Recipe")]
 public class CraftingRecipe : ScriptableObject
 {
-    [SerializeField] private ItemFilter[] inputs;
+    [SerializeField] private ItemStackFilter[] inputs;
     [SerializeField] private ItemStack[] outputs;
 
     //IEnumerable here is usually an ItemStack[] or List<ItemStack>
-    public CraftingRecipe(IEnumerable<ItemFilter> inputs, IEnumerable<ItemStack> outputs)
+    public CraftingRecipe(IEnumerable<ItemStackFilter> inputs, IEnumerable<ItemStack> outputs)
     {
         this.inputs  = inputs .Select(s => s.Clone()).ToArray();
         this.outputs = outputs.Select(s => s.Clone()).ToArray();
@@ -30,7 +30,7 @@ public class CraftingRecipe : ScriptableObject
     public virtual bool IsValid(Inventory crafter, int multiplier)
     {
         //FIXME: If inputs has duplicate type, this incorrectly return true
-        return inputs.All(i => crafter.Count(i) >= i.quantity * multiplier);
+        return inputs.All(i => crafter.Count(i.typeFilter) >= i.quantity * multiplier);
     }
 
     protected virtual bool DoExchange(Inventory crafter, int multiplier)
@@ -43,7 +43,7 @@ public class CraftingRecipe : ScriptableObject
         //FIXME: If inputs has duplicate type, breaks rollback-on-fail contract (exception safety level 2) because items will still be removed
 
         //Remove items
-        foreach (ItemStack i in inputs) stillValid &= crafter.TryRemove(i.itemType, i.quantity*multiplier);
+        foreach (ItemStackFilter i in inputs) stillValid &= crafter.TryRemove(i.typeFilter, i.quantity*multiplier);
 
         Debug.Assert(stillValid);
 

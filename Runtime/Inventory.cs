@@ -37,9 +37,19 @@ public sealed class Inventory : MonoBehaviour
         Debug.Log(this + " removing " + typeToRemove + " x" + totalToRemove, this);
 
         List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
-        
-        //NOTE: Not threadsafe
+        return TryRemove_Internal(matches, totalToRemove);
+    }
 
+    public bool TryRemove(ItemFilter toRemove, int totalToRemove)
+    {
+        Debug.Log(this + " removing " + toRemove + " x" + totalToRemove, this);
+
+        List<ItemStack> matches = contents.Where(stack => toRemove.Matches(stack)).ToList();
+        return TryRemove_Internal(matches, totalToRemove);
+    }
+
+    private bool TryRemove_Internal(List<ItemStack> matches, int totalToRemove)
+    {
         //Make sure we have enough
         int itemsAvailable = matches.Sum(stack => stack.quantity);
         if (itemsAvailable < totalToRemove) return false;
