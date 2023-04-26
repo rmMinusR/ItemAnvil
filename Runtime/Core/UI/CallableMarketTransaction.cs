@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHandler
 {
     [Space]
-    [SerializeField] private Inventory inventoryA;
-    [SerializeField] private Inventory inventoryB;
+    [SerializeField] private InventoryHolder inventoryA;
+    [SerializeField] private InventoryHolder inventoryB;
     private ViewItemStack view;
     [SerializeField] private Item itemType;
     [SerializeField] private Item currencyItem;
@@ -21,8 +21,8 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
     {
         view = GetComponent<ViewItemStack>();
         if (view != null) itemType = view.itemType;
-        if (inventoryA == null) inventoryA = GameObject.FindWithTag("Player").GetComponent<Inventory>();
-        if (inventoryB == null) inventoryB = view.inventory != null ? view.inventory : view.GetComponentInParent<ViewInventory>().inventory;
+        if (inventoryA == null) inventoryA = GameObject.FindWithTag("Player").GetComponent<InventoryHolder>();
+        if (inventoryB == null) inventoryB = view.inventoryHolder != null ? view.inventoryHolder : view.GetComponentInParent<ViewInventory>().inventoryHolder;
         Debug.Assert(inventoryA != null);
     }
 
@@ -79,7 +79,7 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
     {
         Debug.Log("A= "+inventoryA+" B= "+inventoryB);
         transaction.Log();
-        if(!transaction.TryExchange(inventoryA, inventoryB))
+        if(!transaction.TryExchange(inventoryA.inventory, inventoryB.inventory))
         {
             Debug.LogError("Failed - conditions not met");
         }

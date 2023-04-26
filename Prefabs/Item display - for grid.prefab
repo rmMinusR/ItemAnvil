@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8404864555278384925}
   m_RootOrder: 1
@@ -163,6 +164,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8404864556372771999}
   - {fileID: 8404864555214715755}
@@ -207,8 +209,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemType: {fileID: 0}
-  inventory: {fileID: 0}
+  inventoryHolder: {fileID: 0}
   suppressActiveUpdate: 0
+  blankSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   icon: {fileID: 8404864556372771996}
   count: {fileID: 8404864555214715752}
   countFormat: '{0}'
@@ -227,7 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5f5ac5bffd9664da6d8ad27e12f175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipRenderer: {fileID: 0}
+  <tooltipRenderer>k__BackingField: {fileID: 0}
+  fallbackTooltipRenderer: {fileID: 0}
 --- !u!1 &8404864556372771998
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,6 +260,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8404864555278384925}
   m_RootOrder: 0

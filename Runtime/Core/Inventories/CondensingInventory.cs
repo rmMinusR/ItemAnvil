@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class Inventory : MonoBehaviour
+[Serializable]
+public sealed class CondensingInventory : Inventory
 {
-    [SerializeField] private List<ItemStack> contents;
+    [SerializeField] private List<ItemStack> contents = new List<ItemStack>();
 
-    public void AddItem(Item itemType, int quantity) => AddItem(new ItemStack(itemType, quantity));
-    public void AddItem(ItemStack newStack)
+    public override void AddItem(ItemStack newStack)
     {
-        Debug.Log(this + " adding " + newStack.itemType + " x" + newStack.quantity, this);
-
         //Try to merge with an existing stack
         foreach (ItemStack existing in contents)
         {
@@ -32,9 +29,9 @@ public sealed class Inventory : MonoBehaviour
         newStack.quantity = 0;
     }
 
-    public bool TryRemove(Item typeToRemove, int totalToRemove)
+    public override bool TryRemove(Item typeToRemove, int totalToRemove)
     {
-        Debug.Log(this + " removing " + typeToRemove + " x" + totalToRemove, this);
+        Debug.Log(this + " removing " + typeToRemove + " x" + totalToRemove);
 
         List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
         
@@ -68,22 +65,22 @@ public sealed class Inventory : MonoBehaviour
         }
     }
 
-    public int RemoveAll(Item typeToRemove)
+    public override int RemoveAll(Item typeToRemove)
     {
         return contents.RemoveAll(stack => stack.itemType == typeToRemove);
     }
 
-    public int Count(Item itemType)
+    public override int Count(Item itemType)
     {
         return contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
     }
 
-    public IEnumerator<ReadOnlyItemStack> GetContents()
+    public override IEnumerable<ReadOnlyItemStack> GetContents()
     {
         foreach (ItemStack s in contents) yield return s;
     }
 
-    public List<ItemStack> CloneContents()
+    public override List<ItemStack> CloneContents()
     {
         List<ItemStack> list = new List<ItemStack>();
         foreach (ItemStack s in contents) list.Add(s.Clone());

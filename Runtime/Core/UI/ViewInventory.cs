@@ -5,7 +5,7 @@ using UnityEngine;
 
 public sealed class ViewInventory : MonoBehaviour
 {
-    public Inventory inventory;
+    public InventoryHolder inventoryHolder;
     [SerializeField] private ViewItemStack itemStackUIPrefab;
     [SerializeField] private Item[] doNotShow; //TODO proper filtering
 
@@ -17,11 +17,12 @@ public sealed class ViewInventory : MonoBehaviour
 #if USING_INSPECTORSUGAR
     [InspectorReadOnly] [SerializeField]
 #endif
-    private List<ViewItemStack> stackViews;
+    private List<ViewItemStack> stackViews = new List<ViewItemStack>();
 
     private void Start()
     {
-        Debug.Assert(inventory != null, "No inventory connected!", this);
+        Debug.Assert(inventoryHolder != null, "No inventory connected!", this);
+        Debug.Assert(inventoryHolder.inventory != null, "Inventory connected, but not configured!", this);
     }
     
     private void Update()
@@ -33,10 +34,10 @@ public sealed class ViewInventory : MonoBehaviour
     {
         //Build which ItemStacks to show
         //TODO can we do this more efficiently with enumerators?
-        List<ItemStack> stacks = inventory.CloneContents();
+        List<ReadOnlyItemStack> stacks = new List<ReadOnlyItemStack>(inventoryHolder.inventory.GetContents());
         stacks.RemoveAll(s => !s.itemType?.showInMainInventory ?? false);
         stacks.RemoveAll(s => doNotShow.Contains(s.itemType));
-
+        
         //Ensure we have the same number of UI elements as ItemStacks
         //TODO can be optimized
         while (stackViews.Count < stacks.Count)

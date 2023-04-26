@@ -12,12 +12,12 @@ public sealed class CallableCraftingRecipe : MonoBehaviour, IPointerClickHandler
     [SerializeField] private UnityEvent onLMB;
     [SerializeField] private UnityEvent onRMB;
 
-    public void TryCraft(Inventory crafter)
+    public void TryCraft(CondensingInventory crafter)
     {
         TryCraft(crafter, 1);
     }
 
-    public void TryCraft(Inventory crafter, int count)
+    public void TryCraft(CondensingInventory crafter, int count)
     {
         if(!recipe.TryExchange(crafter, count))
         {

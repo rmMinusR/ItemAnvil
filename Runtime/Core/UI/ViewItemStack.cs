@@ -9,12 +9,15 @@ public sealed class ViewItemStack : MonoBehaviour
 {
     [Header("Data source")]
     public Item itemType;
-    public Inventory inventory;
+    public InventoryHolder inventoryHolder;
 
 #if USING_INSPECTORSUGAR
     [InspectorReadOnly] [SerializeField]
 #endif
     public bool suppressActiveUpdate = false;
+
+    [Space]
+    [SerializeField] private Sprite blankSprite;
 
     [Header("Render targets")]
     [SerializeField] private Image icon;
@@ -30,7 +33,8 @@ public sealed class ViewItemStack : MonoBehaviour
     {
         if (!suppressActiveUpdate)
         {
-            Debug.Assert(inventory != null, "No inventory connected!", this);
+            Debug.Assert(inventoryHolder != null, "No inventory connected!", this);
+            Debug.Assert(inventoryHolder.inventory != null, "Inventory connected, but not configured!", this);
         }
     }
 
@@ -43,17 +47,28 @@ public sealed class ViewItemStack : MonoBehaviour
     {
         if(itemType != null)
         {
-            if (inventory == null) WriteCount("NO INV");
-            else WriteCount(inventory.Count(itemType));
+            if (inventoryHolder == null || inventoryHolder.inventory == null) WriteCount("NO INV");
+            else WriteCount(inventoryHolder.inventory.Count(itemType));
         }
 
         WriteType(itemType);
     }
 
-    public void WriteStack(ItemStack src)
+    public void WriteStack(ReadOnlyItemStack src)
     {
-        WriteCount(src.quantity);
-        WriteType (src.itemType);
+        if (src != null && src.itemType != null)
+        {
+            //Has data, show
+            WriteCount(src.quantity);
+            WriteType (src.itemType);
+        }
+        else
+        {
+            //No data, show blank
+            WriteCount("");
+            itemType = null;
+            WriteIcon(blankSprite);
+        }
     }
 
     private void WriteType(Item type)
