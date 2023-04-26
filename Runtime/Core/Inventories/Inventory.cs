@@ -15,4 +15,15 @@ public abstract class Inventory
     public abstract IEnumerable<ReadOnlyItemStack> GetContents();
 
     public abstract List<ItemStack> CloneContents();
+
+    public virtual void Tick()
+    {
+        foreach (ReadOnlyItemStack i in GetContents())
+        {
+            if (i != null) foreach (ItemInstanceProperty p in i.instanceProperties)
+            {
+                if (p.ShouldTick) p.Tick(); //FIXME this breaks read-only contract
+            }
+        }
+    }
 }

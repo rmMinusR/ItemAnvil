@@ -15,6 +15,11 @@ public abstract class ItemInstanceProperty : ICloneable
             this.GetType().GetFields().All(i => i.GetValue(obj) == i.GetValue(this)); //Memberwise equality test. Not efficient, but easy to implement.
     }
 
+
+    public virtual bool ShouldTick => false;
+    public virtual void Tick() { }
+
+
     protected internal struct TooltipEntry
     {
         public GameObject prefab;
