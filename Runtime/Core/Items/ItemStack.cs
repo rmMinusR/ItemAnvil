@@ -125,4 +125,6 @@ public interface ReadOnlyItemStack
     {
         get;
     }
+
+    public T GetProperty<T>() where T : ItemInstanceProperty;
 }

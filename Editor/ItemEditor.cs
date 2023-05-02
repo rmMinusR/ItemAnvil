@@ -65,7 +65,14 @@ public class ItemEditor : Editor
             EditorGUILayout.EndHorizontal();
 
             //Property data
-            EditorGUILayout.PropertyField(propArr.GetArrayElementAtIndex(i).FindPropertyRelative("value"));
+            try
+            {
+                EditorGUILayout.PropertyField(propArr.GetArrayElementAtIndex(i).FindPropertyRelative("value"));
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
 
             EditorGUI.indentLevel--;
         }

@@ -55,25 +55,33 @@ public class ItemStackPropertyDrawer : PropertyDrawer
                 for (int i = 0; i < instanceProperties.arraySize; ++i)
                 {
                     SerializedProperty prop = instanceProperties.GetArrayElementAtIndex(i).FindPropertyRelative("property");
-                    existingPropertyTypes.Add(prop.managedReferenceFieldTypename);
-                    workingRect = Rect.MinMaxRect(workingRect.xMin, workingRect.yMin, workingRect.xMax, instancePropertiesRect.yMin+EditorGUI.GetPropertyHeight(prop));
-                    EditorGUI.PropertyField(workingRect, prop);
-                    workingRect.y += workingRect.height;
+                    existingPropertyTypes.Add(prop.managedReferenceFieldTypename.Split(' ').Last());
+                    workingRect = Rect.MinMaxRect(workingRect.xMin, workingRect.yMin, workingRect.xMax, workingRect.yMin+EditorGUI.GetPropertyHeight(prop, true));
+                    EditorGUI.PropertyField(workingRect, prop, null);
+                    workingRect.y += EditorGUI.GetPropertyHeight(prop, true);
                 }
 
                 //Show add menu
-                List<Type> addable = new List<Type>();
-                addable.Add(null);
-                addable.AddRange(GetPropertyTypes());
-                addable.RemoveAll(i => i != null && existingPropertyTypes.Contains(i.FullName));
-                string[] names = addable.Select(t => t?.Name ?? "Add...").ToArray();
-                workingRect = Rect.MinMaxRect(workingRect.xMin, workingRect.yMin, workingRect.xMax, instancePropertiesRect.yMin + EditorGUIUtility.singleLineHeight);
-                int toAdd = EditorGUI.Popup(workingRect, 0, names);
-                if (toAdd != 0)
+                workingRect = Rect.MinMaxRect(workingRect.xMin, workingRect.yMin, workingRect.xMax, workingRect.yMin + EditorGUIUtility.singleLineHeight);
+                bool shouldAdd = GUI.Button(workingRect, "Add...");
+                workingRect.y += workingRect.height;
+                if (shouldAdd)
                 {
-                    instanceProperties.InsertArrayElementAtIndex(instanceProperties.arraySize);
-                    SerializedProperty prop = instanceProperties.GetArrayElementAtIndex(instanceProperties.arraySize-1).FindPropertyRelative("property");
-                    prop.managedReferenceValue = addable[toAdd].GetConstructor(new Type[] { }).Invoke(new object[] { });
+                    List<Type> addable = new List<Type>(GetPropertyTypes());
+                    addable.RemoveAll(i => existingPropertyTypes.Contains(i?.Name));
+                    
+                    void onMenuClick(object toAdd)
+                    {
+                        instanceProperties.InsertArrayElementAtIndex(instanceProperties.arraySize);
+                        SerializedProperty prop = instanceProperties.GetArrayElementAtIndex(instanceProperties.arraySize-1).FindPropertyRelative("property");
+                        prop.managedReferenceValue = ((Type)toAdd).GetConstructor(new Type[] { }).Invoke(new object[] { });
+                        prop.serializedObject.ApplyModifiedProperties();
+                    }
+
+                    GenericMenu menu = new GenericMenu();
+                    foreach (Type i in GetPropertyTypes()) menu.AddItem(new GUIContent(i.Name), false, onMenuClick, i);
+
+                    menu.ShowAsContext();
                 }
             }
         }
@@ -92,7 +100,7 @@ public class ItemStackPropertyDrawer : PropertyDrawer
             for (int i = 0; i < instanceProperties.arraySize; ++i)
             {
                 //Height of each instance property
-                height += EditorGUI.GetPropertyHeight(instanceProperties.GetArrayElementAtIndex(i));
+                height += EditorGUI.GetPropertyHeight(instanceProperties.GetArrayElementAtIndex(i).FindPropertyRelative("property"), true);
             }
 
             height += EditorGUIUtility.singleLineHeight; //Add button
@@ -108,7 +116,8 @@ public class ItemStackPropertyDrawer : PropertyDrawer
         if (__propertyTypeCache == null)
         {
             __propertyTypeCache = new List<Type>();
-            __propertyTypeCache.AddRange(TypeCache.GetTypesDerivedFrom(typeof(ItemInstanceProperty)).Where(t => !t.IsAbstract));
+            __propertyTypeCache.AddRange(TypeCache.GetTypesDerivedFrom(typeof(ItemInstanceProperty)));
+            __propertyTypeCache.RemoveAll(t => t.IsAbstract);
         }
 
         return __propertyTypeCache;

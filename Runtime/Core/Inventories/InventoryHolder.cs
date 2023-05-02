@@ -19,7 +19,11 @@ public class InventoryHolder : MonoBehaviour
         if (doTick)
         {
             timeSinceLastTick += Time.deltaTime;
-            if (timeSinceLastTick > tickInterval) inventory.Tick();
+            if (timeSinceLastTick > tickInterval)
+            {
+                inventory.Tick();
+                timeSinceLastTick = 0;
+            }
         }
     }
 }

@@ -75,10 +75,7 @@ public sealed class CondensingInventory : Inventory
         return contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
     }
 
-    public override IEnumerable<ReadOnlyItemStack> GetContents()
-    {
-        foreach (ItemStack s in contents) yield return s;
-    }
+    public override IEnumerable<ReadOnlyItemStack> GetContents() => contents;
 
     public override List<ItemStack> CloneContents()
     {

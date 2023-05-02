@@ -10,6 +10,7 @@ public sealed class ViewItemStack : MonoBehaviour
     [Header("Data source")]
     public Item itemType;
     public InventoryHolder inventoryHolder;
+    public ReadOnlyItemStack mostRecentStack { get; private set; } //TODO bad, class should be reworked
 
 #if USING_INSPECTORSUGAR
     [InspectorReadOnly] [SerializeField]
@@ -56,6 +57,8 @@ public sealed class ViewItemStack : MonoBehaviour
 
     public void WriteStack(ReadOnlyItemStack src)
     {
+        mostRecentStack = src;
+
         if (src != null && src.itemType != null)
         {
             //Has data, show
