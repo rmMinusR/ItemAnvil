@@ -1,6 +1,9 @@
+
 # Item Anvil: modular RPG-style items
 
-An RPG-style item ecosystem. Designer-friendly, with a drag-and-drop workflow built on ScriptableObjects. Easy-to-understand expressive scripting syntax. 
+**Item Anvil** is a flexible and highly customizable RPG-style item ecosystem. Designer-friendly, with a drag-and-drop workflow built on ScriptableObjects. Easy-to-understand expressive scripting syntax.
+
+Just like GameObjects have component scripts, items gain functionality by adding properties.
 
 ## Getting started
 ### Installing
@@ -14,20 +17,28 @@ Option 4: Download and place in your Assets folder. Not recommended, as the samp
 **Metallurgy**: A crafting minigame! Buy ores => smelt => alloy => sell for profit.
 
 ## Features
+ - [x] Pre-built UI
  - [x] Crafting recipes
  - [x] Items use assigned icon for display
  - [x] Max stack size
  - [x] Generic inventories:
-	 - [x] Auto-condensing
+	 - [x] Auto-expanding
 	 - [x] Fixed-slot
+ - [x] Fully serializable using Unity's built-in tools
 
 ### Roadmap
- - [x] Per-instance properties (enchantments, temperature, etc): Releasing in 0.4
- - [x] Fuzzy filtering: WIP
+ - [x] Per-instance properties (enchantments, temperature, etc) - Releasing in 0.4
+ - [x] Fuzzy filters
+ - [ ] Combat example
+ - [ ] Dynamic weaponsmithing example
+ - [ ] Loot tables
  - [ ] Player-facing inventory rearranging
-	 - [ ] Sort button?
+	 - [ ] Sort button
+	 - [ ] Searching/highlighting
  - [ ] Unit testing
  - [ ] Fixed-volume inventory
+
+Have a suggestion? [File a feature request!](https://github.com/rmMinusR/ItemAnvil/issues/new)
 
 ## Usage
 
