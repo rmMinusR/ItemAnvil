@@ -3,18 +3,18 @@
 
 **Item Anvil** is a flexible and highly customizable RPG-style item ecosystem. Designer-friendly, with a drag-and-drop workflow built on ScriptableObjects. Easy-to-understand expressive scripting syntax.
 
-Just like GameObjects have component scripts, items gain functionality by adding properties.
+Just like GameObjects have component scripts, items gain functionality by adding properties. These can affect all items of that type (like as tuning the damage of a sword) or only one item (such as enchantments).
 
 ## Getting started
 ### Installing
-Option 1: Use the Package Manager to [add by git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html): `https://github.com/rmMinusR/ItemAnvil.git`
-Option 2: Clone to your Packages folder.
-Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).
-Option 4: Download and place in your Assets folder. Not recommended, as the samples folder will be invisible.
+ - Option 1: Use the Package Manager to [add by git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html): `https://github.com/rmMinusR/ItemAnvil.git`
+ - Option 2: Clone to your Packages folder.
+ - Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).
+ - Option 4: Download and place in your Assets folder. Not recommended, as the samples folder will be invisible.
 
 ### Examples
-**Tea Shop**: Shows a basic setup for shops, similar to an NPC or player. Similar to traders in *Divinity: Original Sin 2*.
-**Metallurgy**: A crafting minigame! Buy ores => smelt => alloy => sell for profit.
+ - **Tea Shop**: Shows a basic setup for shops, similar to an NPC or player. Similar to traders in *Divinity: Original Sin 2*.
+ - **Metallurgy**: A crafting minigame! Buy ores => smelt => alloy => sell for profit.
 
 ## Features
  - [x] Pre-built UI
@@ -36,6 +36,7 @@ Option 4: Download and place in your Assets folder. Not recommended, as the samp
 	 - [ ] Sort button
 	 - [ ] Searching/highlighting
  - [ ] Unit testing
+ - [ ] Inventory properties
  - [ ] Fixed-volume inventory
 
 Have a suggestion? [File a feature request!](https://github.com/rmMinusR/ItemAnvil/issues/new)
