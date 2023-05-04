@@ -13,7 +13,7 @@ Just like GameObjects have component scripts, items gain functionality by adding
 ### Installing
  - Option 1: Use the Package Manager to [add by git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html): `https://github.com/rmMinusR/ItemAnvil.git`
  - Option 2: Clone to your Packages folder.
- - Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).
+ - ~~Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).~~ Currently awaiting review, not available yet.
  - Option 4: Download and place in your Assets folder. Not recommended, as the samples folder will be invisible.
 
 ### Examples
