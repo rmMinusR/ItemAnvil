@@ -5,7 +5,7 @@
 
 | In player | In editor |
 | --------- | --------- |
-| ![Tea Shop example](https://raw.githubusercontent.com/rmMinusR/ItemAnvil/assets/screenshots/tea-demo-1.png) | ![Tea Shop editors](https://raw.githubusercontent.com/rmMinusR/ItemAnvil/assets/screenshots/tea-editor-1.png) |
+| ![Tea Shop example](https://raw.githubusercontent.com/rmMinusR/ItemAnvil/assets/screenshots/tea-demo-1.png) | ![Metallurgy editors](https://raw.githubusercontent.com/rmMinusR/ItemAnvil/assets/screenshots/metallurgy-editor-4.png) |
 
 Just like GameObjects have component scripts, items gain functionality by adding properties. These can affect all items of that type (like as tuning the damage of a sword) or only one item (such as enchantments).
 
@@ -18,7 +18,7 @@ Just like GameObjects have component scripts, items gain functionality by adding
 
 ### Examples
  - **Tea Shop**: Shows a basic setup for shops, similar to an NPC or player. Similar to traders in *Divinity: Original Sin 2*.
- - **Metallurgy**: A crafting minigame! Buy ores => smelt => alloy => sell for profit.
+ - **Metallurgy** ([try it!](https://rmMinusR.github.io/ItemAnvil/demos/Metallurgy/)): A crafting minigame! Buy ores => smelt => alloy => sell for profit.
 
 ## Features
  - [x] Pre-built UI
