@@ -26,7 +26,7 @@ public sealed class PropertyBagDrawer : PropertyDrawer
         SerializedProperty propArr = property.FindPropertyRelative("contents");
         string _getTypenameOfProp(int id)
         {
-            string typename = propArr.GetArrayElementAtIndex(id).FindPropertyRelative("obj").managedReferenceFullTypename;
+            string typename = propArr.GetArrayElementAtIndex(id).FindPropertyRelative("value").managedReferenceFullTypename;
             int splitInd = Math.Max(typename.LastIndexOf('.'), typename.LastIndexOf(' ')) + 1;
             typename = typename.Substring(splitInd);
             return typename;
@@ -47,13 +47,13 @@ public sealed class PropertyBagDrawer : PropertyDrawer
         //Show add menu
         List<Type> addable = new List<Type>();
         addable.Add(null);
-        addable.AddRange(GetPropertyTypes().Where(type => GetElements(propArr).All(container => container.FindPropertyRelative("obj").managedReferenceFullTypename != type.Name))); //FIXME this may not work with namespaces...
+        addable.AddRange(GetPropertyTypes().Where(type => GetElements(propArr).All(container => container.FindPropertyRelative("value").managedReferenceFullTypename != type.Name))); //FIXME this may not work with namespaces...
         string[] names = addable.Select(t => t?.Name ?? "Add...").ToArray();
         int toAdd = EditorGUI.Popup(buildRect(EditorGUIUtility.singleLineHeight), 0, names);
         if (toAdd != 0)
         {
             propArr.InsertArrayElementAtIndex(propArr.arraySize);
-            propArr.GetArrayElementAtIndex(propArr.arraySize - 1).FindPropertyRelative("obj").managedReferenceValue = addable[toAdd].GetConstructor(new Type[] { }).Invoke(new object[] { });
+            propArr.GetArrayElementAtIndex(propArr.arraySize - 1).FindPropertyRelative("value").managedReferenceValue = addable[toAdd].GetConstructor(new Type[] { }).Invoke(new object[] { });
         }
 
         //Show property list
@@ -75,7 +75,7 @@ public sealed class PropertyBagDrawer : PropertyDrawer
                 //Property data
                 try
                 {
-                    SerializedProperty prop = propArr.GetArrayElementAtIndex(i).FindPropertyRelative("obj");
+                    SerializedProperty prop = propArr.GetArrayElementAtIndex(i).FindPropertyRelative("value");
                     EditorGUI.PropertyField(buildRect(EditorGUI.GetPropertyHeight(prop)), prop);
                 }
                 catch (Exception e)
@@ -120,7 +120,7 @@ public sealed class PropertyBagDrawer : PropertyDrawer
                 //Property data
                 try
                 {
-                    SerializedProperty prop = propArr.GetArrayElementAtIndex(i).FindPropertyRelative("obj");
+                    SerializedProperty prop = propArr.GetArrayElementAtIndex(i).FindPropertyRelative("value");
                     buildRect(EditorGUI.GetPropertyHeight(prop));
                 }
                 catch (Exception e)

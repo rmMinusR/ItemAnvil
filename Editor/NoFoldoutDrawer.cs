@@ -11,7 +11,7 @@ using UnityEngine;
 /// </summary>
 [CustomPropertyDrawer(typeof(ItemProperty))]
 [CustomPropertyDrawer(typeof(ItemInstanceProperty))] //TODO make its own thing?
-public class ItemPropertyDrawer : PropertyDrawer
+public class NoFoldoutDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {

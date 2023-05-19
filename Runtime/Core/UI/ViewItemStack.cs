@@ -91,7 +91,7 @@ public sealed class ViewItemStack : MonoBehaviour
         {
             WriteIcon(type.displayIcon);
 
-            if (type.TryGetProperty(out Marketable m)) //TODO convert to object chaining?
+            if (type.properties.TryGet(out Marketable m)) //TODO convert to object chaining?
             {
                 if (sellPrice != null) sellPrice.gameObject.SetActive(m.isSellable);
                 if (buyPrice  != null) buyPrice .gameObject.SetActive(m.isBuyable );

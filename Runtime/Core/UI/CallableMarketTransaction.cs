@@ -33,7 +33,7 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
 
     public void TryBuy(int quantity)
     {
-        Marketable m = itemType.GetProperty<Marketable>();
+        Marketable m = itemType.properties.Get<Marketable>();
         if (m == null)
         {
             Debug.LogError(itemType + " has no property 'Marketable'", this);
@@ -55,7 +55,7 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
 
     public void TrySell(int quantity)
     {
-        Marketable m = itemType.GetProperty<Marketable>();
+        Marketable m = itemType.properties.Get<Marketable>();
         if (m == null)
         {
             Debug.LogError(itemType + " has no property 'Marketable'", this);

@@ -17,7 +17,9 @@ public class ItemEditor : Editor
         Sprite prevDisplayIcon = item.displayIcon;
 
         DrawDefaultInspector();
-        
+
+        serializedObject.ApplyModifiedProperties();
+
         refreshIcon |= (prevDisplayIcon != item.displayIcon);
 
         if(refreshIcon)
@@ -40,16 +42,4 @@ public class ItemEditor : Editor
         if (item.displayIcon != null) return AssetPreview.GetAssetPreview(item.displayIcon);
         else return base.RenderStaticPreview(assetPath, subAssets, width, height);
     }
-
-    static List<Type> GetPropertyTypes()
-    {
-        if (__propertyTypeCache == null)
-        {
-            __propertyTypeCache = new List<Type>();
-            __propertyTypeCache.AddRange(TypeCache.GetTypesDerivedFrom(typeof(ItemProperty)).Where(t => !t.IsAbstract));
-        }
-
-        return __propertyTypeCache;
-    }
-    static List<Type> __propertyTypeCache;
 }

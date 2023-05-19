@@ -8,22 +8,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 {
     [SerializeField] private Item _itemType;
     [SerializeField] [Min(0)] private int _quantity = 1;
-    [SerializeField] private List<ItemInstancePropertyWrapper> _instanceProperties;
-
-    [Serializable]
-    internal struct ItemInstancePropertyWrapper //Nasty hack because Unity can't reference-serialize lists
-    {
-        [SerializeReference] public ItemInstanceProperty property;
-
-        public ItemInstancePropertyWrapper Clone()
-        {
-            return new ItemInstancePropertyWrapper()
-            {
-                property = property.Clone()
-            };
-        }
-    }
-
+    [SerializeField] private PropertyBag<ItemInstanceProperty> _instanceProperties;
 
     public ItemStack() : this(null, 0) { }
 
@@ -33,13 +18,13 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
     {
         this._itemType = itemType;
         this._quantity = quantity;
-        _instanceProperties = new List<ItemInstancePropertyWrapper>();
+        _instanceProperties = new PropertyBag<ItemInstanceProperty>();
     }
 
     public static bool CanMerge(ItemStack src, ItemStack dst)
     {
         return src.itemType == dst.itemType //Item types must match
-            && Enumerable.SequenceEqual(src.instanceProperties, dst.instanceProperties); //Instance properties must match exactly
+            && new HashSet<ItemInstanceProperty>(src._instanceProperties).SetEquals(dst._instanceProperties); //Ensure we have the same properties. FIXME GC
     }
 
     public static bool TryMerge(ItemStack src, ItemStack dst)
@@ -50,7 +35,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
         dst._quantity = totalAmt;
         //TODO Could do better decoupling
-        if (dst._itemType.TryGetProperty(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
+        if (dst._itemType.properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
         src._quantity = totalAmt-dst._quantity;
 
         return true;
@@ -60,21 +45,17 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
     public void AddProperty<T>(T prop) where T : ItemInstanceProperty
     {
-        _instanceProperties.Add(new ItemInstancePropertyWrapper { property = prop });
+        _instanceProperties.Add(prop);
     }
 
     public T GetProperty<T>() where T : ItemInstanceProperty
     {
-        foreach (ItemInstancePropertyWrapper i in _instanceProperties)
-        {
-            if (i.property is T t) return t;
-        }
-        return null;
+        return _instanceProperties.Get<T>();
     }
 
     public void RemoveProperty<T>() where T : ItemInstanceProperty
     {
-        _instanceProperties.RemoveAll(i => i.property is T);
+        _instanceProperties.Remove<T>();
     }
 
     #endregion
@@ -84,7 +65,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
     public ItemStack Clone()
     {
         ItemStack @out = new ItemStack(_itemType, _quantity);
-        foreach (ItemInstancePropertyWrapper p in _instanceProperties) @out._instanceProperties.Add(p.Clone());
+        @out._instanceProperties = (PropertyBag<ItemInstanceProperty>) _instanceProperties.Clone();
         return @out;
     }
     object ICloneable.Clone() => Clone();
@@ -101,9 +82,9 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
         set => _quantity = value;
     }
 
-    public IReadOnlyList<ItemInstanceProperty> instanceProperties
+    public IEnumerable<ItemInstanceProperty> instanceProperties
     {
-        get => _instanceProperties.Select(i => i.property).ToList();
+        get => _instanceProperties;
     }
 
     #endregion
@@ -121,7 +102,7 @@ public interface ReadOnlyItemStack
         get;
     }
 
-    public IReadOnlyList<ItemInstanceProperty> instanceProperties
+    public IEnumerable<ItemInstanceProperty> instanceProperties
     {
         get;
     }
