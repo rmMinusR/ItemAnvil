@@ -7,13 +7,13 @@
 | --------- | --------- |
 | ![Tea Shop example](https://raw.githubusercontent.com/rmMinusR/ItemAnvil/assets/screenshots/tea-demo-1.png) | ![Metallurgy editors](https://raw.githubusercontent.com/rmMinusR/ItemAnvil/assets/screenshots/metallurgy-editor-4.png) |
 
-Just like GameObjects have component scripts, items gain functionality by adding properties. These can affect all items of that type (like as tuning the damage of a sword) or only one item (such as enchantments).
+Just like GameObjects have component scripts, items gain functionality by adding properties. These can affect all items of that type (like tuning the damage of a sword) or only one item (such as enchantments).
 
 ## Getting started
 ### Installing
- - Option 1: Use the Package Manager to [add by git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html): `https://github.com/rmMinusR/ItemAnvil.git`
- - Option 2: Clone to your Packages folder.
- - ~~Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).~~ Currently awaiting review, not available yet.
+ - Option 1: Use the Package Manager to [add by git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html): `https://github.com/rmMinusR/ItemAnvil.git` Recommended for most users.
+ - Option 2: Git clone to your Packages folder. Recommended for contributors.
+ - ~~Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).~~ Currently awaiting review, not available yet. Not recommended, as it will likely be one or two versions out of date due to the review process.
  - Option 4: Download and place in your Assets folder. Not recommended, as the samples folder will be invisible.
 
 ### Examples
@@ -32,13 +32,16 @@ Just like GameObjects have component scripts, items gain functionality by adding
 
 ### Roadmap
  - [x] Per-instance properties (enchantments, temperature, etc) - Releasing in 0.4
- - [x] Fuzzy filters
+ - [x] Fuzzy filters - Planned for 0.5-0.6
+ - [ ] Better player-facing inventory - Planned for 0.5
+	 - [ ] Sort button
+	 - [ ] Drag-and-drop rearranging/moving between inventories
+	 - [ ] Searching/highlighting
+	 - [ ] Controller support
+ - [ ] Loot tables - Planned for 0.5-0.6
  - [ ] Combat example
  - [ ] Dynamic weaponsmithing example
- - [ ] Loot tables
- - [ ] Player-facing inventory rearranging
-	 - [ ] Sort button
-	 - [ ] Searching/highlighting
+ - [ ] Random stats ("+ 10 to 20 Armor")
  - [ ] Unit testing
  - [ ] Inventory properties
  - [ ] Fixed-volume inventory
