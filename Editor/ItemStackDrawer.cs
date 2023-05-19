@@ -64,6 +64,7 @@ public class ItemStackDrawer : PropertyDrawer
     {
         float height = EditorGUIUtility.singleLineHeight;
 
+        height += EditorGUIUtility.singleLineHeight; //Idk why but this fixes some alignment issues
         height += EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_instanceProperties"));
 
         return height;
