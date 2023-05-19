@@ -6,6 +6,9 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Hacky utility class to make data structures layout inline rather than as foldouts
+/// </summary>
 [CustomPropertyDrawer(typeof(ItemProperty))]
 [CustomPropertyDrawer(typeof(ItemInstanceProperty))] //TODO make its own thing?
 public class ItemPropertyDrawer : PropertyDrawer
