@@ -54,6 +54,10 @@ public sealed class PropertyBagDrawer : PropertyDrawer
         {
             propArr.InsertArrayElementAtIndex(propArr.arraySize);
             propArr.GetArrayElementAtIndex(propArr.arraySize - 1).FindPropertyRelative("value").managedReferenceValue = addable[toAdd].GetConstructor(new Type[] { }).Invoke(new object[] { });
+
+            //Ensure fully up to date
+            property.serializedObject.ApplyModifiedProperties();
+            property.serializedObject.Update();
         }
 
         //Show property list
@@ -92,6 +96,10 @@ public sealed class PropertyBagDrawer : PropertyDrawer
             propArr.DeleteArrayElementAtIndex(toRemove.Value);
             //serializedObject.ApplyModifiedPropertiesWithoutUndo();
             //Undo.FlushUndoRecordObjects();
+
+            //Ensure fully up to date
+            property.serializedObject.ApplyModifiedProperties();
+            property.serializedObject.Update();
         }
     }
 
