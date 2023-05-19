@@ -5,8 +5,13 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
+/// <summary>
+/// A unified way to store properties. In general, only one property of each type may exist per bag. Used in Items and ItemStacks.
+/// </summary>
+/// <typeparam name="TBase">Base class of all properties</typeparam>
 [Serializable]
-public sealed class PropertyBag<TBase> : IEnumerable<TBase>, ICloneable where TBase : class // Exclude structs and POD, since they don't have inheritance
+public sealed class PropertyBag<TBase> : IEnumerable<TBase>, ICloneable //Should prob be an ISet, but I'm lazy. TODO.
+    where TBase : class // Exclude structs and POD, since they don't have inheritance
 {
     [Serializable]
     private class Container // Serialization helper

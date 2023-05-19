@@ -47,7 +47,8 @@ public sealed class PropertyBagDrawer : PropertyDrawer
         //Show add menu
         List<Type> addable = new List<Type>();
         addable.Add(null);
-        addable.AddRange(GetPropertyTypes().Where(type => GetElements(propArr).All(container => container.FindPropertyRelative("value").managedReferenceFullTypename != type.Name))); //FIXME this may not work with namespaces...
+        bool hasPropertyOfType(Type t) => GetElements(propArr).Any(container => container.FindPropertyRelative("value").managedReferenceFullTypename == t.Name); //FIXME this may not work with namespaces...
+        addable.AddRange(GetPropertyTypes().Where(type => !hasPropertyOfType(type))); //Currently broken. Fix.
         string[] names = addable.Select(t => t?.Name ?? "Add...").ToArray();
         int toAdd = EditorGUI.Popup(buildRect(EditorGUIUtility.singleLineHeight), 0, names);
         if (toAdd != 0)
