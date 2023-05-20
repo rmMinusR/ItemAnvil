@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 
 [Serializable]
-public abstract class ItemProperty
+public abstract class ItemProperty : ICloneable
 {
     protected internal struct TooltipEntry
     {
@@ -19,4 +19,9 @@ public abstract class ItemProperty
 #else
     protected internal virtual TooltipEntry GetTooltipEntry() => default; //Give something to override, but don't require
 #endif
+
+    public virtual object Clone()
+    {
+        return MemberwiseClone();
+    }
 }

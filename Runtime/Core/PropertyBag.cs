@@ -10,13 +10,24 @@ using UnityEngine;
 /// </summary>
 /// <typeparam name="TBase">Base class of all properties</typeparam>
 [Serializable]
-public sealed class PropertyBag<TBase> : IEnumerable<TBase>, ICloneable //Should prob be an ISet, but I'm lazy. TODO.
-    where TBase : class // Exclude structs and POD, since they don't have inheritance
+public sealed class PropertyBag<TBase> : IEnumerable<TBase>, ICloneable //Should prob be an ISet, but that's a lot of work. TODO.
+    where TBase : class, ICloneable // Exclude structs and POD, since they don't have inheritance. ICloneable to fix inappropriate ref sharing
 {
     [Serializable]
-    private class Container // Serialization helper
+    private class Container : ISerializationCallbackReceiver // Serialization helper
     {
         [SerializeReference] public TBase value;
+
+        public void OnBeforeSerialize()
+        {
+#if UNITY_EDITOR
+            value = (TBase) value.Clone(); // Prevent shared references in a list or when copying. Stupid, but it works.
+#endif
+        }
+
+        public void OnAfterDeserialize()
+        {
+        }
     }
     [SerializeField] private List<Container> contents;
 
