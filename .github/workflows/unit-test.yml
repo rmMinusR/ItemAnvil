@@ -14,6 +14,14 @@ jobs:
         with:
           path: Packages/com.rmMinusR.items
         
+      - name: Cache library
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+        
       - name: Unity - Fetch license
         uses: game-ci/unity-request-activation-file@v2.0.0
         
