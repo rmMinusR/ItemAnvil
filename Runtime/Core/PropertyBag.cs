@@ -80,6 +80,11 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
         return default;
     }
 
+    public bool Contains<T>() where T : TBase
+    {
+        return contents.Any(i => i.value is T);
+    }
+
     public bool TryGet<T>(out T val) where T : TBase
     {
         foreach (Container i in contents)
@@ -120,21 +125,16 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
 
     /////////////// ISet impl ///////////////
 
-    public void ExceptWith   (IEnumerable<TBase> other) => contents.RemoveAll(c =>  other.Contains(c.value));
-    public void IntersectWith(IEnumerable<TBase> other) => contents.RemoveAll(c => !other.Contains(c.value));
+    public void ExceptWith   (IEnumerable<TBase> other) => contents.RemoveAll(c =>  other.Any(i => c.value.GetType() == i.GetType()));
+    public void IntersectWith(IEnumerable<TBase> other) => contents.RemoveAll(c => !other.Any(i => c.value.GetType() == i.GetType()));
 
     public bool IsProperSubsetOf  (IEnumerable<TBase> other) => IsSubsetOf  (other) && Count != other.Count();
     public bool IsProperSupersetOf(IEnumerable<TBase> other) => IsSupersetOf(other) && Count != other.Count();
 
-    public bool IsSubsetOf  (IEnumerable<TBase> other) => this.All(i => other.Any(j => j.GetType() == i.GetType() && (j?.Equals(i) ?? false)));
-    public bool IsSupersetOf(IEnumerable<TBase> other) => other.All(i => this.Any(j => j.GetType() == i.GetType() && (j?.Equals(i) ?? false)));
+    public bool IsSubsetOf  (IEnumerable<TBase> other) => this.All(i => other.Any(j => j.GetType() == i.GetType()));// && (j?.Equals(i) ?? false)));
+    public bool IsSupersetOf(IEnumerable<TBase> other) => other.All(i => this.Any(j => j.GetType() == i.GetType()));// && (j?.Equals(i) ?? false)));
 
-    public bool Overlaps(IEnumerable<TBase> other)
-    {
-        foreach (TBase i in other) if (this .Contains(i)) return true;
-        foreach (TBase i in this ) if (other.Contains(i)) return true;
-        return false;
-    }
+    public bool Overlaps(IEnumerable<TBase> other) => IsSubsetOf(other) || IsSupersetOf(other);
 
     public bool SetEquals(IEnumerable<TBase> other) => IsSubsetOf(other) && IsSupersetOf(other);
 
@@ -166,3 +166,4 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
         this.Add(item); // Defer to main impl
     }
 }
+
