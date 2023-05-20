@@ -21,7 +21,7 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
         public void OnBeforeSerialize()
         {
 #if UNITY_EDITOR
-            value = (TBase) value.Clone(); // Prevent shared references in a list or when copying. Stupid, but it works.
+            if (value != null) value = (TBase) value.Clone(); // Prevent shared references in a list or when copying. Stupid, but it works.
 #endif
         }
 
@@ -29,7 +29,7 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
         {
         }
     }
-    [SerializeField] private List<Container> contents;
+    [SerializeField] private List<Container> contents = new List<Container>();
 
     public int Count => contents.Count;
     public bool IsReadOnly => false;

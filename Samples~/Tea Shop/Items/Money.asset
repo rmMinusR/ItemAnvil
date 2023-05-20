@@ -16,6 +16,7 @@ MonoBehaviour:
   displayIcon: {fileID: 21300000, guid: 3e559ba22869a384eb60d85b42a3368f, type: 3}
   displayTooltip: The money kind
   showInMainInventory: 1
-  properties: []
+  <Properties>k__BackingField:
+    contents: []
   references:
     version: 1

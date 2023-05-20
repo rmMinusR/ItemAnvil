@@ -35,7 +35,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
         dst._quantity = totalAmt;
         //TODO Could do better decoupling
-        if (dst._itemType.properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
+        if (dst._itemType.Properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
         src._quantity = totalAmt-dst._quantity;
 
         return true;

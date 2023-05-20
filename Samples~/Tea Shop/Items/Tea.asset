@@ -16,17 +16,12 @@ MonoBehaviour:
   displayIcon: {fileID: 21300000, guid: a2b789cc0c8861044bade6c8e456bd67, type: 3}
   displayTooltip: Hot. Stacking them while still full would probably be a bad idea...
   showInMainInventory: 1
-  t:
-    inventoryA: {fileID: 0}
-    itemsAToB: []
-    inventoryB: {fileID: 0}
-    itemsBToA: []
-    hasValidated: 0
-  properties:
-  - value:
-      id: 0
-  - value:
-      id: 1
+  <Properties>k__BackingField:
+    contents:
+    - value:
+        id: 0
+    - value:
+        id: 1
   references:
     version: 1
     00000000:
