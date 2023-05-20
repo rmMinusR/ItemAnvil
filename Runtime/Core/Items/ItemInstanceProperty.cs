@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 [Serializable]
@@ -12,7 +13,19 @@ public abstract class ItemInstanceProperty : ICloneable
     public override bool Equals(object obj)
     {
         return obj.GetType() == this.GetType() &&
-            this.GetType().GetFields().All(i => i.GetValue(obj) == i.GetValue(this)); //Memberwise equality test. Not efficient, but easy to implement.
+            this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).All(i => { //Memberwise equality test. Not efficient, but easy to implement.
+                object a = i.GetValue(obj);
+                object b = i.GetValue(this);
+                return a == b || a.Equals(b);
+            });
+    }
+
+    public override int GetHashCode()
+    {
+        int hash = base.GetHashCode();
+        hash ^= this.GetType().GetHashCode();
+        foreach (FieldInfo fi in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)) hash ^= fi.GetValue(this)?.GetHashCode() ?? 0;
+        return hash;
     }
 
 

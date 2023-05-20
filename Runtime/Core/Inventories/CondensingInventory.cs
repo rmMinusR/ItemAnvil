@@ -20,7 +20,8 @@ public sealed class CondensingInventory : Inventory
         //Awful fix, but it plays nice with stacking rules
         while (newStack.quantity > 0)
         {
-            ItemStack s = new ItemStack(newStack.itemType, 0);
+            ItemStack s = newStack.Clone();
+            s.quantity = 0;
             contents.Add(s);
             ItemStack.TryMerge(newStack, s);
         }
@@ -29,17 +30,19 @@ public sealed class CondensingInventory : Inventory
         newStack.quantity = 0;
     }
 
-    public override bool TryRemove(Item typeToRemove, int totalToRemove)
+    public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
     {
         Debug.Log(this + " removing " + typeToRemove + " x" + totalToRemove);
 
         List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
-        
+
         //NOTE: Not threadsafe
+
+        List<ItemStack> @out = new List<ItemStack>();
 
         //Make sure we have enough
         int itemsAvailable = matches.Sum(stack => stack.quantity);
-        if (itemsAvailable < totalToRemove) return false;
+        if (itemsAvailable < totalToRemove) return @out;
         else
         {
             //Removal routine
@@ -48,6 +51,9 @@ public sealed class CondensingInventory : Inventory
                 if(totalToRemove < matches[0].quantity)
                 {
                     //If we would be able to take enough from the current stack, finish routine
+                    ItemStack tmp = matches[0].Clone();
+                    tmp.quantity = totalToRemove;
+                    @out.Add(tmp);
                     matches[0].quantity -= totalToRemove;
                     totalToRemove = 0;
                 }
@@ -55,13 +61,14 @@ public sealed class CondensingInventory : Inventory
                 {
                     //If we wouldn't be able to take enough from the current stack, take what we can and continue
                     //FIXME breaks for keep-if-zero
+                    @out.Add(matches[0]);
                     totalToRemove -= matches[0].quantity;
                     matches[0].quantity = 0; //Just to be safe...
                     contents.Remove(matches[0]);
                     matches.RemoveAt(0);
                 }
             }
-            return true;
+            return @out;
         }
     }
 
@@ -82,5 +89,15 @@ public sealed class CondensingInventory : Inventory
         List<ItemStack> list = new List<ItemStack>();
         foreach (ItemStack s in contents) list.Add(s.Clone());
         return list;
+    }
+
+    public override void Remove(ItemStack stackToRemove)
+    {
+        if (!contents.Remove(stackToRemove)) throw new InvalidOperationException(this+" does not contain "+stackToRemove?.ToString());
+    }
+
+    public override ItemStack Find(Item type)
+    {
+        return contents.FirstOrDefault(i => i.itemType == type);
     }
 }

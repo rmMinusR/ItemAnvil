@@ -14,19 +14,25 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
                           where TBase : class, ICloneable // Exclude structs and POD, since they don't have inheritance. ICloneable to fix inappropriate ref sharing
 {
     [Serializable]
-    private class Container : ISerializationCallbackReceiver // Serialization helper
+    private class Container : // Serialization helper
+#if UNITY_EDITOR
+        ISerializationCallbackReceiver,
+#endif
+        ICloneable
     {
         [SerializeReference] public TBase value;
 
+#if UNITY_EDITOR
         public void OnBeforeSerialize()
         {
-#if UNITY_EDITOR
             if (value != null) value = (TBase) value.Clone(); // Prevent shared references in a list or when copying. Stupid, but it works.
-#endif
         }
 
-        public void OnAfterDeserialize()
+        public void OnAfterDeserialize() { }
+#endif
+        public object Clone()
         {
+            return new Container() { value = (TBase)value.Clone() };
         }
     }
     [SerializeField] private List<Container> contents = new List<Container>();
@@ -107,7 +113,9 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
 
     public object Clone()
     {
-        return MemberwiseClone(); //FIXME deep clone, this will share property instances!
+        PropertyBag<TBase> @out = new PropertyBag<TBase>();
+        foreach (TBase i in this) @out.Add((TBase)i.Clone());
+        return @out;
     }
 
     /////////////// ISet impl ///////////////
@@ -118,8 +126,8 @@ public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
     public bool IsProperSubsetOf  (IEnumerable<TBase> other) => IsSubsetOf  (other) && Count != other.Count();
     public bool IsProperSupersetOf(IEnumerable<TBase> other) => IsSupersetOf(other) && Count != other.Count();
 
-    public bool IsSubsetOf  (IEnumerable<TBase> other) => this.All(i => other.Contains(i));
-    public bool IsSupersetOf(IEnumerable<TBase> other) => other.All(i => this.Contains(i));
+    public bool IsSubsetOf  (IEnumerable<TBase> other) => this.All(i => other.Any(j => j.GetType() == i.GetType() && (j?.Equals(i) ?? false)));
+    public bool IsSupersetOf(IEnumerable<TBase> other) => other.All(i => this.Any(j => j.GetType() == i.GetType() && (j?.Equals(i) ?? false)));
 
     public bool Overlaps(IEnumerable<TBase> other)
     {

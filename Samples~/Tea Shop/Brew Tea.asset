@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 760a1624ac8cb804db0f7281098ad6f5, type: 3}
+  m_Name: Brew Tea
+  m_EditorClassIdentifier: 
+  inputs:
+  - _itemType: {fileID: 11400000, guid: e800f0e5887f86147aceb257ac7865c9, type: 2}
+    _quantity: 1
+    _instanceProperties:
+      contents: []
+  - _itemType: {fileID: 11400000, guid: aa1a4ccfbed3f104786a4f234b72359f, type: 2}
+    _quantity: 1
+    _instanceProperties:
+      contents: []
+  outputs:
+  - _itemType: {fileID: 11400000, guid: be55e0532d7cbd84c8c1e7aa4e1654f9, type: 2}
+    _quantity: 1
+    _instanceProperties:
+      contents:
+      - value:
+          id: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: Temperature, ns: , asm: Assembly-CSharp}
+      data:
+        temperature: 312
+        heatLoss: 1

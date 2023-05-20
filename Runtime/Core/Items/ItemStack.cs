@@ -21,10 +21,20 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
         _instanceProperties = new PropertyBag<ItemInstanceProperty>();
     }
 
+    public ItemStack(Item itemType, int quantity, IEnumerable<ItemInstanceProperty> instanceProperties) : this(itemType, quantity)
+    {
+        foreach (ItemInstanceProperty i in instanceProperties) _instanceProperties.Add(i.Clone());
+    }
+
+    public override string ToString()
+    {
+        return $"({_itemType} x{_quantity}, {_instanceProperties.Count} instance properties)";
+    }
+
     public static bool CanMerge(ItemStack src, ItemStack dst)
     {
         return src.itemType == dst.itemType //Item types must match
-            && new HashSet<ItemInstanceProperty>(src._instanceProperties).SetEquals(dst._instanceProperties); //Ensure we have the same properties. FIXME GC
+            && src._instanceProperties.SetEquals(dst._instanceProperties); //Ensure we have the same properties. FIXME GC
     }
 
     public static bool TryMerge(ItemStack src, ItemStack dst)
@@ -64,7 +74,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
     public ItemStack Clone()
     {
-        ItemStack @out = new ItemStack(_itemType, _quantity);
+        ItemStack @out = (ItemStack) MemberwiseClone();
         @out._instanceProperties = (PropertyBag<ItemInstanceProperty>) _instanceProperties.Clone();
         return @out;
     }

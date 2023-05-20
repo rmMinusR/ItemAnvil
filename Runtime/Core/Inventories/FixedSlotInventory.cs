@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,7 +20,8 @@ public sealed class FixedSlotInventory : Inventory
         //Awful fix, but it plays nice with stacking rules
         while (newStack.quantity > 0)
         {
-            ItemStack s = new ItemStack(newStack.itemType, 0);
+            ItemStack s = newStack.Clone();
+            s.quantity = 0;
             contents[contents.FindIndex(i => i == null || i.itemType == null || i.quantity == 0)] = s;
             ItemStack.TryMerge(newStack, s);
         }
@@ -59,9 +59,12 @@ public sealed class FixedSlotInventory : Inventory
         return nRemoved;
     }
 
-    public override bool TryRemove(Item typeToRemove, int totalToRemove)
+    public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
     {
-        if (Count(typeToRemove) < totalToRemove) return false;
+        List<ItemStack> @out = new List<ItemStack>();
+
+        //Make sure we have enough
+        if (Count(typeToRemove) < totalToRemove) return @out;
 
         for (int i = 0; i < contents.Count; ++i)
         {
@@ -71,17 +74,40 @@ public sealed class FixedSlotInventory : Inventory
                 {
                     //This stack is not enough to complete requirements. Continue consuming.
                     totalToRemove -= contents[i].quantity;
+                    @out.Add(contents[i]);
                     contents[i] = null;
                 }
                 else
                 {
                     //This stack is enough to complete requirements. Stop consuming.
+                    ItemStack tmp = contents[i].Clone();
+                    tmp.quantity = totalToRemove;
+                    @out.Add(tmp);
                     contents[i].quantity -= totalToRemove;
-                    return true;
+                    return @out;
                 }
             }
         }
 
         throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
+    }
+    
+    public override void Remove(ItemStack stackToRemove)
+    {
+        for (int i = 0; i < contents.Count; ++i)
+        {
+            if (contents[i] == stackToRemove)
+            {
+                contents[i] = null;
+                return;
+            }
+        }
+        
+        throw new InvalidOperationException(this+" does not contain "+stackToRemove);
+    }
+
+    public override ItemStack Find(Item type)
+    {
+        return contents.FirstOrDefault(i => i != null && i.itemType == type);
     }
 }

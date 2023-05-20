@@ -43,7 +43,7 @@ public class CraftingRecipe : ScriptableObject
         //FIXME: If inputs has duplicate type, breaks rollback-on-fail contract (exception safety level 2) because items will still be removed
 
         //Remove items
-        foreach (ItemStack i in inputs) stillValid &= crafter.TryRemove(i.itemType, i.quantity*multiplier);
+        foreach (ItemStack i in inputs) stillValid &= crafter.TryRemove(i.itemType, i.quantity*multiplier).Count() > 0;
 
         Debug.Assert(stillValid);
 

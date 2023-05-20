@@ -7,8 +7,6 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(ItemStack))]
 public class ItemStackDrawer : PropertyDrawer
 {
-    bool instancePropertiesFoldout = false;
-
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent mainLabel)
     {
         //Helpers since GUILayout isn't available here
