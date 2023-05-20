@@ -42,7 +42,7 @@ Just like GameObjects have component scripts, items gain functionality by adding
  - [ ] Combat example
  - [ ] Dynamic weaponsmithing example
  - [ ] Random stats ("+ 10 to 20 Armor")
- - [ ] Unit testing
+ - [x] Unit testing - Started
  - [ ] Inventory properties
  - [ ] Fixed-volume inventory
 
