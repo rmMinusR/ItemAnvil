@@ -1,0 +1,12 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Samples/Item and Inventory System/0.3.0/Tea Shop/Tea Shop.unity
+    guid: a8c9c59dc58877649b3aff500baaa325
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: f354ba396fce35349b64944a88be5a31, type: 2}
