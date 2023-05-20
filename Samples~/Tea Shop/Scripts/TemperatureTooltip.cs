@@ -6,6 +6,8 @@ using UnityEngine;
 public class TemperatureTooltip
 #if UNITY_EDITOR
     : Tooltips.ContentPart
+#else
+    : MonoBehaviour
 #endif
 {
     [SerializeField] private TMP_Text text;
@@ -23,17 +25,12 @@ public class TemperatureTooltip
         }
         else temperature = null;
 
-        gameObject.SetActive(temperature != null);
-    }
-#else
-    private void Start()
-    {
-        gameObject.SetActive(false);
     }
 #endif
 
     private void Update()
     {
+        gameObject.SetActive(temperature != null);
         if (temperature != null) text.text = string.Format(format, temperature.temperature);
     }
 }
