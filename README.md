@@ -1,6 +1,8 @@
 
 # Item Anvil: modular RPG-style items
 
+[![Tests](https://github.com/rmMinusR/ItemAnvil/actions/workflows/unit-test.yml/badge.svg)](https://github.com/rmMinusR/ItemAnvil/actions/workflows/unit-test.yml)
+
 **Item Anvil** is a flexible and highly customizable RPG-style item ecosystem. Designer-friendly, with a drag-and-drop workflow built on ScriptableObjects. Easy-to-understand expressive scripting syntax.
 
 | In player | In editor |
