@@ -6,8 +6,12 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Hacky utility class to make data structures layout inline rather than as foldouts. Note that PropertyDrawer.fieldInfo is invalid here.
+/// </summary>
 [CustomPropertyDrawer(typeof(ItemProperty))]
-public class ItemPropertyDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(ItemInstanceProperty))] //TODO make its own thing?
+public class NoFoldoutDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -44,7 +48,7 @@ public class ItemPropertyDrawer : PropertyDrawer
 
     private Type ExtractType(SerializedProperty property)
     {
-        return ExtractFieldValue(property).GetType();
+        return ExtractFieldValue(property)?.GetType();
     }
 
     private object ExtractFieldValue(SerializedProperty property)

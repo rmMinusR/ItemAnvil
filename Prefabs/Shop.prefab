@@ -28,7 +28,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7505076380275961781}
   m_RootOrder: 0
@@ -163,7 +162,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8656643722607358241}
   m_RootOrder: 0
@@ -240,7 +238,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2951825021946191767}
   m_Father: {fileID: 8656643722607358241}
@@ -374,7 +371,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 181692221307553344}
   m_RootOrder: 2
@@ -527,7 +523,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4416175227069858271}
   - {fileID: 8332845089688360650}
@@ -568,7 +563,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8656643722607358241}
   m_Father: {fileID: 0}
@@ -592,11 +586,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory:
-    rid: 5852448987522007040
+    id: 0
   references:
-    version: 2
-    RefIds:
-    - rid: 5852448987522007040
+    version: 1
+    00000000:
       type: {class: CondensingInventory, ns: , asm: ItemSystem}
       data:
         contents: []
@@ -628,7 +621,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8656643722607358241}
   m_RootOrder: 1
@@ -650,12 +642,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58693054c8bc23343a392e28e743d49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory:
-    contents: []
+  inventoryHolder: {fileID: 0}
   itemStackUIPrefab: {fileID: 4422317747195910169, guid: 65972b4a020eb544f8c7f162ee753363, type: 3}
   doNotShow: []
   emptyHint: {fileID: 0}
   stackViewParent: {fileID: 8332845089688360650}
+  stackViews: []
 --- !u!114 &9122712975512511322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,13 +889,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84aeaba89b658f44a87b368b51f710b0, type: 3}
---- !u!224 &181692221307553344 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1408600538941523776, guid: 84aeaba89b658f44a87b368b51f710b0, type: 3}
-  m_PrefabInstance: {fileID: 1227752784086270208}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2730699967915551193 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3813633548749072601, guid: 84aeaba89b658f44a87b368b51f710b0, type: 3}
+  m_PrefabInstance: {fileID: 1227752784086270208}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &181692221307553344 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1408600538941523776, guid: 84aeaba89b658f44a87b368b51f710b0, type: 3}
   m_PrefabInstance: {fileID: 1227752784086270208}
   m_PrefabAsset: {fileID: 0}

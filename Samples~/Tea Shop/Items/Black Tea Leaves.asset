@@ -10,23 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab2c9e3e655f987449c538347da1357a, type: 3}
-  m_Name: Tea
+  m_Name: Black Tea Leaves
   m_EditorClassIdentifier: 
-  displayName: Tea
-  displayIcon: {fileID: 21300000, guid: a2b789cc0c8861044bade6c8e456bd67, type: 3}
-  displayTooltip: Hot. Stacking them while still full would probably be a bad idea...
+  displayName: Black Tea Leaves
+  displayIcon: {fileID: 21300000, guid: 1622bb111e3825b49bec7730e81ead95, type: 3}
+  displayTooltip: 
   showInMainInventory: 1
-  t:
-    inventoryA: {fileID: 0}
-    itemsAToB: []
-    inventoryB: {fileID: 0}
-    itemsBToA: []
-    hasValidated: 0
-  properties:
-  - value:
-      id: 0
-  - value:
-      id: 1
+  <Properties>k__BackingField:
+    contents:
+    - value:
+        id: 0
   references:
     version: 1
     00000000:
@@ -34,10 +27,6 @@ MonoBehaviour:
       data:
         currency: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
         isBuyable: 1
-        buyPrice: 40
+        buyPrice: 15
         isSellable: 0
         sellPrice: 0
-    00000001:
-      type: {class: MaxStackSize, ns: , asm: ItemSystem}
-      data:
-        size: 1

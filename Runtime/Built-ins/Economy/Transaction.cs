@@ -20,7 +20,8 @@ public sealed class Transaction : ICloneable
     {
         if (IsValid(inventoryA, inventoryB))
         {
-            return DoExchange(inventoryA, inventoryB);
+            DoExchange(inventoryA, inventoryB);
+            return true;
         }
 
         return false;
@@ -32,29 +33,32 @@ public sealed class Transaction : ICloneable
             && itemsBToA.All(i => inventoryB.Count(i.itemType) >= i.quantity);
     }
 
-    private bool DoExchange(Inventory inventoryA, Inventory inventoryB)
+    private void DoExchange(Inventory inventoryA, Inventory inventoryB)
     {
-        bool stillValid = true;
 #if UNITY_EDITOR
-        Debug.Assert(stillValid = IsValid(inventoryA, inventoryB));
+        Debug.Assert(IsValid(inventoryA, inventoryB));
 #endif
-        
-        //FIXME: If itemsAtoB has duplicate type, or itemsBtoA has duplicate type, breaks rollback-on-fail contract (exception safety level 2) because items will still be removed
+        List<ItemStack> itemsAToB_instanced = new List<ItemStack>();
+        List<ItemStack> itemsBToA_instanced = new List<ItemStack>();
 
-        //Remove items
-        foreach (ItemStack i in itemsAToB) stillValid &= inventoryA.TryRemove(i.itemType, i.quantity);
-        foreach (ItemStack i in itemsBToA) stillValid &= inventoryB.TryRemove(i.itemType, i.quantity);
-
-        Debug.Assert(stillValid);
-
-        //Add items provided transaction was valid
-        if (stillValid)
+        try
         {
-            foreach (ItemStack i in itemsAToB) inventoryB.AddItem(i);
-            foreach (ItemStack i in itemsBToA) inventoryA.AddItem(i);
+            //Capture items to be moved, and remove from original inventories
+            for (int i = 0; i < itemsAToB.Length; ++i) itemsAToB_instanced.AddRange(inventoryA.TryRemove(itemsAToB[i].itemType, itemsAToB[i].quantity));
+            for (int i = 0; i < itemsBToA.Length; ++i) itemsBToA_instanced.AddRange(inventoryB.TryRemove(itemsBToA[i].itemType, itemsBToA[i].quantity));
+        }
+        catch(Exception e)
+        {
+            //Something went wrong! Refund items.
+            foreach (ItemStack i in itemsAToB_instanced) inventoryA.AddItem(i);
+            foreach (ItemStack i in itemsBToA_instanced) inventoryB.AddItem(i);
+
+            throw new Exception("Something went wrong while processing Transaction!", e);
         }
 
-        return stillValid;
+        //Add items to destination inventories
+        foreach (ItemStack i in itemsAToB_instanced) inventoryB.AddItem(i);
+        foreach (ItemStack i in itemsBToA_instanced) inventoryA.AddItem(i);
     }
 
     public object Clone()

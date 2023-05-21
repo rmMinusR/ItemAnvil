@@ -17,11 +17,12 @@ MonoBehaviour:
   displayTooltip: Can be safely stacked, although at some point the stack will fall
     over.
   showInMainInventory: 1
-  properties:
-  - value:
-      id: 0
-  - value:
-      id: 1
+  <Properties>k__BackingField:
+    contents:
+    - value:
+        id: 0
+    - value:
+        id: 1
   references:
     version: 1
     00000000:

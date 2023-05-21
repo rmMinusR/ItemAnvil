@@ -10,6 +10,7 @@ public sealed class ViewItemStack : MonoBehaviour
     [Header("Data source")]
     public Item itemType;
     public InventoryHolder inventoryHolder;
+    public ReadOnlyItemStack mostRecentStack { get; private set; } //TODO bad, class should be reworked
 
 #if USING_INSPECTORSUGAR
     [InspectorReadOnly] [SerializeField]
@@ -56,6 +57,8 @@ public sealed class ViewItemStack : MonoBehaviour
 
     public void WriteStack(ReadOnlyItemStack src)
     {
+        mostRecentStack = src;
+
         if (src != null && src.itemType != null)
         {
             //Has data, show
@@ -88,7 +91,7 @@ public sealed class ViewItemStack : MonoBehaviour
         {
             WriteIcon(type.displayIcon);
 
-            if (type.TryGetProperty(out Marketable m)) //TODO convert to object chaining?
+            if (type.Properties.TryGet(out Marketable m)) //TODO convert to object chaining?
             {
                 if (sellPrice != null) sellPrice.gameObject.SetActive(m.isSellable);
                 if (buyPrice  != null) buyPrice .gameObject.SetActive(m.isBuyable );
