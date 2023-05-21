@@ -31,9 +31,9 @@ Just like GameObjects have component scripts, items gain functionality by adding
 	 - [x] Auto-expanding
 	 - [x] Fixed-slot
  - [x] Fully serializable using Unity's built-in tools
+ - [x] Per-instance properties (enchantments, temperature, etc)
 
 ### Roadmap
- - [x] Per-instance properties (enchantments, temperature, etc) - Releasing in 0.4
  - [x] Fuzzy filters - Planned for 0.5-0.6
  - [ ] Better player-facing inventory - Planned for 0.5
 	 - [ ] Sort button

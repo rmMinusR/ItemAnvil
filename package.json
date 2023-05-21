@@ -1,12 +1,12 @@
 {
   "name": "com.rmminusr.items",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT License",
   "author": {
     "name": "Robert Christensen / rmMinusR",
     "url": "https://rmMinusR.com/"
   },
-  "displayName": "Item and Inventory System",
+  "displayName": "Item Anvil",
   "description": "Drag-and-drop designer-friendly item ecosystem, using Component-like properties to add modular functionality.",
   "hideInEditor": false,
   "dependencies": {
@@ -25,7 +25,7 @@
 	},
     {
 	  "displayName": "Metallurgy",
-	  "description": "A more complex setup with a shop and crafting, like what might be found in a blacksmithing game.",
+	  "description": "A crafting minigame! Buy ores => smelt => alloy => sell for profit.",
 	  "path": "Samples~/Metallurgy"
 	}
   ]
