@@ -19,7 +19,7 @@ Just like GameObjects have component scripts, items gain functionality by adding
  - Option 4: Download and place in your Assets folder. Not recommended, as the samples folder will be invisible.
 
 ### Examples
- - **Tea Shop**: Shows a basic setup for shops, similar to an NPC or player. Similar to traders in *Divinity: Original Sin 2*.
+ - **Tea Shop** ([try it!](https://rmMinusR.github.io/ItemAnvil/demos/TeaShop/)): Shows a basic setup for shops, similar to an NPC or player. Similar to traders in *Divinity: Original Sin 2*.
  - **Metallurgy** ([try it!](https://rmMinusR.github.io/ItemAnvil/demos/Metallurgy/)): A crafting minigame! Buy ores => smelt => alloy => sell for profit.
 
 ## Features
