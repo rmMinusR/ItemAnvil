@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
-public sealed class InputHintDisplayController : ContentPart
+public sealed class InputHintDisplayController : TooltipPart
 {
     [SerializeField] private LayoutGroup root;
     [SerializeField] private List<InputHintDisplay> instances;

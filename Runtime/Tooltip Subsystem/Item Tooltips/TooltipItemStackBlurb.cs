@@ -4,7 +4,7 @@ using rmMinusR.Tooltips;
 using UnityEditor;
 using UnityEngine;
 
-public sealed class TooltipItemStackBlurb : ContentPart
+public sealed class TooltipItemStackBlurb : TooltipPart
 {
     [SerializeField] private GameObject root;
     [SerializeField] private TMP_Text text;
@@ -18,10 +18,8 @@ public sealed class TooltipItemStackBlurb : ContentPart
     {
         dataSource = newTarget.GetComponent<ViewItemStack>();
         root.SetActive(dataSource != null);
-    }
 
-    private void Update()
-    {
-        text.text = dataSource.itemType.displayTooltip;
+        //Render text if active
+        if (root.activeSelf) text.text = dataSource.itemType.displayTooltip;
     }
 }

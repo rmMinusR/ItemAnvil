@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class TemperatureTooltip : ContentPart
+public class TemperatureTooltip : TooltipPart
 {
     [SerializeField] private TMP_Text text;
     [SerializeField] private string format = "{0} °F";
 
     Temperature temperature;
-
 
     protected override void UpdateTarget(Tooltippable newTarget)
     {
@@ -20,11 +19,11 @@ public class TemperatureTooltip : ContentPart
         }
         else temperature = null;
 
+        gameObject.SetActive(temperature != null);
     }
 
     private void Update()
     {
-        gameObject.SetActive(temperature != null);
         if (temperature != null) text.text = string.Format(format, temperature.temperature);
     }
 }

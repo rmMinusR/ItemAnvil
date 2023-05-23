@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -8,38 +9,16 @@ using UnityEngine.InputSystem;
 namespace rmMinusR.Tooltips
 {
 
+    /// <summary>
+    /// Handles enabling, positioning, and sending what is currently displayed to content parts
+    /// </summary>
     public sealed class TooltipDisplay : MonoBehaviour
     {
         [SerializeField] private GameObject renderRoot;
 
-#if USING_INSPECTORSUGAR
-        [InspectorReadOnly(editing = AccessMode.ReadOnly, playing = AccessMode.ReadWrite)]
-#endif
-        [SerializeField] private List<ContentPart> contentParts = new List<ContentPart>();
-        internal void RegisterContentPart(ContentPart c)
-        {
-            Debug.Assert(!contentParts.Contains(c));
-            Debug.Assert(c.transform.IsChildOf(this.transform));
-
-            if (contentParts.Count > 0)
-            {
-                //Complex case: Insert at correct index
-
-                int insIndex = contentParts.FindLastIndex(i => i.displayOrder < c.displayOrder) + 1;
-                contentParts.Insert(insIndex, c);
-
-                //Try to position right after the element we inserted after in list
-                if (insIndex != 0) c.transform.SetSiblingIndex(contentParts[insIndex-1].transform.GetSiblingIndex()+1);
-                //Otherwise, position right before the element we inserted before
-                else c.transform.SetSiblingIndex(contentParts[insIndex+1].transform.GetSiblingIndex());
-            }
-            else
-            {
-                //Trivial case: just put it there, assume it has right order in hierarchy
-                contentParts.Add(c);
-            }
-        }
-        internal void UnregisterContentPart(ContentPart c) => contentParts.Remove(c);
+        private List<TooltipSectionManager> sections = new List<TooltipSectionManager>();
+        internal void RegisterSection(TooltipSectionManager s) => sections.Add(s);
+        internal void UnregisterSection(TooltipSectionManager s) => sections.Remove(s);
 
 #if USING_INSPECTORSUGAR
         [InspectorReadOnly]
@@ -70,13 +49,13 @@ namespace rmMinusR.Tooltips
 
         public void SetTarget(Tooltippable newTarget)
         {
-            if (newTarget == null) throw new System.ArgumentNullException("Cannot target null - use ClearTarget instead");
+            if (newTarget == null) throw new ArgumentNullException("Cannot target null - use ClearTarget instead");
 
             target = newTarget;
             //this.positionMode = positionMode ?? defaultPositionMode;
             renderRoot.SetActive(true);
 
-            foreach (ContentPart c in contentParts) c.UpdateTarget(newTarget);
+            foreach (TooltipSectionManager l in sections) l.UpdateTarget(newTarget);
         }
 
         public void ClearTarget(Tooltippable target)
@@ -197,7 +176,7 @@ namespace rmMinusR.Tooltips
             else Debug.LogError("TooltipDisplay instance already disabled? This should never happen!");
         }
 
-    #endregion
+        #endregion
     }
 
 }
