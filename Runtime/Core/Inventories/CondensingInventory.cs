@@ -63,7 +63,7 @@ public sealed class CondensingInventory : Inventory
                 {
                     //If we wouldn't be able to take enough from the current stack, take what we can and continue
                     //FIXME breaks for keep-if-zero
-                    @out.Add(matches[0]);
+                    @out.Add(matches[0].Clone());
                     totalToRemove -= matches[0].quantity;
                     matches[0].quantity = 0; //Just to be safe...
                     contents.Remove(matches[0]);
