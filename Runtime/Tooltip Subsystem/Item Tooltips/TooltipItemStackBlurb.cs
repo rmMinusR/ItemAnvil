@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using TMPro;
-using Tooltips;
+using rmMinusR.Tooltips;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,16 +25,3 @@ public sealed class TooltipItemStackBlurb : ContentPart
         text.text = dataSource.itemType.displayTooltip;
     }
 }
-
-//Show warning message if tooltip package is not present.
-#if UNITY_EDITOR && !USING_TOOLTIPS
-[CustomEditor(typeof(TooltipItemStackBlurb))]
-class ViewItemStackTooltipEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        EditorGUILayout.HelpBox("Optional Tooltip package is missing. This component will have no effect.", MessageType.Error);
-        DrawDefaultInspector();
-    }
-}
-#endif

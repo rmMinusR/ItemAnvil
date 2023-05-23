@@ -14,9 +14,4 @@ public class Temperature : ItemInstanceProperty
     {
         temperature = Mathf.MoveTowards(temperature, ROOM_TEMP, heatLoss);
     }
-
-    protected override TooltipEntry GetTooltipEntry()
-    {
-        throw new System.NotImplementedException();
-    }
 }

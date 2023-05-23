@@ -1,14 +1,10 @@
+using rmMinusR.Tooltips;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class TemperatureTooltip
-#if UNITY_EDITOR
-    : Tooltips.ContentPart
-#else
-    : MonoBehaviour
-#endif
+public class TemperatureTooltip : ContentPart
 {
     [SerializeField] private TMP_Text text;
     [SerializeField] private string format = "{0} °F";
@@ -16,8 +12,7 @@ public class TemperatureTooltip
     Temperature temperature;
 
 
-#if UNITY_EDITOR
-    protected override void UpdateTarget(Tooltips.Tooltippable newTarget)
+    protected override void UpdateTarget(Tooltippable newTarget)
     {
         if (newTarget.TryGetComponent(out ViewItemStack view))
         {
@@ -26,7 +21,6 @@ public class TemperatureTooltip
         else temperature = null;
 
     }
-#endif
 
     private void Update()
     {

@@ -8,9 +8,4 @@ public class Marketable : ItemProperty
     [Min(0)] public int buyPrice;
     public bool isSellable;
     [Min(0)] public int sellPrice;
-
-    protected internal override TooltipEntry GetTooltipEntry()
-    {
-        throw new NotImplementedException();
-    }
 }

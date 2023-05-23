@@ -1644,7 +1644,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemSystem}
+      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
@@ -2739,12 +2739,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1473995278}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemSystem
+        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
         m_MethodName: TryCraftAsHolder
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530249}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemSystem
+          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

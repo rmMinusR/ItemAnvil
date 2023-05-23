@@ -574,12 +574,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 123635811}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemSystem
+        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
         m_MethodName: TryCraftAsHolder
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530251}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemSystem
+          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1478,7 +1478,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemSystem}
+      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: b9891fdb3acaf7b48aedcfb1dddb1683, type: 2}
@@ -2411,7 +2411,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemSystem}
+      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: 60f1b8476456c9b4198ba70382457760, type: 2}
@@ -3007,12 +3007,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1192639866}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemSystem
+        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
         m_MethodName: TryCraftAsHolder
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530251}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemSystem
+          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4448,12 +4448,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1633577177}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemSystem
+        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
         m_MethodName: TryCraftAsHolder
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530251}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemSystem
+          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

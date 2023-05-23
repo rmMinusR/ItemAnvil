@@ -154,7 +154,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3760923770173253090}
-        m_TargetAssemblyTypeName: ShopTransactionController, ItemSystem
+        m_TargetAssemblyTypeName: ShopTransactionController, ItemAnvil
         m_MethodName: TrySell
         m_Mode: 3
         m_Arguments:
@@ -169,7 +169,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3760923770173253090}
-        m_TargetAssemblyTypeName: ShopTransactionController, ItemSystem
+        m_TargetAssemblyTypeName: ShopTransactionController, ItemAnvil
         m_MethodName: TrySell
         m_Mode: 3
         m_Arguments:
