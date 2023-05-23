@@ -20,5 +20,5 @@ public sealed class Item : ScriptableObject
     [TextArea] public string displayTooltip;
     public bool showInMainInventory = true;
 
-    [field: SerializeField] public PropertyBag<ItemProperty> Properties { get; private set; }
+    [field: SerializeField] public PropertyBag<ItemProperty> Properties { get; private set; } = new PropertyBag<ItemProperty>();
 }

@@ -8,8 +8,17 @@ public sealed class FixedSlotInventory : Inventory
 {
     [SerializeField] private List<ItemStack> contents = new List<ItemStack>();
 
+    public FixedSlotInventory() { }
+    public FixedSlotInventory(int size)
+    {
+        for (int i = 0; i < size; ++i) contents.Add(null);
+    }
+
     public override void AddItem(ItemStack newStack)
     {
+        //Prevent covariants
+        newStack = newStack.Clone();
+
         //Try to merge with existing stacks
         foreach (ItemStack existing in contents)
         {
@@ -25,14 +34,11 @@ public sealed class FixedSlotInventory : Inventory
             contents[contents.FindIndex(i => i == null || i.itemType == null || i.quantity == 0)] = s;
             ItemStack.TryMerge(newStack, s);
         }
-
-        //Prevent covariants
-        newStack.quantity = 0;
     }
 
     public override List<ItemStack> CloneContents()
     {
-        return contents.Select(i => i.Clone()).ToList();
+        return contents.Select(i => i?.Clone()).ToList();
     }
 
     public override int Count(Item itemType)

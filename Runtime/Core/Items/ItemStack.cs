@@ -28,7 +28,8 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
     public override string ToString()
     {
-        return $"({_itemType} x{_quantity}, {_instanceProperties.Count} instance properties)";
+        string name = _itemType!=null ? _itemType.displayName : "[null]";
+        return $"({name} x{_quantity}, {_instanceProperties.Count} instance properties)";
     }
 
     public static bool CanMerge(ItemStack src, ItemStack dst)

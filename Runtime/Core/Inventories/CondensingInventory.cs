@@ -10,6 +10,9 @@ public sealed class CondensingInventory : Inventory
 
     public override void AddItem(ItemStack newStack)
     {
+        //Prevent covariants
+        newStack = newStack.Clone();
+
         //Try to merge with an existing stack
         foreach (ItemStack existing in contents)
         {
@@ -25,9 +28,6 @@ public sealed class CondensingInventory : Inventory
             contents.Add(s);
             ItemStack.TryMerge(newStack, s);
         }
-
-        //Prevent covariants
-        newStack.quantity = 0;
     }
 
     public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
