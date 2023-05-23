@@ -146,40 +146,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638ae27f78bd08044bca8e7ba27d9cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInv: {fileID: 0}
-  shopInv: {fileID: 0}
+  inventoryA: {fileID: 0}
+  inventoryB: {fileID: 0}
   itemType: {fileID: 0}
   currencyItem: {fileID: 11400000, guid: 60f1b8476456c9b4198ba70382457760, type: 2}
-  onLMB:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3760923770173253090}
-        m_TargetAssemblyTypeName: ShopTransactionController, ItemSystem
-        m_MethodName: TrySell
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onRMB:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3760923770173253090}
-        m_TargetAssemblyTypeName: ShopTransactionController, ItemSystem
-        m_MethodName: TrySell
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  <AltInteractAmount>k__BackingField: 5
+  <mode>k__BackingField: 1
 --- !u!1001 &3932411455617917081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -269,7 +241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555278384924, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_Name
-      value: Item display - shop sell
+      value: Sell to shop
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555278384925, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_Pivot.x

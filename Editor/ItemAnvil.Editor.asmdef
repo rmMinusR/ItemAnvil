@@ -1,5 +1,5 @@
 {
-    "name": "ItemSystem.Editor",
+    "name": "ItemAnvil.Editor",
     "rootNamespace": "",
     "references": [
         "GUID:0cdec7c9895c5fc43a499f5bc7733158"
