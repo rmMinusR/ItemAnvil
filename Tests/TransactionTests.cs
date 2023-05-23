@@ -33,8 +33,14 @@ public class TransactionTests
 
         // Assert
         Assert.IsTrue(exchangeResult);
-        Assert.AreEqual(1, inventoryA.Count(itemA));
-        Assert.AreEqual(3, inventoryB.Count(itemB));
+
+        // Assert nothing was destroyed or duplicated
+        Assert.AreEqual(3, inventoryA.Count(itemA)+inventoryB.Count(itemA));
+        Assert.AreEqual(2, inventoryA.Count(itemB)+inventoryB.Count(itemB));
+
+        // Assert items reached their destinations
+        Assert.AreEqual(1, inventoryA.Count(itemB));
+        Assert.AreEqual(2, inventoryB.Count(itemA));
     }
 
     [Test]

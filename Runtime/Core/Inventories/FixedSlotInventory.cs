@@ -16,6 +16,8 @@ public sealed class FixedSlotInventory : Inventory
 
     public override void AddItem(ItemStack newStack)
     {
+        if (newStack == null || newStack.itemType == null) throw new ArgumentException("Cannot add nothing!");
+
         //Prevent covariants
         newStack = newStack.Clone();
 
@@ -48,7 +50,7 @@ public sealed class FixedSlotInventory : Inventory
 
     public override IEnumerable<ReadOnlyItemStack> GetContents()
     {
-        return contents;
+        return contents.Where(i => i != null && i.itemType != null);
     }
 
     public override int RemoveAll(Item typeToRemove)
@@ -98,20 +100,6 @@ public sealed class FixedSlotInventory : Inventory
         throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
     }
     
-    public override void Remove(ItemStack stackToRemove)
-    {
-        for (int i = 0; i < contents.Count; ++i)
-        {
-            if (contents[i] == stackToRemove)
-            {
-                contents[i] = null;
-                return;
-            }
-        }
-        
-        throw new InvalidOperationException(this+" does not contain "+stackToRemove);
-    }
-
     public override ItemStack Find(Item type)
     {
         return contents.FirstOrDefault(i => i != null && i.itemType == type);

@@ -10,6 +10,8 @@ public sealed class CondensingInventory : Inventory
 
     public override void AddItem(ItemStack newStack)
     {
+        if (newStack == null || newStack.itemType == null) throw new ArgumentException("Cannot add nothing!");
+
         //Prevent covariants
         newStack = newStack.Clone();
 
@@ -74,7 +76,10 @@ public sealed class CondensingInventory : Inventory
 
     public override int RemoveAll(Item typeToRemove)
     {
-        return contents.RemoveAll(stack => stack.itemType == typeToRemove);
+        bool matches(ItemStack stack) => stack.itemType == typeToRemove;
+        int nRemoved = contents.Where(matches).Sum(i => i.quantity);
+        contents.RemoveAll(matches);
+        return nRemoved;
     }
 
     public override int Count(Item itemType)
@@ -89,11 +94,6 @@ public sealed class CondensingInventory : Inventory
         List<ItemStack> list = new List<ItemStack>();
         foreach (ItemStack s in contents) list.Add(s.Clone());
         return list;
-    }
-
-    public override void Remove(ItemStack stackToRemove)
-    {
-        if (!contents.Remove(stackToRemove)) throw new InvalidOperationException(this+" does not contain "+stackToRemove?.ToString());
     }
 
     public override ItemStack Find(Item type)

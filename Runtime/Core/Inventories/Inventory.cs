@@ -8,7 +8,6 @@ public abstract class Inventory
     public abstract void AddItem(ItemStack newStack);
 
     public abstract IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove);
-    public abstract void Remove(ItemStack stackToRemove);
     public abstract int RemoveAll(Item typeToRemove);
     
     public abstract int Count(Item itemType);

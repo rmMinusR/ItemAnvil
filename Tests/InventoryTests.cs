@@ -51,22 +51,6 @@ public class InventoryTests
     }
 
     [Test]
-    public void FixedSlotInventory_Remove_RemovesItemStackFromInventory()
-    {
-        // Arrange
-        FixedSlotInventory inventory = new FixedSlotInventory(30);
-        Item item = new Item();
-        ItemStack stack = new ItemStack(item, 5);
-        inventory.AddItem(stack);
-
-        // Act
-        inventory.Remove(stack);
-
-        // Assert
-        Assert.AreEqual(0, inventory.Count(item));
-    }
-
-    [Test]
     public void FixedSlotInventory_RemoveAll_RemovesAllItemsOfTypeFromInventory()
     {
         // Arrange
@@ -198,22 +182,6 @@ public class InventoryTests
         // Assert
         Assert.AreEqual(2, inventory.Count(item));
         Assert.AreEqual(3, removedStacks.Sum(stack => stack.quantity));
-    }
-
-    [Test]
-    public void CondensingInventory_Remove_RemovesItemStackFromInventory()
-    {
-        // Arrange
-        CondensingInventory inventory = new CondensingInventory();
-        Item item = new Item();
-        ItemStack stack = new ItemStack(item, 5);
-        inventory.AddItem(stack);
-
-        // Act
-        inventory.Remove(stack);
-
-        // Assert
-        Assert.AreEqual(0, inventory.Count(item));
     }
 
     [Test]
