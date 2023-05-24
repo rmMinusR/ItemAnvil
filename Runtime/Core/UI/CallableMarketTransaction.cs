@@ -89,7 +89,7 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
         else if (!m.isSellable)
         {
 #if UNITY_EDITOR
-            Debug.Log(itemType + " cannot be sold", this);
+            Debug.LogError(itemType + " cannot be sold", this);
 #endif
             return;
         }
@@ -102,11 +102,9 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
 
     public void TryPerformTransaction(Transaction transaction)
     {
-        Debug.Log("A= "+inventoryA+" B= "+inventoryB);
-        transaction.Log();
         if(!transaction.TryExchange(inventoryA.inventory, inventoryB.inventory))
         {
-            Debug.LogError("Failed - conditions not met");
+            Debug.LogError("Transaction not performed - conditions not met");
         }
     }
 

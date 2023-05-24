@@ -20,7 +20,7 @@ public sealed class CallableCraftingRecipe : MonoBehaviour, IPointerClickHandler
     {
         if(!recipe.TryExchange(crafter, count))
         {
-            Debug.LogError("Failed - inputs not met");
+            Debug.LogError("Crafting not performed - inputs not met");
         }
     }
 

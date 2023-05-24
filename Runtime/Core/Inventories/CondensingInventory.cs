@@ -34,8 +34,6 @@ public sealed class CondensingInventory : Inventory
 
     public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
     {
-        Debug.Log(this + " removing " + typeToRemove + " x" + totalToRemove);
-
         List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
 
         //NOTE: Not threadsafe
