@@ -39,7 +39,10 @@ jobs:
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           #customParameters: -debugCodeOptimization -enableCodeCoverage -coverageResultsPath ./CodeCoverage -coverageOptions 
-          
+      
+      - name: Debug
+        run: ls
+      
       - name: Upload test results
         uses: actions/upload-artifact@v2
         if: always()
