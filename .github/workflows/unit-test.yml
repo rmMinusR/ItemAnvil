@@ -38,8 +38,12 @@ jobs:
         with:
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          customParameters: -debugCodeOptimization -enableCodeCoverage -coverageResultsPath ./CodeCoverage -coverageOptions generateAdditionalMetrics
-          
+          coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;dontClear;assemblyFilters:+ItemAnvil
+      
+      - name: Debug
+        run: |
+          find CodeCoverage/*
+      
       - name: Upload test results
         uses: actions/upload-artifact@v2
         if: always()

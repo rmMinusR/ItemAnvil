@@ -78,14 +78,7 @@ public sealed class FixedSlotInventory : Inventory
         {
             if (contents[i] != null && contents[i].itemType == typeToRemove)
             {
-                if (totalToRemove >= contents[i].quantity)
-                {
-                    //This stack is not enough to complete requirements. Continue consuming.
-                    totalToRemove -= contents[i].quantity;
-                    @out.Add(contents[i]);
-                    contents[i] = null;
-                }
-                else
+                if (contents[i].quantity >= totalToRemove)
                 {
                     //This stack is enough to complete requirements. Stop consuming.
                     ItemStack tmp = contents[i].Clone();
@@ -93,6 +86,13 @@ public sealed class FixedSlotInventory : Inventory
                     @out.Add(tmp);
                     contents[i].quantity -= totalToRemove;
                     return @out;
+                }
+                else
+                {
+                    //This stack is not enough to complete requirements. Continue consuming.
+                    totalToRemove -= contents[i].quantity;
+                    @out.Add(contents[i]);
+                    contents[i] = null;
                 }
             }
         }
