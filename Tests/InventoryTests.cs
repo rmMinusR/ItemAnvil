@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 [TestFixture]
 public class FixedSlotInventoryTests : InventoryTests<FixedSlotInventory>
@@ -24,7 +25,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item = new Item();
+        Item item = ScriptableObject.CreateInstance<Item>();
 
         // Act
         inventory.AddItem(item, nToAdd);
@@ -38,7 +39,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item = new Item();
+        Item item = ScriptableObject.CreateInstance<Item>();
         ItemStack stack = new ItemStack(item, nToAdd);
 
         // Act
@@ -53,7 +54,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item = new Item();
+        Item item = ScriptableObject.CreateInstance<Item>();
         inventory.AddItem(item, startingCount);
 
         // Act
@@ -79,7 +80,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item = new Item();
+        Item item = ScriptableObject.CreateInstance<Item>();
         inventory.AddItem(item, count);
 
         // Act
@@ -95,8 +96,8 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item1 = new Item();
-        Item item2 = new Item();
+        Item item1 = ScriptableObject.CreateInstance<Item>();
+        Item item2 = ScriptableObject.CreateInstance<Item>();
         inventory.AddItem(item1, realCount1);
         inventory.AddItem(item2, realCount2);
 
@@ -114,8 +115,8 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item1 = new Item();
-        Item item2 = new Item();
+        Item item1 = ScriptableObject.CreateInstance<Item>();
+        Item item2 = ScriptableObject.CreateInstance<Item>();
         inventory.AddItem(item1, count1);
         inventory.AddItem(item2, count2);
 
@@ -136,8 +137,8 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item correct = new Item();
-        Item confuser = new Item();
+        Item correct = ScriptableObject.CreateInstance<Item>();
+        Item confuser = ScriptableObject.CreateInstance<Item>();
         correctItemStackIndex %= confuserCount+1;
         for (int i = 0; i < confuserCount+1; ++i)
         {
@@ -159,7 +160,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
         // Arrange
         TInventory inventory = CreateInventory();
-        Item item = new Item();
+        Item item = ScriptableObject.CreateInstance<Item>();
         inventory.AddItem(item, 5);
 
         // Act
