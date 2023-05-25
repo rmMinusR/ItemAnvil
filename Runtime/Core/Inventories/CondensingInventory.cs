@@ -50,7 +50,7 @@ public sealed class CondensingInventory : Inventory
             //Removal routine
             while (totalToRemove > 0)
             {
-                if(totalToRemove < matches[0].quantity)
+                if(matches[0].quantity >= totalToRemove)
                 {
                     //If we would be able to take enough from the current stack, finish routine
                     ItemStack tmp = matches[0].Clone();
@@ -58,6 +58,7 @@ public sealed class CondensingInventory : Inventory
                     @out.Add(tmp);
                     matches[0].quantity -= totalToRemove;
                     totalToRemove = 0;
+                    return @out;
                 }
                 else
                 {
@@ -70,7 +71,8 @@ public sealed class CondensingInventory : Inventory
                     matches.RemoveAt(0);
                 }
             }
-            return @out;
+
+            throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
         }
     }
 
