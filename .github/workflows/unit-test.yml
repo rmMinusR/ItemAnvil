@@ -41,9 +41,7 @@ jobs:
       
       - name: Debug
         run: |
-          ls .
-          ls CodeCoverage
-          ls CodeCoverage/*
+          find CodeCoverage/*
       
       - name: Upload test results
         uses: actions/upload-artifact@v2
