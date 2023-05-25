@@ -40,7 +40,10 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Debug
-        run: ls *
+        run: |
+          ls .
+          ls CodeCoverage
+          ls CodeCoverage/*
       
       - name: Upload test results
         uses: actions/upload-artifact@v2
