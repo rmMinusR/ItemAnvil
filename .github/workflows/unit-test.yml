@@ -38,7 +38,7 @@ jobs:
         with:
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;dontClear;assemblyFilters:+ItemAnvil*,-ItemAnvil.*Test*
+          coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;dontClear;assemblyFilters:+ItemAnvil
       
       - name: Debug
         run: |
