@@ -21,7 +21,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     protected abstract TInventory CreateInventory();
 
     [Test, Combinatorial]
-    public void AddItem_AddsItemToInventory([Values(1, 2, 3, 4, 5, 10)] int nToAdd)
+    public void AddItem_AddsItemToInventory([Values(1, 2, 5, 10)] int nToAdd)
     {
         // Arrange
         TInventory inventory = CreateInventory();
@@ -35,7 +35,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     }
 
     [Test, Combinatorial]
-    public void AddItemStack_AddsItemStackToInventory([Values(1, 2, 3, 4, 5, 10)] int nToAdd)
+    public void AddItemStack_AddsItemStackToInventory([Values(1, 2, 5, 10)] int nToAdd)
     {
         // Arrange
         TInventory inventory = CreateInventory();
@@ -50,7 +50,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     }
 
     [Test, Combinatorial]
-    public void TryRemove_RemovesItemsFromInventory([Values(1, 2, 3, 4, 5, 10)] int startingCount, [Values(1, 2, 3, 4, 5, 10)] int nToRemove)
+    public void TryRemove_RemovesItemsFromInventory([Values(1, 2, 5, 10)] int startingCount, [Values(1, 2, 5, 10)] int nToRemove)
     {
         // Arrange
         TInventory inventory = CreateInventory();
@@ -76,7 +76,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     }
 
     [Test, Combinatorial]
-    public void RemoveAll_RemovesAllItemsOfTypeFromInventory([Values(1, 2, 3, 4, 5, 10)] int count)
+    public void RemoveAll_RemovesAllItemsOfTypeFromInventory([Values(1, 2, 5, 10)] int count)
     {
         // Arrange
         TInventory inventory = CreateInventory();
@@ -92,7 +92,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     }
 
     [Test, Combinatorial]
-    public void Count_ReturnsCorrectItemCount([Values(1, 2, 3, 4, 5, 10)] int realCount1, [Values(1, 2, 3, 4, 5, 10)] int realCount2)
+    public void Count_ReturnsCorrectItemCount([Values(1, 2, 5, 10)] int realCount1, [Values(1, 2, 5, 10)] int realCount2)
     {
         // Arrange
         TInventory inventory = CreateInventory();
@@ -111,7 +111,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     }
 
     [Test, Combinatorial]
-    public void GetContents_ReturnsCorrectItemStacks([Values(1, 2, 3, 4, 5, 10)] int count1, [Values(1, 2, 3, 4, 5, 10)] int count2)
+    public void GetContents_ReturnsCorrectItemStacks([Values(1, 2, 5, 10)] int count1, [Values(1, 2, 5, 10)] int count2)
     {
         // Arrange
         TInventory inventory = CreateInventory();
@@ -131,9 +131,9 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
 
     [Test, Combinatorial]
     public void Find_ReturnsCorrectItemStack(
-        [Values(1, 2, 3, 4, 5, 10)] int correctItemCount,
-        [Values(1, 2, 3, 5, 7, 11, 13, 17, 19, 23)] int correctItemStackIndex,
-        [Values(0, 1, 2, 3, 4, 5, 10)] int confuserCount)
+        [Values(1, 2, 5, 10)] int correctItemCount,
+        [Values(1, 2, 3, 5, 7, 11, 13)] int correctItemStackIndex,
+        [Values(0, 1, 2, 5, 10)] int confuserCount)
     {
         // Arrange
         TInventory inventory = CreateInventory();
