@@ -12,9 +12,6 @@ public sealed class ViewItemStack : MonoBehaviour
     public InventoryHolder inventoryHolder;
     public ReadOnlyItemStack mostRecentStack { get; private set; } //TODO bad, class should be reworked
 
-#if USING_INSPECTORSUGAR
-    [InspectorReadOnly] [SerializeField]
-#endif
     public bool suppressActiveUpdate = false;
 
     [Space]

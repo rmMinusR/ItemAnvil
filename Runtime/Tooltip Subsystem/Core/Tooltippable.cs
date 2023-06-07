@@ -8,9 +8,6 @@ namespace rmMinusR.Tooltips
 
     public abstract class Tooltippable : MonoBehaviour
     {
-#if USING_INSPECTORSUGAR
-        [field: InspectorReadOnly]
-#endif
         [field: SerializeField]
         protected TooltipDisplay tooltipRenderer { get; set; }
 

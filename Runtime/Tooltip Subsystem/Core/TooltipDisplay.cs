@@ -20,17 +20,11 @@ namespace rmMinusR.Tooltips
         internal void RegisterSection(TooltipSectionManager s) => sections.Add(s);
         internal void UnregisterSection(TooltipSectionManager s) => sections.Remove(s);
 
-#if USING_INSPECTORSUGAR
-        [InspectorReadOnly]
-#endif
         [SerializeField] private Tooltippable target;
 
         /*
         // Buggy. Disabled for now.
 
-#if USING_INSPECTORSUGAR
-        [InspectorReadOnly]
-#endif
         [SerializeField] private PositionMode positionMode;
         [SerializeField] private PositionMode defaultPositionMode = PositionMode.FollowTarget;
 

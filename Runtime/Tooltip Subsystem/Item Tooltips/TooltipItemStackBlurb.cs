@@ -9,9 +9,6 @@ public sealed class TooltipItemStackBlurb : TooltipPart
     [SerializeField] private GameObject root;
     [SerializeField] private TMP_Text text;
 
-#if USING_INSPECTORSUGAR
-    [InspectorReadOnly] [SerializeField]
-#endif
     private ViewItemStack dataSource;
 
     protected override void UpdateTarget(Tooltippable newTarget)

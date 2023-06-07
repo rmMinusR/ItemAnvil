@@ -9,24 +9,35 @@ using UnityEngine;
 /// <summary>
 /// Hacky utility class to make data structures layout inline rather than as foldouts. Note that PropertyDrawer.fieldInfo is invalid here.
 /// </summary>
+[CustomPropertyDrawer(typeof(Inventory))]
 [CustomPropertyDrawer(typeof(ItemProperty))]
-[CustomPropertyDrawer(typeof(ItemInstanceProperty))] //TODO make its own thing?
+[CustomPropertyDrawer(typeof(ItemInstanceProperty))]
 public class NoFoldoutDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         float y = 0;
         Type type = ExtractType(property);
-        foreach (FieldInfo f in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-        {
-            if (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null || f.GetCustomAttribute<SerializeReference>() != null)
-            {
-                SerializedProperty i = property.FindPropertyRelative(f.Name);
 
-                Rect drawRect = Rect.MinMaxRect(position.xMin, position.yMin + y, position.xMax, position.yMin+y+EditorGUI.GetPropertyHeight(i));
-                EditorGUI.PropertyField(drawRect, i);
-                y += EditorGUI.GetPropertyHeight(i);
+        if (type != null)
+        {
+
+            foreach (FieldInfo f in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                if (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null || f.GetCustomAttribute<SerializeReference>() != null)
+                {
+                    SerializedProperty i = property.FindPropertyRelative(f.Name);
+
+                    Rect drawRect = Rect.MinMaxRect(position.xMin, position.yMin + y, position.xMax, position.yMin+y+EditorGUI.GetPropertyHeight(i));
+                    EditorGUI.PropertyField(drawRect, i);
+                    y += EditorGUI.GetPropertyHeight(i);
+                }
             }
+
+        }
+        else
+        {
+            EditorGUI.LabelField(position, label, new GUIContent("<null>"));
         }
     }
 
@@ -34,14 +45,25 @@ public class NoFoldoutDrawer : PropertyDrawer
     {
         float height = 0;
         Type type = ExtractType(property);
-        foreach (FieldInfo f in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+
+        if (type != null)
         {
-            if (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null || f.GetCustomAttribute<SerializeReference>() != null)
+
+            foreach (FieldInfo f in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                SerializedProperty i = property.FindPropertyRelative(f.Name);
-                height += EditorGUI.GetPropertyHeight(i);
+                if (f.IsPublic || f.GetCustomAttribute<SerializeField>() != null || f.GetCustomAttribute<SerializeReference>() != null)
+                {
+                    SerializedProperty i = property.FindPropertyRelative(f.Name);
+                    height += EditorGUI.GetPropertyHeight(i);
+                }
             }
+
         }
+        else
+        {
+            height = EditorGUIUtility.singleLineHeight; // "<null>"
+        }
+
         
         return height;
     }

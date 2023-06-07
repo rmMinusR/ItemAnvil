@@ -22,9 +22,6 @@ namespace rmMinusR.Tooltips
             foreach (TooltipPart c in contentParts) c.UpdateTarget(newTarget);
         }
 
-#if USING_INSPECTORSUGAR
-        [InspectorReadOnly(editing = AccessMode.ReadOnly, playing = AccessMode.ReadWrite)]
-#endif
         [SerializeField] private List<TooltipPart> contentParts = new List<TooltipPart>();
         internal void RegisterContentPart(TooltipPart c)
         {

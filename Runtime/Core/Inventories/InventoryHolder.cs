@@ -9,9 +9,7 @@ public class InventoryHolder : MonoBehaviour
     private float timeSinceLastTick = 0;
 
     [Space]
-#if USING_SUBCLASS_SELECTOR
-    [SubclassSelector]
-#endif
+    [TypeSwitcher(keepData = true, order = 2)]
     [SerializeReference] public Inventory inventory;
 
     private void Update()
