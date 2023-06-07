@@ -6,43 +6,60 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(TypeSwitcherAttribute))]
-public class TypeSwitcherDrawer : DecoratorDrawer
+public class TypeSwitcherDrawer : PropertyDrawer
 {
     const float DROPDOWN_WIDTH = 100;
 
     //TODO parallel arrays bad
     List<Type> types;
-    string[] displayStrings = null;
+    GUIContent[] displayStrings = null;
 
-    TypeSwitcherAttribute attr => (TypeSwitcherAttribute)attribute;
-
-    public override void OnGUI(Rect rootPosition)
+    public override void OnGUI(Rect rootPosition, SerializedProperty property, GUIContent label)
     {
-        Rect targetLineRect = Rect.MinMaxRect(rootPosition.xMin, rootPosition.yMax, rootPosition.xMax, rootPosition.yMax+EditorGUIUtility.singleLineHeight+EditorGUIUtility.standardVerticalSpacing);
-
-        Rect dropdownRect = Rect.MinMaxRect(targetLineRect.xMax-DROPDOWN_WIDTH, targetLineRect.yMin, targetLineRect.xMax, targetLineRect.yMax);
+        //Rect targetLineRect = Rect.MinMaxRect(rootPosition.xMin, rootPosition.yMax, rootPosition.xMax, rootPosition.yMax+EditorGUIUtility.singleLineHeight+EditorGUIUtility.standardVerticalSpacing);
+        //Rect dropdownRect = Rect.MinMaxRect(targetLineRect.xMax-DROPDOWN_WIDTH, targetLineRect.yMin, targetLineRect.xMax, targetLineRect.yMax);
+        Rect dropdownRect = Rect.MinMaxRect(rootPosition.xMin, rootPosition.yMin, rootPosition.xMax, rootPosition.yMin+EditorGUIUtility.singleLineHeight);
+        Rect contentRect = rootPosition;//Rect.MinMaxRect(rootPosition.xMin, dropdownRect.yMax, rootPosition.xMax, rootPosition.yMax);
 
         //Flyweight populating list
         if (displayStrings == null)
         {
             types = new List<Type>();
-            types.Add(null); //Dummy, placeholder for "Switch to..."
-            //types.AddRange(GetSubclasses(attr.type));
-            displayStrings = types.Select(t => t?.Name ?? "Switch to...").ToArray();
+            types.AddRange(GetSubclasses(fieldInfo.FieldType));
+            List<string> strings = types.Select(t => t.Name).ToList();
+            strings.Insert(0, "(null)");
+            displayStrings = strings.Select(i => new GUIContent(i)).ToArray();
         }
 
-        int toSwitch = EditorGUI.Popup(dropdownRect, 0, displayStrings);
-        if (toSwitch != 0)
+        //Awful magic numbers, but -1 is null, making type list 0-indexed
+        int currentTypeIndex = types.FindIndex(t => t.Assembly.GetName().Name+" "+t.Name == property.managedReferenceFullTypename);
+        int targetTypeIndex = EditorGUI.Popup(dropdownRect, label, currentTypeIndex+1, displayStrings) - 1;
+        if (targetTypeIndex != currentTypeIndex)
         {
-            Debug.Log("Switching to "+types[toSwitch]);
+            if (targetTypeIndex != -1)
+            {
+                Type targetType = types[targetTypeIndex];
+                //Debug.Log("Switching to "+targetType);
+                property.managedReferenceValue = Instantiate(targetType);
+            }
+            else
+            {
+                //Debug.Log("Switching to null");
+                property.managedReferenceValue = null;
+            }
         }
+
+        EditorGUI.PropertyField(contentRect, property, true);
     }
 
-    public override float GetHeight()
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return 0; //EditorGUIUtility.singleLineHeight;
+        if (property.managedReferenceFullTypename.Length > 0) //property value != null
+        {
+            return EditorGUIUtility.singleLineHeight + EditorGUI.GetPropertyHeight(property);
+        }
+        else return EditorGUIUtility.singleLineHeight;
     }
-
 
     private static object Instantiate(Type type)
     {

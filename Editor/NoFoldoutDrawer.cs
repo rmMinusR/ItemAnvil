@@ -9,7 +9,7 @@ using UnityEngine;
 /// <summary>
 /// Hacky utility class to make data structures layout inline rather than as foldouts. Note that PropertyDrawer.fieldInfo is invalid here.
 /// </summary>
-[CustomPropertyDrawer(typeof(Inventory))]
+//[CustomPropertyDrawer(typeof(Inventory))]
 [CustomPropertyDrawer(typeof(ItemProperty))]
 [CustomPropertyDrawer(typeof(ItemInstanceProperty))]
 public class NoFoldoutDrawer : PropertyDrawer
