@@ -32,14 +32,13 @@ public sealed class CondensingInventory : Inventory
         }
     }
 
-    public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove)
-    {
-        throw new NotImplementedException();
-    }
+    #region TryRemove family
 
-    public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
+    public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove) => TryRemove_Impl(filter.Matches, totalToRemove);
+    public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove) => TryRemove_Impl(stack => stack.itemType == typeToRemove, totalToRemove);
+    private IEnumerable<ItemStack> TryRemove_Impl(Func<ItemStack, bool> filter, int totalToRemove)
     {
-        List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
+        List<ItemStack> matches = contents.Where(filter).ToList();
 
         //NOTE: Not threadsafe
 
@@ -79,22 +78,24 @@ public sealed class CondensingInventory : Inventory
         }
     }
 
-    public override int RemoveAll(ItemFilter filter)
-    {
-        throw new NotImplementedException();
-    }
+    #endregion
 
-    public override int RemoveAll(Item typeToRemove)
+    #region RemoveAll family
+
+    public override int RemoveAll(ItemFilter filter) => RemoveAll_Impl(filter.Matches);
+    public override int RemoveAll(Item typeToRemove) => RemoveAll_Impl(s => s.itemType == typeToRemove);
+    private int RemoveAll_Impl(Func<ItemStack, bool> filter)
     {
-        bool matches(ItemStack stack) => stack.itemType == typeToRemove;
-        int nRemoved = contents.Where(matches).Sum(i => i.quantity);
-        contents.RemoveAll(matches);
+        int nRemoved = contents.Where(filter).Sum(i => i.quantity);
+        contents.RemoveAll(i => filter(i));
         return nRemoved;
     }
 
+    #endregion
+
     public override int Count(ItemFilter filter)
     {
-        throw new NotImplementedException();
+        return contents.Where(filter.Matches).Sum(stack => stack.quantity);
     }
 
     public override int Count(Item itemType)
@@ -113,7 +114,7 @@ public sealed class CondensingInventory : Inventory
 
     public override ItemStack Find(ItemFilter filter)
     {
-        throw new NotImplementedException();
+        return contents.FirstOrDefault(filter.Matches);
     }
 
     public override ItemStack Find(Item type)
