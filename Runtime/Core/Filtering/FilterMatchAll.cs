@@ -6,10 +6,8 @@ using UnityEngine;
 [Serializable]
 public sealed class FilterMatchAll : ItemFilter
 {
-#if USING_SUBCLASS_SELECTOR
-    [SubclassSelector]
-#endif
-    [SerializeReference] private List<ItemFilter> criteria;
+    [TypeSwitcher]
+    [SerializeReference] public List<ItemFilter> criteria;
 
     public override bool Matches(ItemStack itemStack)
     {

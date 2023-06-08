@@ -4,16 +4,14 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public sealed class FilterMatchByExample : ItemFilter
+public sealed class FilterMatchReference : ItemFilter
 {
-    [SerializeField] private bool matchType = true;
-    [SerializeField] private MatchMode matchQuantity = MatchMode.Ignore;
-    [SerializeField] private MatchMode matchInstanceProperties = MatchMode.Fuzzy;
+    public bool matchType = true;
+    public MatchMode matchQuantity = MatchMode.Ignore;
+    public MatchMode matchInstanceProperties = MatchMode.Fuzzy;
 
-    [Space]
-    [SerializeField] private ItemStack stack;
+    public ItemStack stack;
     
-    [Flags]
     public enum MatchMode
     {
         Ignore = 0,

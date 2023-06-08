@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public sealed class FilterMatchTypes : ItemFilter
 {
-    [SerializeField] private Item[] matches;
+    public Item[] matches;
 
     public override bool Matches(ItemStack itemStack)
     {
