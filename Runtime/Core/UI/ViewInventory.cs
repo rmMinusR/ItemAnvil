@@ -6,7 +6,7 @@ using UnityEngine;
 public sealed class ViewInventory : MonoBehaviour
 {
     public InventoryHolder inventoryHolder;
-    [SerializeField] private ViewItemStack itemStackUIPrefab;
+    [SerializeField] private ViewInventorySlot itemStackUIPrefab;
     [SerializeField] private Item[] doNotShow; //TODO proper filtering
 
     [SerializeField] private GameObject emptyHint;
@@ -14,7 +14,7 @@ public sealed class ViewInventory : MonoBehaviour
     [Space]
     [SerializeField] private Transform stackViewParent;
 
-    private List<ViewItemStack> stackViews = new List<ViewItemStack>();
+    private List<ViewInventorySlot> stackViews = new List<ViewInventorySlot>();
 
     private void Start()
     {
@@ -38,8 +38,7 @@ public sealed class ViewInventory : MonoBehaviour
         //TODO can be optimized
         while (stackViews.Count < stacks.Count)
         {
-            ViewItemStack view = Instantiate(itemStackUIPrefab.gameObject, stackViewParent).GetComponent<ViewItemStack>();
-            view.suppressActiveUpdate = true;
+            ViewInventorySlot view = Instantiate(itemStackUIPrefab, stackViewParent);
             stackViews.Add(view);
         }
         while (stackViews.Count > stacks.Count)

@@ -20,7 +20,7 @@ public sealed class TooltipMarketable : TooltipPart
     {
         //Try to grab necessary resources
         interaction = newTarget.GetComponent<CallableMarketTransaction>();
-        if (newTarget.TryGetComponent(out ViewItemStack view)) market = view.mostRecentStack.itemType.Properties.Get<Marketable>();
+        if (newTarget.TryGetComponent(out ViewInventorySlot view)) market = view.mostRecentStack.itemType.Properties.Get<Marketable>();
         else market = null;
 
         //Determine whether we should be active
@@ -50,6 +50,6 @@ public sealed class TooltipMarketable : TooltipPart
             _ => throw new System.NotImplementedException()
         };
 
-        text.text = string.Format(formatter, interaction?.MainControlName ?? "LMB", 1) + new string(' ', padding) + string.Format(formatter, interaction?.AltControlName ?? "RMB", interaction?.AltInteractAmount ?? 5);
+        text.text = string.Format(formatter, interaction?.MainControlName ?? "LMB", 1) + new string(' ', padding) + string.Format(formatter, interaction?.AltControlName ?? "RMB", interaction?.BatchQuantity ?? 5);
     }
 }
