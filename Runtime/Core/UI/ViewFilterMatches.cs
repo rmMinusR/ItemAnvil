@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public sealed class ViewFilterMatches : BaseViewItemStack
 {
     [Header("Data source")]
-    public Item itemType;
+    [SerializeReference] [TypeSwitcher] public ItemFilter filter = new FilterMatchByExample();
     public InventoryHolder inventoryHolder;
 
     private void Start()
@@ -19,12 +19,10 @@ public sealed class ViewFilterMatches : BaseViewItemStack
 
     private void LateUpdate()
     {
-        if(itemType != null)
+        if(filter != null)
         {
             if (inventoryHolder == null || inventoryHolder.inventory == null) WriteCount("NO INV");
-            else WriteCount(inventoryHolder.inventory.Count(itemType));
+            else WriteCount(inventoryHolder.inventory.Count(filter));
         }
-
-        WriteType(itemType);
     }
 }

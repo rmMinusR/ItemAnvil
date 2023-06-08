@@ -13,7 +13,6 @@ public sealed class FilterMatchByExample : ItemFilter
     [Space]
     [SerializeField] private ItemStack stack;
     
-    [Flags]
     public enum MatchMode
     {
         Ignore = 0,
