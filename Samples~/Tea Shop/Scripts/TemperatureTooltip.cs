@@ -13,7 +13,7 @@ public class TemperatureTooltip : TooltipPart
 
     protected override void UpdateTarget(Tooltippable newTarget)
     {
-        if (newTarget.TryGetComponent(out ViewItemStack view))
+        if (newTarget.TryGetComponent(out ViewInventorySlot view))
         {
             temperature = view.mostRecentStack.GetProperty<Temperature>();
         }
