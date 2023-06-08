@@ -59,6 +59,7 @@ public sealed class CondensingInventory : Inventory
                     tmp.quantity = totalToRemove;
                     @out.Add(tmp);
                     matches[0].quantity -= totalToRemove;
+                    if (matches[0].quantity == 0) contents.Remove(matches[0]);
                     totalToRemove = 0;
                     return @out;
                 }
