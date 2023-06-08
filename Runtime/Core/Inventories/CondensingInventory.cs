@@ -32,6 +32,11 @@ public sealed class CondensingInventory : Inventory
         }
     }
 
+    public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove)
+    {
+        throw new NotImplementedException();
+    }
+
     public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
     {
         List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
@@ -74,12 +79,22 @@ public sealed class CondensingInventory : Inventory
         }
     }
 
+    public override int RemoveAll(ItemFilter filter)
+    {
+        throw new NotImplementedException();
+    }
+
     public override int RemoveAll(Item typeToRemove)
     {
         bool matches(ItemStack stack) => stack.itemType == typeToRemove;
         int nRemoved = contents.Where(matches).Sum(i => i.quantity);
         contents.RemoveAll(matches);
         return nRemoved;
+    }
+
+    public override int Count(ItemFilter filter)
+    {
+        throw new NotImplementedException();
     }
 
     public override int Count(Item itemType)
@@ -94,6 +109,11 @@ public sealed class CondensingInventory : Inventory
         List<ItemStack> list = new List<ItemStack>();
         foreach (ItemStack s in contents) list.Add(s.Clone());
         return list;
+    }
+
+    public override ItemStack Find(ItemFilter filter)
+    {
+        throw new NotImplementedException();
     }
 
     public override ItemStack Find(Item type)

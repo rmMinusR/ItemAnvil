@@ -16,4 +16,7 @@ public sealed class FilterMatchType : ItemFilter
     {
         return (ItemFilter) MemberwiseClone();
     }
+
+    public FilterMatchType() { }
+    public FilterMatchType(Item type) { match = type; }
 }

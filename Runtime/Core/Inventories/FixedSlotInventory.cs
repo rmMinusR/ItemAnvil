@@ -43,6 +43,11 @@ public sealed class FixedSlotInventory : Inventory
         return contents.Select(i => i?.Clone()).ToList();
     }
 
+    public override int Count(ItemFilter filter)
+    {
+        throw new NotImplementedException();
+    }
+
     public override int Count(Item itemType)
     {
         return contents.Where(i => i != null && i.itemType == itemType).Sum(i => i.quantity);
@@ -51,6 +56,11 @@ public sealed class FixedSlotInventory : Inventory
     public override IEnumerable<ReadOnlyItemStack> GetContents()
     {
         return contents.Where(i => i != null && i.itemType != null);
+    }
+
+    public override int RemoveAll(ItemFilter filter)
+    {
+        throw new NotImplementedException();
     }
 
     public override int RemoveAll(Item typeToRemove)
@@ -65,6 +75,11 @@ public sealed class FixedSlotInventory : Inventory
             }
         }
         return nRemoved;
+    }
+
+    public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove)
+    {
+        throw new NotImplementedException();
     }
 
     public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
@@ -99,7 +114,12 @@ public sealed class FixedSlotInventory : Inventory
 
         throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
     }
-    
+
+    public override ItemStack Find(ItemFilter filter)
+    {
+        throw new NotImplementedException();
+    }
+
     public override ItemStack Find(Item type)
     {
         return contents.FirstOrDefault(i => i != null && i.itemType == type);
