@@ -1,0 +1,25 @@
+{
+    "name": "ItemAnvil.Tooltips",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1326adb9ebbec114688cb434f208c4f7",
+        "GUID:0cdec7c9895c5fc43a499f5bc7733158",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:663cc89300c65114f96af19af68e5688"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.rmminusr.inspectorsugar",
+            "expression": "0.1",
+            "define": "USING_INSPECTORSUGAR"
+        }
+    ],
+    "noEngineReferences": false
+}

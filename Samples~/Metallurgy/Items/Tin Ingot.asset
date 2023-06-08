@@ -16,13 +16,14 @@ MonoBehaviour:
   displayIcon: {fileID: 21300000, guid: b0aa674d31be5b44f8fc376f9d2051b2, type: 3}
   displayTooltip: 
   showInMainInventory: 1
-  properties:
-  - value:
-      id: 0
+  <Properties>k__BackingField:
+    contents:
+    - value:
+        id: 0
   references:
     version: 1
     00000000:
-      type: {class: Marketable, ns: , asm: ItemSystem}
+      type: {class: Marketable, ns: , asm: ItemAnvil}
       data:
         currency: {fileID: 11400000, guid: 60f1b8476456c9b4198ba70382457760, type: 2}
         isBuyable: 1

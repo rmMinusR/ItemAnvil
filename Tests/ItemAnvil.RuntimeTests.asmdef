@@ -1,0 +1,26 @@
+{
+    "name": "ItemAnvil.RuntimeTests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0cdec7c9895c5fc43a499f5bc7733158"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "USING_TEST_FRAMEWORK"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.test-framework",
+            "expression": "",
+            "define": "USING_TEST_FRAMEWORK"
+        }
+    ],
+    "noEngineReferences": false
+}
