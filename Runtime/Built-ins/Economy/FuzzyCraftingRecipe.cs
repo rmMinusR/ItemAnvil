@@ -61,6 +61,13 @@ public sealed class FuzzyCraftingRecipe : CraftingRecipe
             {
                 ItemStack stack = i.Clone();
                 stack.quantity *= multiplier; //FIXME is this safe?
+
+                if (copyInstancePropertiesToOutputs)
+                {
+                    //FIXME will likely error if instance property types overlap
+                    foreach (ItemStack input in inputs_instanced) foreach (ItemInstanceProperty prop in input.instanceProperties) stack.AddProperty(prop);
+                }
+
                 crafter.AddItem(stack);
             }
         }

@@ -9,29 +9,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 760a1624ac8cb804db0f7281098ad6f5, type: 3}
+  m_Script: {fileID: 11500000, guid: dbb53d6a159ec15469c7f38a96342d42, type: 3}
   m_Name: Brew Tea
   m_EditorClassIdentifier: 
   inputs:
-  - _itemType: {fileID: 11400000, guid: e800f0e5887f86147aceb257ac7865c9, type: 2}
-    _quantity: 1
-    _instanceProperties:
-      contents: []
-  - _itemType: {fileID: 11400000, guid: aa1a4ccfbed3f104786a4f234b72359f, type: 2}
-    _quantity: 1
-    _instanceProperties:
-      contents: []
+  - filter:
+      id: 0
+    quantity: 1
+  - filter:
+      id: 1
+    quantity: 1
   outputs:
   - _itemType: {fileID: 11400000, guid: be55e0532d7cbd84c8c1e7aa4e1654f9, type: 2}
     _quantity: 1
     _instanceProperties:
-      contents:
-      - value:
-          id: 0
+      contents: []
+  copyInstancePropertiesToOutputs: 1
   references:
     version: 1
     00000000:
+      type: {class: FilterMatchByExample, ns: , asm: ItemAnvil}
+      data:
+        matchType: 1
+        matchQuantity: 0
+        matchInstanceProperties: 1
+        stack:
+          _itemType: {fileID: 11400000, guid: e800f0e5887f86147aceb257ac7865c9, type: 2}
+          _quantity: 1
+          _instanceProperties:
+            contents:
+            - value:
+                id: 2
+    00000001:
+      type: {class: FilterMatchType, ns: , asm: ItemAnvil}
+      data:
+        match: {fileID: 11400000, guid: aa1a4ccfbed3f104786a4f234b72359f, type: 2}
+    00000002:
       type: {class: Temperature, ns: , asm: Assembly-CSharp}
       data:
-        temperature: 312
+        temperature: 70
         heatLoss: 1
