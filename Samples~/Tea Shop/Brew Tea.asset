@@ -28,7 +28,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: FilterMatchByExample, ns: , asm: ItemAnvil}
+      type: {class: FilterMatchReference, ns: , asm: ItemAnvil}
       data:
         matchType: 1
         matchQuantity: 0

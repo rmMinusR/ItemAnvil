@@ -5,9 +5,9 @@ using UnityEngine;
 [Serializable]
 public sealed class FilterMatchType : ItemFilter
 {
-    [SerializeField] private Item match;
+    public Item match;
 
-    public override bool Matches(ItemStack itemStack)
+    public override bool Matches(ReadOnlyItemStack itemStack)
     {
         return match == itemStack.itemType;
     }
@@ -16,7 +16,4 @@ public sealed class FilterMatchType : ItemFilter
     {
         return (ItemFilter) MemberwiseClone();
     }
-
-    public FilterMatchType() { }
-    public FilterMatchType(Item type) { match = type; }
 }

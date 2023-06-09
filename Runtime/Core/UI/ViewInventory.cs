@@ -7,7 +7,7 @@ public sealed class ViewInventory : MonoBehaviour
 {
     public InventoryHolder inventoryHolder;
     [SerializeField] private ViewInventorySlot itemStackUIPrefab;
-    [SerializeField] private Item[] doNotShow; //TODO proper filtering
+    [SerializeReference] [TypeSwitcher] private ItemFilter displayFilter = null;
 
     [SerializeField] private GameObject emptyHint;
 
@@ -32,7 +32,7 @@ public sealed class ViewInventory : MonoBehaviour
         //Build which ItemStacks to show
         //TODO can we do this more efficiently with enumerators?
         List<ReadOnlyItemStack> stacks = new List<ReadOnlyItemStack>(inventoryHolder.inventory.GetContents());
-        stacks.RemoveAll(s => doNotShow.Contains(s.itemType));
+        if (displayFilter != null) stacks.RemoveAll(i => displayFilter.Matches(i));
         
         //Ensure we have the same number of UI elements as ItemStacks
         //TODO can be optimized

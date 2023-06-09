@@ -6,12 +6,9 @@ using UnityEngine;
 [Serializable]
 public sealed class FilterMatchAny : ItemFilter
 {
-#if USING_SUBCLASS_SELECTOR
-    [SubclassSelector]
-#endif
-    [SerializeReference] private List<ItemFilter> criteria;
+    [SerializeReference] [TypeSwitcher] public List<ItemFilter> criteria;
 
-    public override bool Matches(ItemStack itemStack)
+    public override bool Matches(ReadOnlyItemStack itemStack)
     {
         return criteria.Any(c => c.Matches(itemStack));
     }

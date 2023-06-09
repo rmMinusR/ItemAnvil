@@ -59,6 +59,7 @@ public sealed class CondensingInventory : Inventory
                     tmp.quantity = totalToRemove;
                     @out.Add(tmp);
                     matches[0].quantity -= totalToRemove;
+                    if (matches[0].quantity == 0) contents.Remove(matches[0]);
                     totalToRemove = 0;
                     return @out;
                 }
@@ -93,15 +94,8 @@ public sealed class CondensingInventory : Inventory
 
     #endregion
 
-    public override int Count(ItemFilter filter)
-    {
-        return contents.Where(filter.Matches).Sum(stack => stack.quantity);
-    }
-
-    public override int Count(Item itemType)
-    {
-        return contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
-    }
+    public override int Count(ItemFilter filter) => contents.Where(filter.Matches).Sum(stack => stack.quantity);
+    public override int Count(Item itemType) => contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
 
     public override IEnumerable<ReadOnlyItemStack> GetContents() => contents;
 
@@ -112,13 +106,14 @@ public sealed class CondensingInventory : Inventory
         return list;
     }
 
-    public override ItemStack Find(ItemFilter filter)
-    {
-        return contents.FirstOrDefault(filter.Matches);
-    }
+    public override ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
+    public override ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
 
-    public override ItemStack Find(Item type)
+    public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => contents.Where(filter.Matches);
+    public override IEnumerable<ItemStack> FindAll(Item type) => contents.Where(i => i.itemType == type);
+
+    public override void Sort(IComparer<ReadOnlyItemStack> comparer)
     {
-        return contents.FirstOrDefault(i => i.itemType == type);
+        contents.Sort(comparer);
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public sealed class ViewFilterMatches : BaseViewItemStack
 {
     [Header("Data source")]
-    [SerializeReference] [TypeSwitcher] public ItemFilter filter = new FilterMatchByExample();
+    [SerializeReference] [TypeSwitcher] public ItemFilter filter = new FilterMatchReference();
     public InventoryHolder inventoryHolder;
 
     private void Start()
