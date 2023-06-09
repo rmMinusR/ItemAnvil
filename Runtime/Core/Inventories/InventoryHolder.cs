@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// An inventory in component form. Most operations need just an inventory, but the provided components will typically bind to one of these.
+/// </summary>
 public class InventoryHolder : MonoBehaviour
 {
     [Header("Ticking")]

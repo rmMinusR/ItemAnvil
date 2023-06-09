@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Binds a Transaction to a Component, and makes it callable by UI
+/// </summary>
 public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHandler
 {
     [Space]

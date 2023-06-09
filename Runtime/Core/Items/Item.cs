@@ -5,9 +5,12 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Data structure describing how items should look and act. One of these must exist per item type.
-/// MUST be created through Unity and passed in by Inspector, can not by created or retrieved through code.
+/// Represents the concept of an item, or its type. Not to be confused with an ItemStack, which is an owned item.
 /// </summary>
+/// <remarks>
+/// For example, consider a car: there may be many of a given model, but this represents the model, not any specific car.
+/// In scripting, these should be created through Unity and passed in by Inspector, not created or retrieved through code.
+/// </remarks>
 /// <seealso cref="ItemStack"/>
 /// <seealso cref="ItemProperty"/>
 

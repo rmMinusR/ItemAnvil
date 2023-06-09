@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// A safe way to transfer items between two inventories, such purchasing from a shop or trading between players
+/// </summary>
 [Serializable]
 public sealed class Transaction : ICloneable
 {
-    [SerializeField] private ItemStack[] itemsAToB;
-    [SerializeField] private ItemStack[] itemsBToA;
+    [SerializeField] private ItemStack[] itemsAToB; //Items that should be taken from A and given to B
+    [SerializeField] private ItemStack[] itemsBToA; //Items that should be taken from B and given to A
 
     //IEnumerable here is usually an ItemStack[] or List<ItemStack>
     public Transaction(IEnumerable<ItemStack> itemsAtoB, IEnumerable<ItemStack> itemsBtoA)
@@ -16,6 +19,10 @@ public sealed class Transaction : ICloneable
         this.itemsBToA = itemsBtoA.Select(s => s.Clone()).ToArray();
     }
 
+    /// <summary>
+    /// Attempt to perform the transaction. Does not modify the original object.
+    /// </summary>
+    /// <returns>Whether the transaction was successfully performed</returns>
     public bool TryExchange(Inventory inventoryA, Inventory inventoryB)
     {
         if (IsValid(inventoryA, inventoryB))
@@ -27,12 +34,19 @@ public sealed class Transaction : ICloneable
         return false;
     }
 
+    /// <summary>
+    /// Can the transaction take place between the given inventories?
+    /// </summary>
+    /// <returns>Whether the transaction would be successfully performed</returns>
     public bool IsValid(Inventory inventoryA, Inventory inventoryB)
     {
         return itemsAToB.All(i => inventoryA.Count(i.itemType) >= i.quantity)
             && itemsBToA.All(i => inventoryB.Count(i.itemType) >= i.quantity);
     }
 
+    /// <summary>
+    /// Businss logic function that actually transfers the items
+    /// </summary>
     private void DoExchange(Inventory inventoryA, Inventory inventoryB)
     {
 #if UNITY_EDITOR
@@ -66,15 +80,12 @@ public sealed class Transaction : ICloneable
         return new Transaction(itemsAToB, itemsBToA);
     }
 
+    /// <summary>
+    /// Helper function, preferable to calling TryExchange multiple times
+    /// </summary>
     public void MultiplyInPlace(int scale)
     {
         foreach (ItemStack s in itemsAToB) s.quantity *= scale;
         foreach (ItemStack s in itemsBToA) s.quantity *= scale;
-    }
-
-    public void Log()
-    {
-        foreach (ItemStack s in itemsAToB) Debug.Log("A=>B "+s.itemType+" x"+s.quantity);
-        foreach (ItemStack s in itemsBToA) Debug.Log("B=>A "+s.itemType+" x"+s.quantity);
     }
 }

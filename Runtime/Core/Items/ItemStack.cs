@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Represents an item (or multiple items) that may be owned, used, traded, etc.
+/// </summary>
+/// <remarks>
+/// For example, consider a car: there may be many of a given model. This would represent any specific car, complete with wear and tear, paint, and contents.
+/// </remarks>
 [Serializable]
 public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 {
@@ -32,12 +38,24 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
         return $"({name} x{_quantity}, {_instanceProperties.Count} instance properties)";
     }
 
+    /// <summary>
+    /// Can two ItemStacks be merged?
+    /// </summary>
+    /// <param name="src">Stack that will be merged from, and will be consumed in the process</param>
+    /// <param name="dst">Stack that will be merged into</param>
+    /// <returns>Whether the merge would be allowed</returns>
     public static bool CanMerge(ItemStack src, ItemStack dst)
     {
         return src.itemType == dst.itemType //Item types must match
             && src._instanceProperties.SetEquals(dst._instanceProperties); //Ensure we have the same properties. FIXME GC
     }
 
+    /// <summary>
+    /// Attempt to merge two ItemStacks
+    /// </summary>
+    /// <param name="src">Stack that will be merged from, and will be consumed in the process</param>
+    /// <param name="dst">Stack that will be merged into</param>
+    /// <returns>Whether the merge was performed. If false, no changes to either stack were made.</returns>
     public static bool TryMerge(ItemStack src, ItemStack dst)
     {
         if (!CanMerge(src, dst)) return false;
@@ -51,28 +69,12 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
 
         return true;
     }
-
-    #region Property IO
-
-    public void AddProperty<T>(T prop) where T : ItemInstanceProperty
-    {
-        _instanceProperties.Add(prop);
-    }
-
-    public T GetProperty<T>() where T : ItemInstanceProperty
-    {
-        return _instanceProperties.Get<T>();
-    }
-
-    public void RemoveProperty<T>() where T : ItemInstanceProperty
-    {
-        _instanceProperties.Remove<T>();
-    }
-
-    #endregion
-
+    
     #region Interface compatability
 
+    /// <summary>
+    /// Make a copy of this ItemStack, including instance properties
+    /// </summary>
     public ItemStack Clone()
     {
         ItemStack @out = (ItemStack) MemberwiseClone();
@@ -93,7 +95,7 @@ public sealed class ItemStack : ReadOnlyItemStack, ICloneable
         set => _quantity = value;
     }
 
-    public IEnumerable<ItemInstanceProperty> instanceProperties
+    public PropertyBag<ItemInstanceProperty> instanceProperties
     {
         get => _instanceProperties;
     }
@@ -113,10 +115,8 @@ public interface ReadOnlyItemStack
         get;
     }
 
-    public IEnumerable<ItemInstanceProperty> instanceProperties
+    public PropertyBag<ItemInstanceProperty> instanceProperties
     {
         get;
     }
-
-    public T GetProperty<T>() where T : ItemInstanceProperty;
 }

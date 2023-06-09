@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Binds a CraftingRecipe to a Component, and makes it callable by UI
+/// </summary>
 public sealed class CallableCraftingRecipe : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField] private CraftingRecipe recipe;
