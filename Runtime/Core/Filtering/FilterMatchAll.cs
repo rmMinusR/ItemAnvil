@@ -9,7 +9,7 @@ public sealed class FilterMatchAll : ItemFilter
     [TypeSwitcher]
     [SerializeReference] public List<ItemFilter> criteria;
 
-    public override bool Matches(ItemStack itemStack)
+    public override bool Matches(ReadOnlyItemStack itemStack)
     {
         return criteria.All(c => c.Matches(itemStack));
     }

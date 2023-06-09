@@ -7,7 +7,7 @@ public sealed class FilterMatchCategory : ItemFilter
 {
     public ItemCategory category;
 
-    public override bool Matches(ItemStack itemStack)
+    public override bool Matches(ReadOnlyItemStack itemStack)
     {
         return itemStack.itemType.categories.Contains(category);
     }

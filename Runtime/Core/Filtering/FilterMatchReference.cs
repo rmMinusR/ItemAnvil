@@ -19,7 +19,7 @@ public sealed class FilterMatchReference : ItemFilter
         Exact
     }
 
-    public override bool Matches(ItemStack itemStack)
+    public override bool Matches(ReadOnlyItemStack itemStack)
     {
         //Attempt to match type
         if (matchType && itemStack.itemType != stack.itemType) return false;

@@ -7,7 +7,7 @@ public sealed class FilterMatchType : ItemFilter
 {
     public Item match;
 
-    public override bool Matches(ItemStack itemStack)
+    public override bool Matches(ReadOnlyItemStack itemStack)
     {
         return match == itemStack.itemType;
     }
