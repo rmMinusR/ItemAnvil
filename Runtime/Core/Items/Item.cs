@@ -21,7 +21,9 @@ public sealed class Item : ScriptableObject
     public string displayName = "Item";
     public Sprite displayIcon;
     [TextArea] public string displayTooltip;
-    public bool showInMainInventory = true;
+    
+    [Space]
+    public List<ItemCategory> categories = new List<ItemCategory>();
 
-    [field: SerializeField] public PropertyBag<ItemProperty> Properties { get; private set; } = new PropertyBag<ItemProperty>();
+    [field: Space, SerializeField] public PropertyBag<ItemProperty> Properties { get; private set; } = new PropertyBag<ItemProperty>();
 }

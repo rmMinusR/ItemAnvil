@@ -39,15 +39,27 @@ public sealed class CondensingInventory : Inventory
         }
     }
 
+    #region TryRemove family
+
+    /// <summary>
+    /// Attempt to remove items. If not enough are available, no changes will be made.
+    /// </summary>
+    /// <param name="filter">Filter specifying what to remove</param>
+    /// <param name="totalToRemove">How many to be removed</param>
+    /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
+    public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove) => TryRemove_Impl(filter.Matches, totalToRemove);
+
     /// <summary>
     /// Attempt to remove items. If not enough are available, no changes will be made.
     /// </summary>
     /// <param name="typeToRemove">Item type to be removed</param>
     /// <param name="totalToRemove">How many to be removed</param>
     /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-    public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
+    public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove) => TryRemove_Impl(stack => stack.itemType == typeToRemove, totalToRemove);
+
+    private IEnumerable<ItemStack> TryRemove_Impl(Func<ItemStack, bool> filter, int totalToRemove)
     {
-        List<ItemStack> matches = contents.Where(stack => stack.itemType == typeToRemove).ToList();
+        List<ItemStack> matches = contents.Where(filter).ToList();
 
         //NOTE: Not threadsafe
 
@@ -68,6 +80,7 @@ public sealed class CondensingInventory : Inventory
                     tmp.quantity = totalToRemove;
                     @out.Add(tmp);
                     matches[0].quantity -= totalToRemove;
+                    if (matches[0].quantity == 0) contents.Remove(matches[0]);
                     totalToRemove = 0;
                     return @out;
                 }
@@ -87,25 +100,40 @@ public sealed class CondensingInventory : Inventory
         }
     }
 
+    #endregion
+
+    #region RemoveAll family
+
+    /// <summary>
+    /// Remove all items that match the given filter
+    /// </summary>
+    /// <returns>How many items were removed</returns>
+    public override int RemoveAll(ItemFilter filter) => RemoveAll_Impl(filter.Matches);
+
     /// <summary>
     /// Remove all items of the given type
     /// </summary>
     /// <returns>How many items were removed</returns>
-    public override int RemoveAll(Item typeToRemove)
+    public override int RemoveAll(Item typeToRemove) => RemoveAll_Impl(s => s.itemType == typeToRemove);
+
+    private int RemoveAll_Impl(Func<ItemStack, bool> filter)
     {
-        bool matches(ItemStack stack) => stack.itemType == typeToRemove;
-        int nRemoved = contents.Where(matches).Sum(i => i.quantity);
-        contents.RemoveAll(matches);
+        int nRemoved = contents.Where(filter).Sum(i => i.quantity);
+        contents.RemoveAll(i => filter(i));
         return nRemoved;
     }
+
+    #endregion
+
+    /// <summary>
+    /// Check how many items match the given filter
+    /// </summary>
+    public override int Count(ItemFilter filter) => contents.Where(filter.Matches).Sum(stack => stack.quantity);
 
     /// <summary>
     /// Check how many items are present of the given type
     /// </summary>
-    public override int Count(Item itemType)
-    {
-        return contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
-    }
+    public override int Count(Item itemType) => contents.Where(stack => stack.itemType == itemType).Sum(stack => stack.quantity);
 
     /// <summary>
     /// Dump the contents of this inventory. Note that these the original instances.
@@ -123,11 +151,28 @@ public sealed class CondensingInventory : Inventory
     }
 
     /// <summary>
-    /// Find the first item of the given type
+    /// Find the first ItemStack of the given type
     /// </summary>
     /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public override ItemStack Find(Item type)
+    public override ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
+
+    /// <summary>
+    /// Find the first item of the given type
+    /// </summary>
+    public override ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
+
+    /// <summary>
+    /// Find all ItemStacks that match the filter
+    /// </summary>
+    public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => contents.Where(filter.Matches);
+
+    /// <summary>
+    /// Find all ItemStacks with the given type
+    /// </summary>
+    public override IEnumerable<ItemStack> FindAll(Item type) => contents.Where(i => i.itemType == type);
+
+    public override void Sort(IComparer<ReadOnlyItemStack> comparer)
     {
-        return contents.FirstOrDefault(i => i.itemType == type);
+        contents.Sort(comparer);
     }
 }

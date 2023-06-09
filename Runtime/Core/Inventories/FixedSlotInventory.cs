@@ -46,14 +46,6 @@ public sealed class FixedSlotInventory : Inventory
     }
 
     /// <summary>
-    /// Check how many items are present of the given type
-    /// </summary>
-    public override int Count(Item itemType)
-    {
-        return contents.Where(i => i != null && i.itemType == itemType).Sum(i => i.quantity);
-    }
-
-    /// <summary>
     /// Dump the contents of this inventory. Note that these the original instances.
     /// </summary>
     public override IEnumerable<ReadOnlyItemStack> GetContents()
@@ -69,22 +61,20 @@ public sealed class FixedSlotInventory : Inventory
         return contents.Select(i => i?.Clone()).ToList();
     }
 
+    #region TryRemove family
+
     /// <summary>
-    /// Remove all items of the given type
+    /// Attempt to remove items. If not enough are available, no changes will be made.
     /// </summary>
-    /// <returns>How many items were removed</returns>
-    public override int RemoveAll(Item typeToRemove)
+    /// <param name="filter">Filter specifying what to remove</param>
+    /// <param name="totalToRemove">How many to be removed</param>
+    /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
+    public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove)
     {
-        int nRemoved = 0;
-        for (int i = 0; i < contents.Count; ++i)
-        {
-            if (contents[i] != null && contents[i].itemType == typeToRemove)
-            {
-                nRemoved += contents[i].quantity;
-                contents[i] = null;
-            }
-        }
-        return nRemoved;
+        //Make sure we have enough
+        if (Count(filter) < totalToRemove) return new List<ItemStack>();
+
+        return TryRemove_Impl(filter.Matches, totalToRemove);
     }
 
     /// <summary>
@@ -95,14 +85,19 @@ public sealed class FixedSlotInventory : Inventory
     /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
     public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove)
     {
-        List<ItemStack> @out = new List<ItemStack>();
-
         //Make sure we have enough
-        if (Count(typeToRemove) < totalToRemove) return @out;
+        if (Count(typeToRemove) < totalToRemove) return new List<ItemStack>();
+
+        return TryRemove_Impl(s => s.itemType == typeToRemove, totalToRemove);
+    }
+
+    private IEnumerable<ItemStack> TryRemove_Impl(Func<ItemStack, bool> filter, int totalToRemove)
+    {
+        List<ItemStack> @out = new List<ItemStack>();
 
         for (int i = 0; i < contents.Count; ++i)
         {
-            if (contents[i] != null && contents[i].itemType == typeToRemove)
+            if (contents[i] != null && filter(contents[i]))
             {
                 if (contents[i].quantity >= totalToRemove)
                 {
@@ -125,13 +120,73 @@ public sealed class FixedSlotInventory : Inventory
 
         throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
     }
-    
+
+    #endregion
+
+    #region RemoveAll family
+
     /// <summary>
-    /// Find the first item of the given type
+    /// Remove all items that match the given filter
+    /// </summary>
+    /// <returns>How many items were removed</returns>
+    public override int RemoveAll(ItemFilter filter) => RemoveAll_Impl(filter.Matches);
+
+    /// <summary>
+    /// Remove all items of the given type
+    /// </summary>
+    /// <returns>How many items were removed</returns>
+    public override int RemoveAll(Item typeToRemove) => RemoveAll_Impl(s => s.itemType == typeToRemove);
+    
+    private int RemoveAll_Impl(Func<ItemStack, bool> filter)
+    {
+        int nRemoved = 0;
+        for (int i = 0; i < contents.Count; ++i)
+        {
+            if (contents[i] != null && filter(contents[i]))
+            {
+                nRemoved += contents[i].quantity;
+                contents[i] = null;
+            }
+        }
+        return nRemoved;
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Check how many items match the given filter
+    /// </summary>
+    public override int Count(ItemFilter filter) => contents.Where(i => i != null).Where(filter.Matches).Sum(i => i.quantity);
+
+    /// <summary>
+    /// Check how many items are present of the given type
+    /// </summary>
+    public override int Count(Item itemType) => contents.Where(i => i != null).Where(i => i.itemType == itemType).Sum(i => i.quantity);
+
+    /// <summary>
+    /// Find the first ItemStack that matches the filter
     /// </summary>
     /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public override ItemStack Find(Item type)
+    public override ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
+
+    /// <summary>
+    /// Find the first ItemStack of the given type
+    /// </summary>
+    /// <returns>The matching ItemStack if a match was present, else null</returns>
+    public override ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
+
+    /// <summary>
+    /// Find all ItemStacks that match the filter
+    /// </summary>
+    public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => contents.Where(i => i != null).Where(filter.Matches);
+
+    /// <summary>
+    /// Find all ItemStacks with the given type
+    /// </summary>
+    public override IEnumerable<ItemStack> FindAll(Item type) => contents.Where(i => i != null).Where(i => i.itemType == type);
+
+    public override void Sort(IComparer<ReadOnlyItemStack> comparer)
     {
-        return contents.FirstOrDefault(i => i != null && i.itemType == type);
+        contents.Sort(comparer);
     }
 }

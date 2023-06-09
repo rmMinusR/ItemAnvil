@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: Alloy bronze
   m_EditorClassIdentifier: 
   inputs:
-  - _itemType: {fileID: 11400000, guid: 097017a55c2a90644abcaf065b25c00b, type: 2}
-    _quantity: 3
-  - _itemType: {fileID: 11400000, guid: 10839daf06478c24b8002d5d97e8b0c8, type: 2}
-    _quantity: 1
+  - itemType: {fileID: 11400000, guid: 097017a55c2a90644abcaf065b25c00b, type: 2}
+    quantity: 3
+  - itemType: {fileID: 11400000, guid: 10839daf06478c24b8002d5d97e8b0c8, type: 2}
+    quantity: 1
   outputs:
   - _itemType: {fileID: 11400000, guid: 831af5d5a3f69da4aaa859027f294471, type: 2}
     _quantity: 4
+    _instanceProperties:
+      contents: []
+  references:
+    version: 1

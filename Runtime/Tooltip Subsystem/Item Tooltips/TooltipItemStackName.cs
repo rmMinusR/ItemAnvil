@@ -9,14 +9,14 @@ public sealed class TooltipItemStackName : TooltipPart
     [SerializeField] private GameObject root;
     [SerializeField] private TMP_Text text;
 
-    private ViewItemStack dataSource;
+    private ViewInventorySlot dataSource;
 
     protected override void UpdateTarget(Tooltippable newTarget)
     {
-        dataSource = newTarget.GetComponent<ViewItemStack>();
+        dataSource = newTarget.GetComponent<ViewInventorySlot>();
         root.SetActive(dataSource != null);
 
         //Render text if active
-        if (root.activeSelf) text.text = dataSource.itemType.displayName;
+        if (root.activeSelf) text.text = dataSource.mostRecentStack.itemType.displayName;
     }
 }

@@ -13,8 +13,12 @@ MonoBehaviour:
   m_Name: Smelt tin
   m_EditorClassIdentifier: 
   inputs:
-  - _itemType: {fileID: 11400000, guid: 0ff35d7348a185d4ca72a0dff9f87f72, type: 2}
-    _quantity: 1
+  - itemType: {fileID: 11400000, guid: 0ff35d7348a185d4ca72a0dff9f87f72, type: 2}
+    quantity: 1
   outputs:
   - _itemType: {fileID: 11400000, guid: 10839daf06478c24b8002d5d97e8b0c8, type: 2}
     _quantity: 1
+    _instanceProperties:
+      contents: []
+  references:
+    version: 1

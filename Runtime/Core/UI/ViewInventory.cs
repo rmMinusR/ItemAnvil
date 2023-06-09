@@ -6,15 +6,15 @@ using UnityEngine;
 public sealed class ViewInventory : MonoBehaviour
 {
     public InventoryHolder inventoryHolder;
-    [SerializeField] private ViewItemStack itemStackUIPrefab;
-    [SerializeField] private Item[] doNotShow; //TODO proper filtering
+    [SerializeField] private ViewInventorySlot itemStackUIPrefab;
+    [SerializeReference] [TypeSwitcher] private ItemFilter displayFilter = null;
 
     [SerializeField] private GameObject emptyHint;
 
     [Space]
     [SerializeField] private Transform stackViewParent;
 
-    private List<ViewItemStack> stackViews = new List<ViewItemStack>();
+    private List<ViewInventorySlot> stackViews = new List<ViewInventorySlot>();
 
     private void Start()
     {
@@ -32,15 +32,13 @@ public sealed class ViewInventory : MonoBehaviour
         //Build which ItemStacks to show
         //TODO can we do this more efficiently with enumerators?
         List<ReadOnlyItemStack> stacks = new List<ReadOnlyItemStack>(inventoryHolder.inventory.GetContents());
-        stacks.RemoveAll(s => !s.itemType?.showInMainInventory ?? false);
-        stacks.RemoveAll(s => doNotShow.Contains(s.itemType));
+        if (displayFilter != null) stacks.RemoveAll(i => displayFilter.Matches(i));
         
         //Ensure we have the same number of UI elements as ItemStacks
         //TODO can be optimized
         while (stackViews.Count < stacks.Count)
         {
-            ViewItemStack view = Instantiate(itemStackUIPrefab.gameObject, stackViewParent).GetComponent<ViewItemStack>();
-            view.suppressActiveUpdate = true;
+            ViewInventorySlot view = Instantiate(itemStackUIPrefab, stackViewParent);
             stackViews.Add(view);
         }
         while (stackViews.Count > stacks.Count)

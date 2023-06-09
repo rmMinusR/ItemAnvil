@@ -8,14 +8,15 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Binds a Transaction to a Component, and makes it callable by UI
 /// </summary>
+[RequireComponent(typeof(ViewInventorySlot))]
 public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHandler
 {
     [Space]
     [SerializeField] private InventoryHolder inventoryA;
     [SerializeField] private InventoryHolder inventoryB;
-    private ViewItemStack view;
-    [SerializeField] private Item itemType;
-    [field: SerializeField, Min(0), Tooltip("How many items to buy/sell when right clicking")] public int AltInteractAmount { get; private set; } = 5;
+    private ViewInventorySlot view;
+    private Item itemType;
+    [field: SerializeField, Min(0), Tooltip("How many items to buy/sell when right clicking")] public int BatchQuantity { get; private set; } = 5;
     [field: SerializeField] public Mode mode { get; private set; }
 
     public enum Mode
@@ -29,8 +30,8 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
 
     private void Start()
     {
-        view = GetComponent<ViewItemStack>();
-        if (view != null) itemType = view.itemType;
+        view = GetComponent<ViewInventorySlot>();
+        if (view != null) itemType = view.mostRecentStack?.itemType;
         if (inventoryA == null) inventoryA = GameObject.FindWithTag("Player").GetComponent<InventoryHolder>();
         if (inventoryB == null) inventoryB = view.inventoryHolder != null ? view.inventoryHolder : view.GetComponentInParent<ViewInventory>().inventoryHolder;
         Debug.Assert(inventoryA != null);
@@ -38,7 +39,7 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
 
     private void Update()
     {
-        if (view != null) itemType = view.itemType;
+        if (view != null) itemType = view.mostRecentStack?.itemType;
     }
 
     //Generic form for buy/sell, depending on mode
@@ -114,6 +115,6 @@ public sealed class CallableMarketTransaction : MonoBehaviour, IPointerClickHand
     public void OnPointerClick(PointerEventData eventData)
     {
              if (eventData.button == PointerEventData.InputButton.Left ) TryExecute(1);
-        else if (eventData.button == PointerEventData.InputButton.Right) TryExecute(AltInteractAmount);
+        else if (eventData.button == PointerEventData.InputButton.Right) TryExecute(BatchQuantity);
     }
 }

@@ -130,7 +130,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
     }
 
     [Test, Combinatorial]
-    public void Find_ReturnsCorrectItemStack(
+    public void FindFirst_ReturnsCorrectItemStack(
         [Values(1, 2, 5, 10)] int correctItemCount,
         [Values(1, 2, 3, 5, 7, 11, 13)] int correctItemStackIndex,
         [Values(0, 1, 2, 5, 10)] int confuserCount)
@@ -147,7 +147,7 @@ public abstract class InventoryTests<TInventory> where TInventory : Inventory
         }
 
         // Act
-        ItemStack stack = inventory.Find(correct);
+        ItemStack stack = inventory.FindFirst(correct);
 
         // Assert
         Assert.IsNotNull(stack);

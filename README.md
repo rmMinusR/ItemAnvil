@@ -24,6 +24,8 @@ Just like GameObjects have component scripts, items gain functionality by adding
 
 ## Features
  - [x] Pre-built UI
+	 - [x] Sort button
+	 - [x] Model-View-Controller architecture
  - [x] Crafting recipes
  - [x] Items use assigned icon for display
  - [x] Max stack size
@@ -32,19 +34,19 @@ Just like GameObjects have component scripts, items gain functionality by adding
 	 - [x] Fixed-slot
  - [x] Fully serializable using Unity's built-in tools
  - [x] Per-instance properties (enchantments, temperature, etc)
+ - [x] Fuzzy filters and advanced querying
+ - [x] Unit testing - actively improving
 
 ### Roadmap
- - [x] Fuzzy filters - Planned for 0.5-0.6
- - [ ] Better player-facing inventory - Planned for 0.5
-	 - [ ] Sort button
-	 - [ ] Drag-and-drop rearranging/moving between inventories
-	 - [ ] Searching/highlighting
-	 - [ ] Controller support
  - [ ] Loot tables - Planned for 0.5-0.6
+ - [ ] Better player-facing inventory
+	 - [ ] Drag-and-drop rearranging
+	 - [ ] Drag-and-drop moving between inventories
+	 - [ ] Searching/highlighting - Partially supported through Filters, needs proper UI
+	 - [ ] Controller support
  - [ ] Combat example
  - [ ] Dynamic weaponsmithing example
  - [ ] Random stats ("+ 10 to 20 Armor")
- - [x] Unit testing - Started
  - [ ] Inventory properties
  - [ ] Fixed-volume inventory
 
