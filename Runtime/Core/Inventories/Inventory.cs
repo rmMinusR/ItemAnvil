@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [Serializable]
 public abstract class Inventory
@@ -56,30 +57,44 @@ public abstract class Inventory
     public abstract int Count(Item itemType);
 
     /// <summary>
-    /// Find the first ItemStack that matches the filter
+    /// Find the first ItemStack of the given type.
     /// </summary>
+    /// <remarks>
+    /// Note that these are the original instances, and changes made will reflect in the inventory.
+    /// </remarks>
     /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public abstract ItemStack FindFirst(ItemFilter filter);
+    public virtual ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
 
     /// <summary>
-    /// Find the first ItemStack of the given type
+    /// Find the first item of the given type.
     /// </summary>
-    /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public abstract ItemStack FindFirst(Item type);
+    /// <remarks>
+    /// Note that these are the original instances, and changes made will reflect in the inventory.
+    /// </remarks>
+    public virtual ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
 
     /// <summary>
-    /// Find all ItemStacks that match the filter
+    /// Find all ItemStacks that match the filter.
     /// </summary>
+    /// <remarks>
+    /// Note that these are the original instances, and changes made will reflect in the inventory.
+    /// </remarks>
     public abstract IEnumerable<ItemStack> FindAll(ItemFilter filter);
 
     /// <summary>
-    /// Find all ItemStacks with the given type
+    /// Find all ItemStacks with the given type.
     /// </summary>
+    /// <remarks>
+    /// Note that these are the original instances, and changes made will reflect in the inventory.
+    /// </remarks>
     public abstract IEnumerable<ItemStack> FindAll(Item type);
 
     /// <summary>
-    /// Dump the contents of this inventory. Note that these the original instances.
+    /// Dump the contents of this inventory.
     /// </summary>
+    /// <remarks>
+    /// Note that these are the original instances, and changes made will reflect in the inventory.
+    /// </remarks>
     public abstract IEnumerable<ReadOnlyItemStack> GetContents();
 
     /// <summary>

@@ -151,17 +151,6 @@ public sealed class CondensingInventory : Inventory
     }
 
     /// <summary>
-    /// Find the first ItemStack of the given type
-    /// </summary>
-    /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public override ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
-
-    /// <summary>
-    /// Find the first item of the given type
-    /// </summary>
-    public override ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
-
-    /// <summary>
     /// Find all ItemStacks that match the filter
     /// </summary>
     public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => contents.Where(filter.Matches);

@@ -162,19 +162,7 @@ public sealed class FixedSlotInventory : Inventory
     /// Check how many items are present of the given type
     /// </summary>
     public override int Count(Item itemType) => contents.Where(i => i != null).Where(i => i.itemType == itemType).Sum(i => i.quantity);
-
-    /// <summary>
-    /// Find the first ItemStack that matches the filter
-    /// </summary>
-    /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public override ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
-
-    /// <summary>
-    /// Find the first ItemStack of the given type
-    /// </summary>
-    /// <returns>The matching ItemStack if a match was present, else null</returns>
-    public override ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
-
+    
     /// <summary>
     /// Find all ItemStacks that match the filter
     /// </summary>
