@@ -126,8 +126,8 @@ public class FilterMatchReferenceTests
 
         // Create the exampleToMatchBy with specific instance properties
         ItemStack exampleToMatchBy = new ItemStack(itemToMatchBy);
-        exampleToMatchBy.AddProperty(new InstanceProperty1());
-        exampleToMatchBy.AddProperty(new InstanceProperty2());
+        exampleToMatchBy.instanceProperties.Add(new InstanceProperty1());
+        exampleToMatchBy.instanceProperties.Add(new InstanceProperty2());
 
         FilterMatchReference filter = new FilterMatchReference();
         filter.matchType = false;
@@ -154,8 +154,8 @@ public class FilterMatchReferenceTests
 
         // Add instance properties to the exampleToMatchBy
         ItemStack itemStackToMatchBy = new ItemStack(itemToMatchBy);
-        itemStackToMatchBy.AddProperty(prop1ToMatchBy);
-        itemStackToMatchBy.AddProperty(prop2ToMatchBy);
+        itemStackToMatchBy.instanceProperties.Add(prop1ToMatchBy);
+        itemStackToMatchBy.instanceProperties.Add(prop2ToMatchBy);
 
         FilterMatchReference filter = new FilterMatchReference();
         filter.matchType = false;
@@ -164,8 +164,8 @@ public class FilterMatchReferenceTests
         // Create an ItemStack with matching instance properties (fuzzy match)
         Item itemMatch = CreateItem("ItemMatch", category);
         ItemStack itemStackMatch = new ItemStack(itemMatch);
-        itemStackMatch.AddProperty(prop1ToMatchBy);
-        itemStackMatch.AddProperty(prop2ToMatchBy);
+        itemStackMatch.instanceProperties.Add(prop1ToMatchBy);
+        itemStackMatch.instanceProperties.Add(prop2ToMatchBy);
 
         // Act
         bool result = filter.Matches(itemStackMatch);
@@ -186,7 +186,7 @@ public class FilterMatchReferenceTests
 
         // Add instance properties to the exampleToMatchBy
         ItemStack itemStackToMatchBy = new ItemStack(itemToMatchBy);
-        itemStackToMatchBy.AddProperty(prop1ToMatchBy);
+        itemStackToMatchBy.instanceProperties.Add(prop1ToMatchBy);
 
         FilterMatchReference filter = new FilterMatchReference();
         filter.matchType = false;
@@ -195,7 +195,7 @@ public class FilterMatchReferenceTests
         // Create an ItemStack with partially matching instance properties (fuzzy match)
         Item itemPartialMatch = CreateItem("ItemPartialMatch", category);
         ItemStack itemStackPartialMatch = new ItemStack(itemPartialMatch);
-        itemStackPartialMatch.AddProperty(prop1ToMatchBy);
+        itemStackPartialMatch.instanceProperties.Add(prop1ToMatchBy);
 
         // Act
         bool result = filter.Matches(itemStackPartialMatch);
@@ -217,8 +217,8 @@ public class FilterMatchReferenceTests
 
         // Add instance properties to the exampleToMatchBy
         ItemStack itemStackToMatchBy = new ItemStack(itemToMatchBy);
-        itemStackToMatchBy.AddProperty(prop1ToMatchBy);
-        itemStackToMatchBy.AddProperty(prop2ToMatchBy);
+        itemStackToMatchBy.instanceProperties.Add(prop1ToMatchBy);
+        itemStackToMatchBy.instanceProperties.Add(prop2ToMatchBy);
 
         FilterMatchReference filter = new FilterMatchReference();
         filter.matchType = false;
@@ -246,13 +246,13 @@ public class FilterMatchReferenceTests
         filter.matchType = false;
         filter.matchInstanceProperties = FilterMatchReference.MatchMode.Exact;
         filter.stack = new ItemStack(itemToMatchBy);
-        filter.stack.AddProperty(new InstanceProperty1());
-        filter.stack.AddProperty(new InstanceProperty2());
+        filter.stack.instanceProperties.Add(new InstanceProperty1());
+        filter.stack.instanceProperties.Add(new InstanceProperty2());
 
         // Create an ItemStack to match against the example
         ItemStack itemStack = new ItemStack(itemToMatchBy);
-        itemStack.AddProperty(new InstanceProperty1());
-        itemStack.AddProperty(new InstanceProperty2());
+        itemStack.instanceProperties.Add(new InstanceProperty1());
+        itemStack.instanceProperties.Add(new InstanceProperty2());
 
         // Act
         bool result = filter.Matches(itemStack);
@@ -275,12 +275,12 @@ public class FilterMatchReferenceTests
 
         // Create an example ItemStack with the instance properties
         ItemStack exampleItemStack = new ItemStack(itemToMatchBy);
-        exampleItemStack.AddProperty(new InstanceProperty1());
-        exampleItemStack.AddProperty(new InstanceProperty2());
+        exampleItemStack.instanceProperties.Add(new InstanceProperty1());
+        exampleItemStack.instanceProperties.Add(new InstanceProperty2());
 
         // Create an ItemStack missing one property
         ItemStack itemStack = new ItemStack(itemToMatchBy);
-        itemStack.AddProperty(new InstanceProperty1());
+        itemStack.instanceProperties.Add(new InstanceProperty1());
 
         // Act
         bool result = filter.Matches(itemStack);
@@ -303,12 +303,12 @@ public class FilterMatchReferenceTests
 
         // Create an example ItemStack with the instance properties
         ItemStack exampleItemStack = new ItemStack(itemToMatchBy);
-        exampleItemStack.AddProperty(new InstanceProperty1());
+        exampleItemStack.instanceProperties.Add(new InstanceProperty1());
 
         // Create an ItemStack with additional property
         ItemStack itemStack = new ItemStack(itemToMatchBy);
-        itemStack.AddProperty(new InstanceProperty1());
-        itemStack.AddProperty(new InstanceProperty2());
+        itemStack.instanceProperties.Add(new InstanceProperty1());
+        itemStack.instanceProperties.Add(new InstanceProperty2());
 
         // Act
         bool result = filter.Matches(itemStack);
@@ -327,8 +327,8 @@ public class FilterMatchReferenceTests
 
         // Create the exampleToMatchBy with specific instance properties
         ItemStack exampleToMatchBy = new ItemStack(itemToMatchBy);
-        exampleToMatchBy.AddProperty(new InstanceProperty1());
-        exampleToMatchBy.AddProperty(new InstanceProperty2());
+        exampleToMatchBy.instanceProperties.Add(new InstanceProperty1());
+        exampleToMatchBy.instanceProperties.Add(new InstanceProperty2());
 
         FilterMatchReference filter = new FilterMatchReference();
         filter.stack = exampleToMatchBy;

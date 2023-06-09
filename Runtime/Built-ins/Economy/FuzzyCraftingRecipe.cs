@@ -65,7 +65,7 @@ public sealed class FuzzyCraftingRecipe : CraftingRecipe
                 if (copyInstancePropertiesToOutputs)
                 {
                     //FIXME will likely error if instance property types overlap
-                    foreach (ItemStack input in inputs_instanced) foreach (ItemInstanceProperty prop in input.instanceProperties) stack.AddProperty(prop);
+                    foreach (ItemStack input in inputs_instanced) foreach (ItemInstanceProperty prop in input.instanceProperties) stack.instanceProperties.Add(prop);
                 }
 
                 crafter.AddItem(stack);
