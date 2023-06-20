@@ -3,20 +3,26 @@ using TMPro;
 using rmMinusR.Tooltips;
 using UnityEditor;
 using UnityEngine;
+using rmMinusR.ItemAnvil.UI;
 
-public sealed class TooltipItemStackName : TooltipPart
+namespace rmMinusR.ItemAnvil.Tooltips
 {
-    [SerializeField] private GameObject root;
-    [SerializeField] private TMP_Text text;
 
-    private ViewInventorySlot dataSource;
-
-    protected override void UpdateTarget(Tooltippable newTarget)
+    public sealed class TooltipItemStackName : TooltipPart
     {
-        dataSource = newTarget.GetComponent<ViewInventorySlot>();
-        root.SetActive(dataSource != null);
+        [SerializeField] private GameObject root;
+        [SerializeField] private TMP_Text text;
 
-        //Render text if active
-        if (root.activeSelf) text.text = dataSource.mostRecentStack.itemType.displayName;
+        private ViewInventorySlot dataSource;
+
+        protected override void UpdateTarget(Tooltippable newTarget)
+        {
+            dataSource = newTarget.GetComponent<ViewInventorySlot>();
+            root.SetActive(dataSource != null);
+
+            //Render text if active
+            if (root.activeSelf) text.text = dataSource.mostRecentStack.itemType.displayName;
+        }
     }
+
 }

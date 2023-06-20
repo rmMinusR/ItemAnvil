@@ -5,24 +5,29 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class ViewFilterMatches : BaseViewItemStack
+namespace rmMinusR.ItemAnvil.UI
 {
-    [Header("Data source")]
-    [SerializeReference] [TypeSwitcher] public ItemFilter filter = new FilterMatchReference();
-    public InventoryHolder inventoryHolder;
 
-    private void Start()
+    public sealed class ViewFilterMatches : BaseViewItemStack
     {
-        Debug.Assert(inventoryHolder != null, "No inventory connected!", this);
-        Debug.Assert(inventoryHolder.inventory != null, "Inventory connected, but not configured!", this);
-    }
+        [Header("Data source")]
+        [SerializeReference] [TypeSwitcher] public ItemFilter filter = new FilterMatchReference();
+        public InventoryHolder inventoryHolder;
 
-    private void LateUpdate()
-    {
-        if(filter != null)
+        private void Start()
         {
-            if (inventoryHolder == null || inventoryHolder.inventory == null) WriteCount("NO INV");
-            else WriteCount(inventoryHolder.inventory.Count(filter));
+            Debug.Assert(inventoryHolder != null, "No inventory connected!", this);
+            Debug.Assert(inventoryHolder.inventory != null, "Inventory connected, but not configured!", this);
+        }
+
+        private void LateUpdate()
+        {
+            if(filter != null)
+            {
+                if (inventoryHolder == null || inventoryHolder.inventory == null) WriteCount("NO INV");
+                else WriteCount(inventoryHolder.inventory.Count(filter));
+            }
         }
     }
+
 }

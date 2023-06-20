@@ -5,81 +5,86 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class BaseViewItemStack : MonoBehaviour
+namespace rmMinusR.ItemAnvil.UI
 {
-    [SerializeField] protected Sprite blankSprite;
 
-    [Header("Render targets")]
-    [SerializeField] protected Image icon;
-    [SerializeField] protected TMP_Text count;
-    [SerializeField] protected string countFormat = "x{0}";
-    [SerializeField] protected TMP_Text sellPrice;
-    [SerializeField] protected TMP_Text buyPrice;
-    [SerializeField] protected string priceFormat = "${0}";
-
-    protected virtual void WriteType(Item type)
+    public abstract class BaseViewItemStack : MonoBehaviour
     {
-        if (type == null)
-        {
-            WriteIcon(null);
-            WriteCount("NO ITEM");
-            if (sellPrice != null) sellPrice.gameObject.SetActive(true);
-            if (buyPrice  != null) buyPrice .gameObject.SetActive(true);
-            WriteSellPrice("NO ITEM");
-            WriteBuyPrice ("NO ITEM");
-        }
-        else
-        {
-            WriteIcon(type.displayIcon);
+        [SerializeField] protected Sprite blankSprite;
 
-            if (type.Properties.TryGet(out Marketable m)) //TODO convert to object chaining?
+        [Header("Render targets")]
+        [SerializeField] protected Image icon;
+        [SerializeField] protected TMP_Text count;
+        [SerializeField] protected string countFormat = "x{0}";
+        [SerializeField] protected TMP_Text sellPrice;
+        [SerializeField] protected TMP_Text buyPrice;
+        [SerializeField] protected string priceFormat = "${0}";
+
+        protected virtual void WriteType(Item type)
+        {
+            if (type == null)
             {
-                if (sellPrice != null) sellPrice.gameObject.SetActive(m.isSellable);
-                if (buyPrice  != null) buyPrice .gameObject.SetActive(m.isBuyable );
-
-                WriteSellPrice(m.sellPrice);
-                WriteBuyPrice (m.buyPrice );
+                WriteIcon(null);
+                WriteCount("NO ITEM");
+                if (sellPrice != null) sellPrice.gameObject.SetActive(true);
+                if (buyPrice  != null) buyPrice .gameObject.SetActive(true);
+                WriteSellPrice("NO ITEM");
+                WriteBuyPrice ("NO ITEM");
             }
             else
             {
-                if (sellPrice != null) sellPrice.gameObject.SetActive(false);
-                if (buyPrice  != null) buyPrice .gameObject.SetActive(false);
+                WriteIcon(type.displayIcon);
+
+                if (type.Properties.TryGet(out Marketable m)) //TODO convert to object chaining?
+                {
+                    if (sellPrice != null) sellPrice.gameObject.SetActive(m.isSellable);
+                    if (buyPrice  != null) buyPrice .gameObject.SetActive(m.isBuyable );
+
+                    WriteSellPrice(m.sellPrice);
+                    WriteBuyPrice (m.buyPrice );
+                }
+                else
+                {
+                    if (sellPrice != null) sellPrice.gameObject.SetActive(false);
+                    if (buyPrice  != null) buyPrice .gameObject.SetActive(false);
+                }
             }
+        }
+
+        protected void WriteIcon(Sprite sprite)
+        {
+            if (icon != null) icon.sprite = sprite;
+        }
+
+        protected void WriteCount(int count)
+        {
+            WriteCount(string.Format(countFormat, count));
+        }
+
+        protected void WriteCount(string text)
+        {
+            if (count != null) count.text = text;
+        }
+    
+        protected void WriteSellPrice(int price)
+        {
+            WriteSellPrice(string.Format(priceFormat, price));
+        }
+
+        protected void WriteSellPrice(string text)
+        {
+            if (sellPrice != null) sellPrice.text = text;
+        }
+    
+        protected void WriteBuyPrice(int price)
+        {
+            WriteBuyPrice(string.Format(priceFormat, price));
+        }
+
+        protected void WriteBuyPrice(string text)
+        {
+            if (buyPrice != null) buyPrice.text = text;
         }
     }
 
-    protected void WriteIcon(Sprite sprite)
-    {
-        if (icon != null) icon.sprite = sprite;
-    }
-
-    protected void WriteCount(int count)
-    {
-        WriteCount(string.Format(countFormat, count));
-    }
-
-    protected void WriteCount(string text)
-    {
-        if (count != null) count.text = text;
-    }
-    
-    protected void WriteSellPrice(int price)
-    {
-        WriteSellPrice(string.Format(priceFormat, price));
-    }
-
-    protected void WriteSellPrice(string text)
-    {
-        if (sellPrice != null) sellPrice.text = text;
-    }
-    
-    protected void WriteBuyPrice(int price)
-    {
-        WriteBuyPrice(string.Format(priceFormat, price));
-    }
-
-    protected void WriteBuyPrice(string text)
-    {
-        if (buyPrice != null) buyPrice.text = text;
-    }
 }

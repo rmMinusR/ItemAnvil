@@ -1,10 +1,17 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-/// <summary>
-/// Limit item stacking to the given amount. If not present, items will stack infinitely.
-/// </summary>
-public class MaxStackSize : ItemProperty
+namespace rmMinusR.ItemAnvil
 {
-    [Min(1)] public int size = 10;
+
+    /// <summary>
+    /// Limit item stacking to the given amount. If not present, items will stack infinitely.
+    /// </summary>
+    [MovedFrom(true, sourceNamespace: "", sourceAssembly: "ItemAnvil", sourceClassName: "MaxStackSize")]
+    public class MaxStackSize : ItemProperty
+    {
+        [Min(1)] public int size = 10;
+    }
+
 }

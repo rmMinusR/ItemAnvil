@@ -28,7 +28,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: FilterMatchReference, ns: , asm: ItemAnvil}
+      type: {class: FilterMatchReference, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         matchType: 1
         matchQuantity: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
             - value:
                 id: 2
     00000001:
-      type: {class: FilterMatchType, ns: , asm: ItemAnvil}
+      type: {class: FilterMatchType, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         match: {fileID: 11400000, guid: aa1a4ccfbed3f104786a4f234b72359f, type: 2}
     00000002:

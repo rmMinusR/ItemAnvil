@@ -255,7 +255,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: FilterMatchType, ns: , asm: ItemAnvil}
+      type: {class: FilterMatchType, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         match: {fileID: 0}
 --- !u!114 &-2370294232265034537

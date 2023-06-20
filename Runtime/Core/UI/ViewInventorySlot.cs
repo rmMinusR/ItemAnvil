@@ -5,26 +5,31 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class ViewInventorySlot : BaseViewItemStack
+namespace rmMinusR.ItemAnvil.UI
 {
-    public InventoryHolder inventoryHolder { get; internal set; }
-    public ReadOnlyItemStack mostRecentStack { get; private set; }
 
-    public void WriteStack(ReadOnlyItemStack src)
+    public sealed class ViewInventorySlot : BaseViewItemStack
     {
-        mostRecentStack = src;
+        public InventoryHolder inventoryHolder { get; internal set; }
+        public ReadOnlyItemStack mostRecentStack { get; private set; }
 
-        if (src != null && src.itemType != null)
+        public void WriteStack(ReadOnlyItemStack src)
         {
-            //Has data, show
-            WriteCount(src.quantity);
-            WriteType (src.itemType);
-        }
-        else
-        {
-            //No data, show blank
-            WriteCount("");
-            WriteIcon(blankSprite);
+            mostRecentStack = src;
+
+            if (src != null && src.itemType != null)
+            {
+                //Has data, show
+                WriteCount(src.quantity);
+                WriteType (src.itemType);
+            }
+            else
+            {
+                //No data, show blank
+                WriteCount("");
+                WriteIcon(blankSprite);
+            }
         }
     }
+
 }

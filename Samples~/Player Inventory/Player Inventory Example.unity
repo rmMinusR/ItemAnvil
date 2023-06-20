@@ -332,7 +332,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
+      type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: fc919debdaa5fac479203cce573b4da6, type: 2}

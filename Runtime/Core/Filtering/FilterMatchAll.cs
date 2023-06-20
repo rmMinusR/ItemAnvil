@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public sealed class FilterMatchAll : ItemFilter
+namespace rmMinusR.ItemAnvil
 {
-    [TypeSwitcher]
-    [SerializeReference] public List<ItemFilter> criteria;
 
-    public override bool Matches(ReadOnlyItemStack itemStack)
+    [Serializable]
+    public sealed class FilterMatchAll : ItemFilter
     {
-        return criteria.All(c => c.Matches(itemStack));
-    }
+        [TypeSwitcher]
+        [SerializeReference] public List<ItemFilter> criteria;
 
-    public override ItemFilter Clone()
-    {
-        return new FilterMatchAll()
+        public override bool Matches(ReadOnlyItemStack itemStack)
         {
-            criteria = criteria.Select(i => i.Clone()).ToList()
-        };
+            return criteria.All(c => c.Matches(itemStack));
+        }
+
+        public override ItemFilter Clone()
+        {
+            return new FilterMatchAll()
+            {
+                criteria = criteria.Select(i => i.Clone()).ToList()
+            };
+        }
     }
+
 }

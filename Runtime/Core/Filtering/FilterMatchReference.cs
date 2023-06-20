@@ -3,69 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public sealed class FilterMatchReference : ItemFilter
+namespace rmMinusR.ItemAnvil
 {
-    public bool matchType = true;
-    public MatchMode matchQuantity = MatchMode.Ignore;
-    public MatchMode matchInstanceProperties = MatchMode.Fuzzy;
 
-    public ItemStack stack;
+    [Serializable]
+    public sealed class FilterMatchReference : ItemFilter
+    {
+        public bool matchType = true;
+        public MatchMode matchQuantity = MatchMode.Ignore;
+        public MatchMode matchInstanceProperties = MatchMode.Fuzzy;
+
+        public ItemStack stack;
     
-    public enum MatchMode
-    {
-        Ignore = 0,
-        Fuzzy,
-        Exact
-    }
-
-    public override bool Matches(ReadOnlyItemStack itemStack)
-    {
-        //Attempt to match type
-        if (matchType && itemStack.itemType != stack.itemType) return false;
-
-        //Attempt to match quantity
-        switch (matchQuantity)
+        public enum MatchMode
         {
-            case MatchMode.Exact:
-                if (itemStack.quantity != stack.quantity) return false;
-                break;
-                
-            case MatchMode.Fuzzy:
-                if (itemStack.quantity < stack.quantity) return false;
-                break;
-
-            case MatchMode.Ignore:
-                break;
-
-            default: throw new NotImplementedException();
+            Ignore = 0,
+            Fuzzy,
+            Exact
         }
 
-        //Attempt to match instance properties
-        if (matchInstanceProperties != MatchMode.Ignore)
+        public override bool Matches(ReadOnlyItemStack itemStack)
         {
-            HashSet<Type> ownTypes = new HashSet<Type>(stack.instanceProperties.Select(i => i.GetType()));
-            HashSet<Type> otherTypes = new HashSet<Type>(itemStack.instanceProperties.Select(i => i.GetType()));
-            switch (matchInstanceProperties)
+            //Attempt to match type
+            if (matchType && itemStack.itemType != stack.itemType) return false;
+
+            //Attempt to match quantity
+            switch (matchQuantity)
             {
                 case MatchMode.Exact:
-                    if (!ownTypes.SetEquals(otherTypes)) return false;
+                    if (itemStack.quantity != stack.quantity) return false;
                     break;
                 
                 case MatchMode.Fuzzy:
-                    //Given stack contains all properties listed in example
-                    if (!otherTypes.IsSupersetOf(ownTypes)) return false;
+                    if (itemStack.quantity < stack.quantity) return false;
+                    break;
+
+                case MatchMode.Ignore:
                     break;
 
                 default: throw new NotImplementedException();
             }
+
+            //Attempt to match instance properties
+            if (matchInstanceProperties != MatchMode.Ignore)
+            {
+                HashSet<Type> ownTypes = new HashSet<Type>(stack.instanceProperties.Select(i => i.GetType()));
+                HashSet<Type> otherTypes = new HashSet<Type>(itemStack.instanceProperties.Select(i => i.GetType()));
+                switch (matchInstanceProperties)
+                {
+                    case MatchMode.Exact:
+                        if (!ownTypes.SetEquals(otherTypes)) return false;
+                        break;
+                
+                    case MatchMode.Fuzzy:
+                        //Given stack contains all properties listed in example
+                        if (!otherTypes.IsSupersetOf(ownTypes)) return false;
+                        break;
+
+                    default: throw new NotImplementedException();
+                }
+            }
+
+            return true;
         }
 
-        return true;
+        public override ItemFilter Clone()
+        {
+            return (ItemFilter)MemberwiseClone();
+        }
     }
 
-    public override ItemFilter Clone()
-    {
-        return (ItemFilter)MemberwiseClone();
-    }
 }

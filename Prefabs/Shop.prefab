@@ -437,7 +437,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
+      type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         contents: []
 --- !u!1 &8760210325834219565

@@ -2,91 +2,96 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[Category("Filtering")]
-public class FilterMatchAnyTests
+namespace rmMinusR.ItemAnvil.Tests
 {
-    private ItemCategory CreateItemCategory(string displayName)
-    {
-        ItemCategory itemCategory = ScriptableObject.CreateInstance<ItemCategory>();
-        itemCategory.name = displayName;
-        return itemCategory;
-    }
 
-    private Item CreateItem(string displayName, params ItemCategory[] categories)
+    [Category("Filtering")]
+    public class FilterMatchAnyTests
     {
-        Item item = ScriptableObject.CreateInstance<Item>();
-        item.displayName = displayName;
-        item.name = displayName;
-        item.categories = new List<ItemCategory>(categories);
-        return item;
-    }
-
-    [Test]
-    public void MatchAny_CriteriaMatch_AllMatch()
-    {
-        // Arrange
-        var category1 = CreateItemCategory("Category1");
-        var category2 = CreateItemCategory("Category2");
-        var item1 = CreateItem("Item1", category1);
-        var item2 = CreateItem("Item2", category2);
-        var itemStack = new ItemStack(item1);
-        var criteria = new List<ItemFilter>
+        private ItemCategory CreateItemCategory(string displayName)
         {
-            new FilterMatchCategory { category = category1 },
-            new FilterMatchType { match = item1 }
-        };
-        var filterMatchAny = new FilterMatchAny { criteria = criteria };
+            ItemCategory itemCategory = ScriptableObject.CreateInstance<ItemCategory>();
+            itemCategory.name = displayName;
+            return itemCategory;
+        }
 
-        // Act
-        var result = filterMatchAny.Matches(itemStack);
-
-        // Assert
-        Assert.IsTrue(result);
-    }
-
-    [Test]
-    public void MatchAny_CriteriaMatch_SomeMatch()
-    {
-        // Arrange
-        var category1 = CreateItemCategory("Category1");
-        var category2 = CreateItemCategory("Category2");
-        var item1 = CreateItem("Item1", category1);
-        var item2 = CreateItem("Item2", category2);
-        var itemStack = new ItemStack(item1);
-        var criteria = new List<ItemFilter>
+        private Item CreateItem(string displayName, params ItemCategory[] categories)
         {
-            new FilterMatchCategory { category = category1 },
-            new FilterMatchType { match = item2 }
-        };
-        var filterMatchAny = new FilterMatchAny { criteria = criteria };
+            Item item = ScriptableObject.CreateInstance<Item>();
+            item.displayName = displayName;
+            item.name = displayName;
+            item.categories = new List<ItemCategory>(categories);
+            return item;
+        }
 
-        // Act
-        var result = filterMatchAny.Matches(itemStack);
-
-        // Assert
-        Assert.IsTrue(result);
-    }
-
-    [Test]
-    public void MatchAny_CriteriaMatch_NoneMatch()
-    {
-        // Arrange
-        var category1 = CreateItemCategory("Category1");
-        var category2 = CreateItemCategory("Category2");
-        var item1 = CreateItem("Item1", category1);
-        var item2 = CreateItem("Item2", category2);
-        var itemStack = new ItemStack(item1);
-        var criteria = new List<ItemFilter>
+        [Test]
+        public void MatchAny_CriteriaMatch_AllMatch()
         {
-            new FilterMatchCategory { category = category2 },
-            new FilterMatchType { match = item2 }
-        };
-        var filterMatchAny = new FilterMatchAny { criteria = criteria };
+            // Arrange
+            var category1 = CreateItemCategory("Category1");
+            var category2 = CreateItemCategory("Category2");
+            var item1 = CreateItem("Item1", category1);
+            var item2 = CreateItem("Item2", category2);
+            var itemStack = new ItemStack(item1);
+            var criteria = new List<ItemFilter>
+            {
+                new FilterMatchCategory { category = category1 },
+                new FilterMatchType { match = item1 }
+            };
+            var filterMatchAny = new FilterMatchAny { criteria = criteria };
 
-        // Act
-        var result = filterMatchAny.Matches(itemStack);
+            // Act
+            var result = filterMatchAny.Matches(itemStack);
 
-        // Assert
-        Assert.IsFalse(result);
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void MatchAny_CriteriaMatch_SomeMatch()
+        {
+            // Arrange
+            var category1 = CreateItemCategory("Category1");
+            var category2 = CreateItemCategory("Category2");
+            var item1 = CreateItem("Item1", category1);
+            var item2 = CreateItem("Item2", category2);
+            var itemStack = new ItemStack(item1);
+            var criteria = new List<ItemFilter>
+            {
+                new FilterMatchCategory { category = category1 },
+                new FilterMatchType { match = item2 }
+            };
+            var filterMatchAny = new FilterMatchAny { criteria = criteria };
+
+            // Act
+            var result = filterMatchAny.Matches(itemStack);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void MatchAny_CriteriaMatch_NoneMatch()
+        {
+            // Arrange
+            var category1 = CreateItemCategory("Category1");
+            var category2 = CreateItemCategory("Category2");
+            var item1 = CreateItem("Item1", category1);
+            var item2 = CreateItem("Item2", category2);
+            var itemStack = new ItemStack(item1);
+            var criteria = new List<ItemFilter>
+            {
+                new FilterMatchCategory { category = category2 },
+                new FilterMatchType { match = item2 }
+            };
+            var filterMatchAny = new FilterMatchAny { criteria = criteria };
+
+            // Act
+            var result = filterMatchAny.Matches(itemStack);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
     }
+
 }

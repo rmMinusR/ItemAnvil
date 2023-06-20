@@ -1,143 +1,148 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-public class TransactionTests
+namespace rmMinusR.ItemAnvil.Tests
 {
-    [Test]
-    public void TryExchange_ValidTransaction_SuccessfullyExchangesItems()
+
+    public class TransactionTests
     {
-        // Arrange
-        var inventoryA = new CondensingInventory();
-        var inventoryB = new CondensingInventory();
-
-        var itemA = new Item() { displayName = "ItemA" };
-        var itemB = new Item() { displayName = "ItemB" };
-
-        inventoryA.AddItem(itemA, 3);
-        inventoryB.AddItem(itemB, 2);
-
-        var itemsAtoB = new List<ItemStack>
+        [Test]
+        public void TryExchange_ValidTransaction_SuccessfullyExchangesItems()
         {
-            new ItemStack(itemA, 2),
-        };
+            // Arrange
+            var inventoryA = new CondensingInventory();
+            var inventoryB = new CondensingInventory();
 
-        var itemsBtoA = new List<ItemStack>
+            var itemA = new Item() { displayName = "ItemA" };
+            var itemB = new Item() { displayName = "ItemB" };
+
+            inventoryA.AddItem(itemA, 3);
+            inventoryB.AddItem(itemB, 2);
+
+            var itemsAtoB = new List<ItemStack>
+            {
+                new ItemStack(itemA, 2),
+            };
+
+            var itemsBtoA = new List<ItemStack>
+            {
+                new ItemStack(itemB, 1),
+            };
+
+            var transaction = new Transaction(itemsAtoB, itemsBtoA);
+
+            // Act
+            var exchangeResult = transaction.TryExchange(inventoryA, inventoryB);
+
+            // Assert
+            Assert.IsTrue(exchangeResult);
+
+            // Assert nothing was destroyed or duplicated
+            Assert.AreEqual(3, inventoryA.Count(itemA)+inventoryB.Count(itemA));
+            Assert.AreEqual(2, inventoryA.Count(itemB)+inventoryB.Count(itemB));
+
+            // Assert items reached their destinations
+            Assert.AreEqual(1, inventoryA.Count(itemB));
+            Assert.AreEqual(2, inventoryB.Count(itemA));
+        }
+
+        [Test]
+        public void TryExchange_InvalidTransaction_DoesNotExchangeItems()
         {
-            new ItemStack(itemB, 1),
-        };
+            // Arrange
+            var inventoryA = new CondensingInventory();
+            var inventoryB = new CondensingInventory();
 
-        var transaction = new Transaction(itemsAtoB, itemsBtoA);
+            var itemA = new Item() { displayName = "ItemA" };
+            var itemB = new Item() { displayName = "ItemB" };
 
-        // Act
-        var exchangeResult = transaction.TryExchange(inventoryA, inventoryB);
+            inventoryA.AddItem(itemA, 3);
+            inventoryB.AddItem(itemB, 2);
 
-        // Assert
-        Assert.IsTrue(exchangeResult);
+            var itemsAtoB = new List<ItemStack>
+            {
+                new ItemStack(itemA, 4), // More items than available in inventoryA
+            };
 
-        // Assert nothing was destroyed or duplicated
-        Assert.AreEqual(3, inventoryA.Count(itemA)+inventoryB.Count(itemA));
-        Assert.AreEqual(2, inventoryA.Count(itemB)+inventoryB.Count(itemB));
+            var itemsBtoA = new List<ItemStack>
+            {
+                new ItemStack(itemB, 1),
+            };
 
-        // Assert items reached their destinations
-        Assert.AreEqual(1, inventoryA.Count(itemB));
-        Assert.AreEqual(2, inventoryB.Count(itemA));
+            var transaction = new Transaction(itemsAtoB, itemsBtoA);
+
+            // Act
+            var exchangeResult = transaction.TryExchange(inventoryA, inventoryB);
+
+            // Assert
+            Assert.IsFalse(exchangeResult);
+            Assert.AreEqual(3, inventoryA.Count(itemA)); // No items should be removed from inventoryA
+            Assert.AreEqual(2, inventoryB.Count(itemB)); // No items should be added to inventoryB
+        }
+
+        [Test]
+        public void IsValid_ValidTransaction_ReturnsTrue()
+        {
+            // Arrange
+            var inventoryA = new CondensingInventory();
+            var inventoryB = new CondensingInventory();
+
+            var itemA = new Item() { displayName = "ItemA" };
+            var itemB = new Item() { displayName = "ItemB" };
+
+            inventoryA.AddItem(itemA, 3);
+            inventoryB.AddItem(itemB, 2);
+
+            var itemsAtoB = new List<ItemStack>
+            {
+                new ItemStack(itemA, 2),
+            };
+
+            var itemsBtoA = new List<ItemStack>
+            {
+                new ItemStack(itemB, 1),
+            };
+
+            var transaction = new Transaction(itemsAtoB, itemsBtoA);
+
+            // Act
+            var isValid = transaction.IsValid(inventoryA, inventoryB);
+
+            // Assert
+            Assert.IsTrue(isValid);
+        }
+
+        [Test]
+        public void IsValid_InvalidTransaction_ReturnsFalse()
+        {
+            // Arrange
+            var inventoryA = new CondensingInventory();
+            var inventoryB = new CondensingInventory();
+
+            var itemA = new Item() { displayName = "ItemA" };
+            var itemB = new Item() { displayName = "ItemB" };
+
+            inventoryA.AddItem(itemA, 3);
+            inventoryB.AddItem(itemB, 2);
+
+            var itemsAtoB = new List<ItemStack>
+            {
+                new ItemStack(itemA, 4), // More items than available in inventoryA
+            };
+
+            var itemsBtoA = new List<ItemStack>
+            {
+                new ItemStack(itemB, 1),
+            };
+
+            var transaction = new Transaction(itemsAtoB, itemsBtoA);
+
+            // Act
+            var isValid = transaction.IsValid(inventoryA, inventoryB);
+
+            // Assert
+            Assert.IsFalse(isValid);
+        }
     }
 
-    [Test]
-    public void TryExchange_InvalidTransaction_DoesNotExchangeItems()
-    {
-        // Arrange
-        var inventoryA = new CondensingInventory();
-        var inventoryB = new CondensingInventory();
-
-        var itemA = new Item() { displayName = "ItemA" };
-        var itemB = new Item() { displayName = "ItemB" };
-
-        inventoryA.AddItem(itemA, 3);
-        inventoryB.AddItem(itemB, 2);
-
-        var itemsAtoB = new List<ItemStack>
-        {
-            new ItemStack(itemA, 4), // More items than available in inventoryA
-        };
-
-        var itemsBtoA = new List<ItemStack>
-        {
-            new ItemStack(itemB, 1),
-        };
-
-        var transaction = new Transaction(itemsAtoB, itemsBtoA);
-
-        // Act
-        var exchangeResult = transaction.TryExchange(inventoryA, inventoryB);
-
-        // Assert
-        Assert.IsFalse(exchangeResult);
-        Assert.AreEqual(3, inventoryA.Count(itemA)); // No items should be removed from inventoryA
-        Assert.AreEqual(2, inventoryB.Count(itemB)); // No items should be added to inventoryB
-    }
-
-    [Test]
-    public void IsValid_ValidTransaction_ReturnsTrue()
-    {
-        // Arrange
-        var inventoryA = new CondensingInventory();
-        var inventoryB = new CondensingInventory();
-
-        var itemA = new Item() { displayName = "ItemA" };
-        var itemB = new Item() { displayName = "ItemB" };
-
-        inventoryA.AddItem(itemA, 3);
-        inventoryB.AddItem(itemB, 2);
-
-        var itemsAtoB = new List<ItemStack>
-        {
-            new ItemStack(itemA, 2),
-        };
-
-        var itemsBtoA = new List<ItemStack>
-        {
-            new ItemStack(itemB, 1),
-        };
-
-        var transaction = new Transaction(itemsAtoB, itemsBtoA);
-
-        // Act
-        var isValid = transaction.IsValid(inventoryA, inventoryB);
-
-        // Assert
-        Assert.IsTrue(isValid);
-    }
-
-    [Test]
-    public void IsValid_InvalidTransaction_ReturnsFalse()
-    {
-        // Arrange
-        var inventoryA = new CondensingInventory();
-        var inventoryB = new CondensingInventory();
-
-        var itemA = new Item() { displayName = "ItemA" };
-        var itemB = new Item() { displayName = "ItemB" };
-
-        inventoryA.AddItem(itemA, 3);
-        inventoryB.AddItem(itemB, 2);
-
-        var itemsAtoB = new List<ItemStack>
-        {
-            new ItemStack(itemA, 4), // More items than available in inventoryA
-        };
-
-        var itemsBtoA = new List<ItemStack>
-        {
-            new ItemStack(itemB, 1),
-        };
-
-        var transaction = new Transaction(itemsAtoB, itemsBtoA);
-
-        // Act
-        var isValid = transaction.IsValid(inventoryA, inventoryB);
-
-        // Assert
-        Assert.IsFalse(isValid);
-    }
 }

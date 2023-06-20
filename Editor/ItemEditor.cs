@@ -6,40 +6,45 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Item))]
-public class ItemEditor : Editor
+namespace rmMinusR.ItemAnvil.Editor
 {
-    public override void OnInspectorGUI()
+
+    [CustomEditor(typeof(Item))]
+    public class ItemEditor : UnityEditor.Editor
     {
-        bool refreshIcon = false;
-        Item item = (Item) target;
-
-        Sprite prevDisplayIcon = item.displayIcon;
-
-        DrawDefaultInspector();
-
-        serializedObject.ApplyModifiedProperties();
-
-        refreshIcon |= (prevDisplayIcon != item.displayIcon);
-
-        if(refreshIcon)
+        public override void OnInspectorGUI()
         {
-            //Update asset icon
-            //FIXME inconsistent, and overkill in terms of what we're refreshing
-            //TODO use instead: https://docs.unity.cn/2021.2/Documentation/ScriptReference/EditorGUIUtility.SetIconForObject.html
-            EditorUtility.SetDirty(target);
-            string path = AssetDatabase.GetAssetPath(target);
-            AssetDatabase.ForceReserializeAssets(new string[] { path }, ForceReserializeAssetsOptions.ReserializeAssetsAndMetadata);
-            AssetImporter.GetAtPath(path).SaveAndReimport();
-            AssetPreview.GetAssetPreview(target);
+            bool refreshIcon = false;
+            Item item = (Item) target;
+
+            Sprite prevDisplayIcon = item.displayIcon;
+
+            DrawDefaultInspector();
+
+            serializedObject.ApplyModifiedProperties();
+
+            refreshIcon |= (prevDisplayIcon != item.displayIcon);
+
+            if(refreshIcon)
+            {
+                //Update asset icon
+                //FIXME inconsistent, and overkill in terms of what we're refreshing
+                //TODO use instead: https://docs.unity.cn/2021.2/Documentation/ScriptReference/EditorGUIUtility.SetIconForObject.html
+                EditorUtility.SetDirty(target);
+                string path = AssetDatabase.GetAssetPath(target);
+                AssetDatabase.ForceReserializeAssets(new string[] { path }, ForceReserializeAssetsOptions.ReserializeAssetsAndMetadata);
+                AssetImporter.GetAtPath(path).SaveAndReimport();
+                AssetPreview.GetAssetPreview(target);
+            }
+        }
+
+        public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
+        {
+            Item item = (Item) target;
+
+            if (item.displayIcon != null) return AssetPreview.GetAssetPreview(item.displayIcon);
+            else return base.RenderStaticPreview(assetPath, subAssets, width, height);
         }
     }
 
-    public override Texture2D RenderStaticPreview(string assetPath, UnityEngine.Object[] subAssets, int width, int height)
-    {
-        Item item = (Item) target;
-
-        if (item.displayIcon != null) return AssetPreview.GetAssetPreview(item.displayIcon);
-        else return base.RenderStaticPreview(assetPath, subAssets, width, height);
-    }
 }

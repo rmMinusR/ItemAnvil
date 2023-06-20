@@ -2,18 +2,23 @@
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
-public sealed class FilterMatchType : ItemFilter
+namespace rmMinusR.ItemAnvil
 {
-    public Item match;
 
-    public override bool Matches(ReadOnlyItemStack itemStack)
+    [Serializable]
+    public sealed class FilterMatchType : ItemFilter
     {
-        return match == itemStack.itemType;
+        public Item match;
+
+        public override bool Matches(ReadOnlyItemStack itemStack)
+        {
+            return match == itemStack.itemType;
+        }
+
+        public override ItemFilter Clone()
+        {
+            return (ItemFilter) MemberwiseClone();
+        }
     }
 
-    public override ItemFilter Clone()
-    {
-        return (ItemFilter) MemberwiseClone();
-    }
 }

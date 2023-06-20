@@ -25,7 +25,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: Marketable, ns: , asm: ItemAnvil}
+      type: {class: Marketable, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         currency: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
         isBuyable: 1
@@ -33,6 +33,6 @@ MonoBehaviour:
         isSellable: 0
         sellPrice: 0
     00000001:
-      type: {class: MaxStackSize, ns: , asm: ItemAnvil}
+      type: {class: MaxStackSize, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         size: 1

@@ -320,7 +320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: inventory
-      value: ItemAnvil CondensingInventory
+      value: ItemAnvil rmMinusR.ItemAnvil.CondensingInventory
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: inventory.contents.Array.size
@@ -1720,7 +1720,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
+      type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
@@ -2723,7 +2723,6 @@ GameObject:
   - component: {fileID: 1473995281}
   - component: {fileID: 1473995280}
   - component: {fileID: 1473995279}
-  - component: {fileID: 1473995278}
   m_Layer: 5
   m_Name: Brew tea
   m_TagString: Untagged
@@ -2752,25 +2751,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1473995278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473995276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68aa0b7bbe79f8f4183a3f656b3d8248, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recipe: {fileID: 11400000, guid: 31bd674869da7ad4c88d65e0ef7d7c80, type: 2}
-  onLMB:
-    m_PersistentCalls:
-      m_Calls: []
-  onRMB:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1473995279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2815,13 +2795,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1473995278}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
-        m_MethodName: TryCraftAsHolder
+      - m_Target: {fileID: 11400000, guid: 31bd674869da7ad4c88d65e0ef7d7c80, type: 2}
+        m_TargetAssemblyTypeName: rmMinusR.ItemAnvil.CraftingRecipe, ItemAnvil
+        m_MethodName: TryExchange_UEv
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530249}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
+          m_ObjectArgumentAssemblyTypeName: rmMinusR.ItemAnvil.InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

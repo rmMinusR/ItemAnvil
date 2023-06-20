@@ -345,7 +345,6 @@ GameObject:
   - component: {fileID: 123635810}
   - component: {fileID: 123635809}
   - component: {fileID: 123635808}
-  - component: {fileID: 123635811}
   m_Layer: 5
   m_Name: Smelt tin ingot
   m_TagString: Untagged
@@ -418,13 +417,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 123635811}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
-        m_MethodName: TryCraftAsHolder
+      - m_Target: {fileID: 11400000, guid: b80f20f33ff6d6040bc6c34c0820b943, type: 2}
+        m_TargetAssemblyTypeName: rmMinusR.ItemAnvil.CraftingRecipe, ItemAnvil
+        m_MethodName: TryExchange_UEv
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530251}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
+          m_ObjectArgumentAssemblyTypeName: rmMinusR.ItemAnvil.InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -468,25 +467,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123635806}
   m_CullTransparentMesh: 1
---- !u!114 &123635811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123635806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68aa0b7bbe79f8f4183a3f656b3d8248, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recipe: {fileID: 11400000, guid: b80f20f33ff6d6040bc6c34c0820b943, type: 2}
-  onLMB:
-    m_PersistentCalls:
-      m_Calls: []
-  onRMB:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &142940186
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,7 +1305,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
+      type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: b9891fdb3acaf7b48aedcfb1dddb1683, type: 2}
@@ -2266,7 +2246,7 @@ MonoBehaviour:
   references:
     version: 1
     00000000:
-      type: {class: CondensingInventory, ns: , asm: ItemAnvil}
+      type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
         contents:
         - _itemType: {fileID: 11400000, guid: 60f1b8476456c9b4198ba70382457760, type: 2}
@@ -2790,7 +2770,6 @@ GameObject:
   - component: {fileID: 1192639865}
   - component: {fileID: 1192639864}
   - component: {fileID: 1192639863}
-  - component: {fileID: 1192639866}
   m_Layer: 5
   m_Name: Smelt copper ingot
   m_TagString: Untagged
@@ -2863,13 +2842,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1192639866}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
-        m_MethodName: TryCraftAsHolder
+      - m_Target: {fileID: 11400000, guid: 3031f0bd053f8d242b8d878ae6b07558, type: 2}
+        m_TargetAssemblyTypeName: rmMinusR.ItemAnvil.CraftingRecipe, ItemAnvil
+        m_MethodName: TryExchange_UEv
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530251}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
+          m_ObjectArgumentAssemblyTypeName: rmMinusR.ItemAnvil.InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2913,25 +2892,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1192639861}
   m_CullTransparentMesh: 1
---- !u!114 &1192639866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1192639861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68aa0b7bbe79f8f4183a3f656b3d8248, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recipe: {fileID: 11400000, guid: 3031f0bd053f8d242b8d878ae6b07558, type: 2}
-  onLMB:
-    m_PersistentCalls:
-      m_Calls: []
-  onRMB:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1247781830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4038,7 +3998,6 @@ GameObject:
   - component: {fileID: 1633577175}
   - component: {fileID: 1633577174}
   - component: {fileID: 1633577176}
-  - component: {fileID: 1633577177}
   m_Layer: 5
   m_Name: Alloy bronze ingots
   m_TagString: Untagged
@@ -4149,37 +4108,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1633577177}
-        m_TargetAssemblyTypeName: CallableCraftingRecipe, ItemAnvil
-        m_MethodName: TryCraftAsHolder
+      - m_Target: {fileID: 11400000, guid: b2f99b06ccb24c641bcdd044c04bb6e9, type: 2}
+        m_TargetAssemblyTypeName: rmMinusR.ItemAnvil.CraftingRecipe, ItemAnvil
+        m_MethodName: TryExchange_UEv
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 951530251}
-          m_ObjectArgumentAssemblyTypeName: InventoryHolder, ItemAnvil
+          m_ObjectArgumentAssemblyTypeName: rmMinusR.ItemAnvil.InventoryHolder, ItemAnvil
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1633577177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633577172}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68aa0b7bbe79f8f4183a3f656b3d8248, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recipe: {fileID: 11400000, guid: b2f99b06ccb24c641bcdd044c04bb6e9, type: 2}
-  onLMB:
-    m_PersistentCalls:
-      m_Calls: []
-  onRMB:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1715667597
 GameObject:
   m_ObjectHideFlags: 0
