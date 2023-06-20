@@ -15,7 +15,7 @@ Just like GameObjects have component scripts, items gain functionality by adding
 ### Installing
  - Option 1: Use the Package Manager to [add by git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html): `https://github.com/rmMinusR/ItemAnvil.git` Recommended for most users.
  - Option 2: Git clone to your Packages folder. Recommended for contributors.
- - ~~Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).~~ Currently awaiting review, not available yet. Not recommended, as it will likely be one or two versions out of date due to the review process.
+ - ~~Option 3: [Download from Unity Asset Store](https://u3d.as/33kM).~~ Currently awaiting review, not available yet. Will likely be slightly out of date due to the review process.
  - Option 4: Download and place in your Assets folder. Not recommended, as the samples folder will be invisible.
 
 ### Examples
@@ -24,26 +24,28 @@ Just like GameObjects have component scripts, items gain functionality by adding
 
 ## Features
  - [x] Pre-built UI
+	 - [x] Tooltips
 	 - [x] Sort button
 	 - [x] Model-View-Controller architecture
  - [x] Crafting recipes
- - [x] Items use assigned icon for display
- - [x] Max stack size
+ - [x] Items use assigned icon in Project browser and Asset Picker
+ - [x] Control over max stack size
  - [x] Generic inventories:
 	 - [x] Auto-expanding
 	 - [x] Fixed-slot
  - [x] Fully serializable using Unity's built-in tools
- - [x] Per-instance properties (enchantments, temperature, etc)
+ - [x] Per-instance properties (enchantments, temperature, aesthetic customizations, etc)
  - [x] Fuzzy filters and advanced querying
  - [x] Unit testing - actively improving
 
 ### Roadmap
- - [ ] Loot tables - Planned for 0.5-0.6
+ - [ ] Loot tables - Planned for 0.6-0.7
  - [ ] Better player-facing inventory
-	 - [ ] Drag-and-drop rearranging
-	 - [ ] Drag-and-drop moving between inventories
+	 - [ ] Drag-and-drop rearranging - Planned for 0.6
+	 - [ ] Drag-and-drop moving between inventories - Planned for 0.6
 	 - [ ] Searching/highlighting - Partially supported through Filters, needs proper UI
-	 - [ ] Controller support
+	 - [ ] Gamepad support
+ - [ ] Event hooks
  - [ ] Combat example
  - [ ] Dynamic weaponsmithing example
  - [ ] Random stats ("+ 10 to 20 Armor")
