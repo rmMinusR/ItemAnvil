@@ -28,7 +28,6 @@ public abstract class ItemInstanceProperty : ICloneable
         return hash;
     }
 
-
     public virtual bool ShouldTick => false;
     public virtual void Tick() { }
 }

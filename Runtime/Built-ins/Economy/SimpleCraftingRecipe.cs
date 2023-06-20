@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Simple Crafting Recipe", menuName = "Simple Crafting Recipe")]
+[CreateAssetMenu(menuName = "Item Anvil/Simple Crafting Recipe")]
 public sealed class SimpleCraftingRecipe : CraftingRecipe
 {
     [Serializable]

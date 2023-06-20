@@ -15,7 +15,7 @@ public class TemperatureTooltip : TooltipPart
     {
         if (newTarget.TryGetComponent(out ViewInventorySlot view))
         {
-            temperature = view.mostRecentStack.GetProperty<Temperature>();
+            temperature = view.mostRecentStack.instanceProperties.Get<Temperature>();
         }
         else temperature = null;
 

@@ -14,7 +14,7 @@ using UnityEngine;
 /// <seealso cref="ItemStack"/>
 /// <seealso cref="ItemProperty"/>
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Item")]
+[CreateAssetMenu(menuName = "Item Anvil/Item")]
 public sealed class Item : ScriptableObject
 {
     [Header("Display settings")]

@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// No logic, exists only as a tag
 /// </summary>
-[CreateAssetMenu(fileName = "New Item Category", menuName = "Item Category")]
+[CreateAssetMenu(menuName = "Item Anvil/Item Category")]
 public sealed class ItemCategory : ScriptableObject
 {
 	
