@@ -1,6 +1,6 @@
 {
   "name": "com.rmminusr.items",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "license": "MIT License",
   "author": {
     "name": "Robert Christensen / rmMinusR",
@@ -14,19 +14,19 @@
   },
   "samples": [
     {
-	  "displayName": "Player Inventory",
-	  "description": "Contains a simple setup for player inventory and UI",
-	  "path": "Samples~/Player Inventory"
-	},
+      "displayName": "Player Inventory",
+      "description": "Contains a simple setup for player inventory and UI",
+      "path": "Samples~/Player Inventory"
+    },
     {
-	  "displayName": "Tea Shop",
-	  "description": "Contains a simple shop setup, allowing the player to buy with safe, covariant-proof transactions",
-	  "path": "Samples~/Tea Shop"
-	},
+      "displayName": "Tea Shop",
+      "description": "Contains a simple shop setup, allowing the player to buy with safe, covariant-proof transactions",
+      "path": "Samples~/Tea Shop"
+    },
     {
-	  "displayName": "Metallurgy",
-	  "description": "A crafting minigame! Buy ores => smelt => alloy => sell for profit.",
-	  "path": "Samples~/Metallurgy"
-	}
+      "displayName": "Metallurgy",
+      "description": "A crafting minigame! Buy ores => smelt => alloy => sell for profit.",
+      "path": "Samples~/Metallurgy"
+    }
   ]
 }
