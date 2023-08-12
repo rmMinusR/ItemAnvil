@@ -49,6 +49,9 @@ namespace rmMinusR.ItemAnvil
         /// <returns>Whether the merge would be allowed</returns>
         public static bool CanMerge(ItemStack src, ItemStack dst)
         {
+            //Can always transfer if destination has nothing that would be overwritten
+            if (IsEmpty(dst)) return true;
+
             return src.itemType == dst.itemType //Item types must match
                 && src._instanceProperties.SetEquals(dst._instanceProperties); //Ensure we have the same properties. FIXME GC
         }
@@ -67,7 +70,7 @@ namespace rmMinusR.ItemAnvil
 
             dst._quantity = totalAmt;
             //TODO Could do better decoupling
-            if (dst._itemType.Properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
+            if (dst._itemType != null && dst._itemType.Properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
             src._quantity = totalAmt-dst._quantity;
 
             return true;

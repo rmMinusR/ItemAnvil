@@ -142,8 +142,9 @@ namespace rmMinusR.ItemAnvil
     
         private int RemoveAll_Impl(Func<ItemStack, bool> filter)
         {
-            int nRemoved = slots.Where(i => filter(i.Contents)).Sum(i => i.Contents.quantity);
-            foreach (InventorySlot slot in slots.Where(i => filter(i.Contents))) slot.Contents = null;
+            bool wrappedFilter(InventorySlot i) => !i.IsEmpty && filter(i.Contents);
+            int nRemoved = slots.Where(wrappedFilter).Sum(i => i.Contents.quantity);
+            foreach (InventorySlot slot in slots.Where(wrappedFilter)) slot.Contents = null;
             return nRemoved;
         }
 

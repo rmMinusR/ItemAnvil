@@ -42,11 +42,18 @@ namespace rmMinusR.ItemAnvil
 
         public bool CanAccept(ItemStack newStack)
         {
-            return IsEmpty || ItemStack.CanMerge(newStack, Contents);
+            return ItemStack.CanMerge(newStack, Contents);
         }
 
         public void TryAccept(ItemStack newStack)
         {
+            if (IsEmpty)
+            {
+                //Create a dummy object to transfer into
+                Contents = newStack.Clone();
+                Contents.quantity = 0;
+            }
+
             ItemStack.TryMerge(newStack, Contents);
         }
     }

@@ -39,22 +39,12 @@ namespace rmMinusR.ItemAnvil
                 if (newStack.quantity == 0) return;
             }
 
-            //Awful fix, but it plays nice with stacking rules
+            //Then try adding slots until we deplete the stack
+            //Not a great fix, but it plays nice with stacking rules
             while (newStack.quantity > 0)
             {
                 InventorySlot newSlot = AddSlot();
-
-                ItemStack s = newStack.Clone();
-                s.quantity = 0;
-                
-                newSlot.TryAccept(s);
-            }
-
-            //Then try adding a slot
-            foreach (InventorySlot slot in slots)
-            {
-                if (slot.IsEmpty && slot.CanAccept(newStack)) slot.TryAccept(newStack);
-                if (newStack.quantity == 0) return;
+                newSlot.TryAccept(newStack);
             }
 
             //We couldn't accept the full stack
@@ -142,8 +132,9 @@ namespace rmMinusR.ItemAnvil
 
         private int RemoveAll_Impl(Func<ItemStack, bool> filter)
         {
-            int nRemoved = slots.Where(i => filter(i.Contents)).Sum(i => i.Contents.quantity);
-            slots.RemoveAll(i => filter(i.Contents));
+            bool wrappedFilter(InventorySlot i) => !i.IsEmpty && filter(i.Contents);
+            int nRemoved = slots.Where(wrappedFilter).Sum(i => i.Contents.quantity);
+            slots.RemoveAll(wrappedFilter);
             if (nRemoved != 0) ValidateIDs();
             return nRemoved;
         }
