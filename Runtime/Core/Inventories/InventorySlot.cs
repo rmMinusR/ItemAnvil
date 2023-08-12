@@ -39,6 +39,16 @@ namespace rmMinusR.ItemAnvil
             a._contents = b._contents;
             b._contents = tmp;
         }
+
+        public bool CanAccept(ItemStack newStack)
+        {
+            return IsEmpty || ItemStack.CanMerge(newStack, Contents);
+        }
+
+        public void TryAccept(ItemStack newStack)
+        {
+            ItemStack.TryMerge(newStack, Contents);
+        }
     }
 
     public interface ReadOnlyInventorySlot

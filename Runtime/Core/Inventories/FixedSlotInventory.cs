@@ -12,12 +12,15 @@ namespace rmMinusR.ItemAnvil
     [Serializable]
     public sealed class FixedSlotInventory : Inventory
     {
-        [SerializeField] private List<ItemStack> contents = new List<ItemStack>();
+        [SerializeField] private List<InventorySlot> slots = new List<InventorySlot>();
+        public override IEnumerable<InventorySlot> Slots => slots;
+        public override InventorySlot GetSlot(int id) => slots[id];
+        public override int SlotCount => slots.Count;
 
         public FixedSlotInventory() { }
         public FixedSlotInventory(int size)
         {
-            for (int i = 0; i < size; ++i) contents.Add(null);
+            for (int i = 0; i < size; ++i) slots.Add(new InventorySlot(i));
         }
 
         /// <summary>
@@ -26,26 +29,23 @@ namespace rmMinusR.ItemAnvil
         /// <param name="newStack">Stack to add</param>
         public override void AddItem(ItemStack newStack)
         {
-            if (newStack == null || newStack.itemType == null) throw new ArgumentException("Cannot add nothing!");
+            if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
 
-            //Prevent covariants
-            newStack = newStack.Clone();
-
-            //Try to merge with existing stacks
-            foreach (ItemStack existing in contents)
+            //First try to merge with existing stacks
+            foreach (InventorySlot slot in slots)
             {
-                if (existing != null) ItemStack.TryMerge(newStack, existing);
+                if (!slot.IsEmpty && slot.CanAccept(newStack)) slot.TryAccept(newStack);
                 if (newStack.quantity == 0) return;
             }
 
-            //Awful fix, but it plays nice with stacking rules
-            while (newStack.quantity > 0)
+            //Then try to merge into empty slots
+            foreach (InventorySlot slot in slots)
             {
-                ItemStack s = newStack.Clone();
-                s.quantity = 0;
-                contents[contents.FindIndex(i => i == null || i.itemType == null || i.quantity == 0)] = s;
-                ItemStack.TryMerge(newStack, s);
+                if (slot.IsEmpty && slot.CanAccept(newStack)) slot.TryAccept(newStack);
+                if (newStack.quantity == 0) return;
             }
+
+            //We couldn't accept the full stack
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public override IEnumerable<ReadOnlyItemStack> GetContents()
         {
-            return contents.Where(i => i != null && i.itemType != null);
+            return slots.Where(i => !i.IsEmpty).Select(i => i.Contents);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public override List<ItemStack> CloneContents()
         {
-            return contents.Select(i => i?.Clone()).ToList();
+            return slots.Where(i => !i.IsEmpty).Select(i => i.Contents.Clone()).ToList();
         }
 
         #region TryRemove family
@@ -98,25 +98,25 @@ namespace rmMinusR.ItemAnvil
         {
             List<ItemStack> @out = new List<ItemStack>();
 
-            for (int i = 0; i < contents.Count; ++i)
+            for (int i = 0; i < slots.Count; ++i)
             {
-                if (contents[i] != null && filter(contents[i]))
+                if (!slots[i].IsEmpty && filter(slots[i].Contents))
                 {
-                    if (contents[i].quantity >= totalToRemove)
+                    if (slots[i].Contents.quantity >= totalToRemove)
                     {
                         //This stack is enough to complete requirements. Stop consuming.
-                        ItemStack tmp = contents[i].Clone();
+                        ItemStack tmp = slots[i].Contents.Clone();
                         tmp.quantity = totalToRemove;
                         @out.Add(tmp);
-                        contents[i].quantity -= totalToRemove;
+                        slots[i].Contents.quantity -= totalToRemove;
                         return @out;
                     }
                     else
                     {
                         //This stack is not enough to complete requirements. Continue consuming.
-                        totalToRemove -= contents[i].quantity;
-                        @out.Add(contents[i]);
-                        contents[i] = null;
+                        totalToRemove -= slots[i].Contents.quantity;
+                        @out.Add(slots[i].Contents);
+                        slots[i].Contents = null;
                     }
                 }
             }
@@ -142,15 +142,8 @@ namespace rmMinusR.ItemAnvil
     
         private int RemoveAll_Impl(Func<ItemStack, bool> filter)
         {
-            int nRemoved = 0;
-            for (int i = 0; i < contents.Count; ++i)
-            {
-                if (contents[i] != null && filter(contents[i]))
-                {
-                    nRemoved += contents[i].quantity;
-                    contents[i] = null;
-                }
-            }
+            int nRemoved = slots.Where(i => filter(i.Contents)).Sum(i => i.Contents.quantity);
+            foreach (InventorySlot slot in slots.Where(i => filter(i.Contents))) slot.Contents = null;
             return nRemoved;
         }
 
@@ -159,27 +152,59 @@ namespace rmMinusR.ItemAnvil
         /// <summary>
         /// Check how many items match the given filter
         /// </summary>
-        public override int Count(ItemFilter filter) => contents.Where(i => i != null).Where(filter.Matches).Sum(i => i.quantity);
+        public override int Count(ItemFilter filter) => slots.Where(i => !i.IsEmpty && filter.Matches(i.Contents)).Sum(i => i.Contents.quantity);
 
         /// <summary>
         /// Check how many items are present of the given type
         /// </summary>
-        public override int Count(Item itemType) => contents.Where(i => i != null).Where(i => i.itemType == itemType).Sum(i => i.quantity);
+        public override int Count(Item itemType) => slots.Where(i => !i.IsEmpty && i.Contents.itemType == itemType).Sum(i => i.Contents.quantity);
     
         /// <summary>
         /// Find all ItemStacks that match the filter
         /// </summary>
-        public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => contents.Where(i => i != null).Where(filter.Matches);
+        public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => slots.Where(i => !i.IsEmpty).Select(i => i.Contents).Where(filter.Matches);
 
         /// <summary>
         /// Find all ItemStacks with the given type
         /// </summary>
-        public override IEnumerable<ItemStack> FindAll(Item type) => contents.Where(i => i != null).Where(i => i.itemType == type);
+        public override IEnumerable<ItemStack> FindAll(Item type) => slots.Where(i => !i.IsEmpty).Select(i => i.Contents).Where(i => i.itemType == type);
 
-        public override void Sort(IComparer<ReadOnlyItemStack> comparer)
+        public override void Sort(IComparer<ReadOnlyItemStack> comparer) => contents.Sort(comparer);
+
+
+        #region Obsolete functions/variables, and upgrader
+
+        public override void Validate()
         {
-            contents.Sort(comparer);
+            //Update obsolete members
+#pragma warning disable CS0612
+            if (contents.Count != 0)
+            {
+                if (slots.Count != 0) throw new InvalidOperationException("Cannot update storage -- destination 'slots' must be empty");
+
+                for (int i = 0; i < contents.Count; ++i)
+                {
+                    InventorySlot s = new InventorySlot(i);
+                    s.Contents = contents[i];
+                    slots.Add(s);
+                }
+                contents.Clear();
+
+            }
+#pragma warning restore CS0612
+
+            //Ensure slots have correct IDs
+            for (int i = 0; i < slots.Count; ++i) slots[i].ID = i;
         }
+
+        /// <summary>
+        /// OUTDATED as of 0.5.1 - use "slots" instead
+        /// Validate() should handle the upgrade gracefully
+        /// </summary>
+        [HideInInspector, Obsolete]
+        [SerializeField] private List<ItemStack> contents = new List<ItemStack>();
+
+        #endregion
     }
 
 }

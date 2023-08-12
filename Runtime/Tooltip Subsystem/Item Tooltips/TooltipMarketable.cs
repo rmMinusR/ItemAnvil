@@ -24,7 +24,7 @@ namespace rmMinusR.ItemAnvil.Tooltips
         {
             //Try to grab necessary resources
             interaction = newTarget.GetComponent<CallableMarketTransaction>();
-            if (newTarget.TryGetComponent(out ViewInventorySlot view)) market = view.mostRecentStack.itemType.Properties.Get<Marketable>();
+            if (newTarget.TryGetComponent(out ViewInventorySlot view) && !view.slot.IsEmpty) market = view.slot.Contents.itemType.Properties.Get<Marketable>();
             else market = null;
 
             //Determine whether we should be active

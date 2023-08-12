@@ -34,7 +34,7 @@ namespace rmMinusR.ItemAnvil.UI
         private void Start()
         {
             view = GetComponent<ViewInventorySlot>();
-            if (view != null) itemType = view.mostRecentStack?.itemType;
+            if (view != null && !view.slot.IsEmpty) itemType = view.slot.Contents.itemType;
             if (inventoryA == null) inventoryA = GameObject.FindWithTag("Player").GetComponent<InventoryHolder>();
             if (inventoryB == null) inventoryB = view.inventoryHolder != null ? view.inventoryHolder : view.GetComponentInParent<ViewInventory>().inventoryHolder;
             Debug.Assert(inventoryA != null);
@@ -42,7 +42,7 @@ namespace rmMinusR.ItemAnvil.UI
 
         private void Update()
         {
-            if (view != null) itemType = view.mostRecentStack?.itemType;
+            if (view != null && !view.slot.IsEmpty) itemType = view.slot.Contents.itemType;
         }
 
         //Generic form for buy/sell, depending on mode

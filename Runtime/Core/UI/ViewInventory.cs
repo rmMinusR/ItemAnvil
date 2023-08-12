@@ -10,14 +10,23 @@ namespace rmMinusR.ItemAnvil.UI
     {
         public InventoryHolder inventoryHolder;
         [SerializeField] private ViewInventorySlot itemStackUIPrefab;
-        [SerializeReference] [TypeSwitcher] private ItemFilter displayFilter = null;
 
+        [Space]
+        [SerializeReference] [TypeSwitcher(order = 2)] private ItemFilter displayFilter = null;
+        [SerializeField] private FilterBehavior filterBehavior;
+        private enum FilterBehavior
+        {
+            HideSlot,
+            ShowBlank
+        }
+
+        [Space]
         [SerializeField] private GameObject emptyHint;
 
         [Space]
         [SerializeField] private Transform stackViewParent;
 
-        private List<ViewInventorySlot> stackViews = new List<ViewInventorySlot>();
+        private List<ViewInventorySlot> slotViews = new List<ViewInventorySlot>();
 
         private void Start()
         {
@@ -34,27 +43,27 @@ namespace rmMinusR.ItemAnvil.UI
         {
             //Build which ItemStacks to show
             //TODO can we do this more efficiently with enumerators?
-            List<ReadOnlyItemStack> stacks = new List<ReadOnlyItemStack>(inventoryHolder.inventory.GetContents());
-            if (displayFilter != null) stacks.RemoveAll(i => displayFilter.Matches(i));
-        
+            List<ReadOnlyInventorySlot> slots = new List<ReadOnlyInventorySlot>(inventoryHolder.inventory.Slots);
+            if (displayFilter != null) slots.RemoveAll(i => displayFilter.Matches(i.Contents));
+            
             //Ensure we have the same number of UI elements as ItemStacks
             //TODO can be optimized
-            while (stackViews.Count < stacks.Count)
+            while (slotViews.Count < slots.Count)
             {
                 ViewInventorySlot view = Instantiate(itemStackUIPrefab, stackViewParent);
-                stackViews.Add(view);
+                slotViews.Add(view);
             }
-            while (stackViews.Count > stacks.Count)
+            while (slotViews.Count > slots.Count)
             {
-                Destroy(stackViews[stackViews.Count-1].gameObject);
-                stackViews.RemoveAt(stackViews.Count-1);
+                Destroy(slotViews[slotViews.Count-1].gameObject);
+                slotViews.RemoveAt(slotViews.Count-1);
             }
 
             //Write stack data
-            for (int i = 0; i < stacks.Count; ++i) stackViews[i].WriteStack(stacks[i]);
+            for (int i = 0; i < slots.Count; ++i) slotViews[i].WriteSlot(slots[i]);
 
             //Show/hide empty hint
-            if (emptyHint != null) emptyHint.SetActive(stacks.Count == 0);
+            if (emptyHint != null) emptyHint.SetActive(slots.Count == 0);
         }
     }
 

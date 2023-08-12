@@ -95,7 +95,11 @@ namespace rmMinusR.ItemAnvil
         public int quantity
         {
             get => _quantity;
-            set => _quantity = value;
+            set
+            {
+                if (value < 0) throw new ArgumentException("Quantity cannot be negative");
+                _quantity = value;
+            }
         }
 
         public PropertyBag<ItemInstanceProperty> instanceProperties

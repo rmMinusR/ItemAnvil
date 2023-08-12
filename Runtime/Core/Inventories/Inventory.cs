@@ -102,6 +102,8 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public abstract int SlotCount { get; }
 
+        public abstract IEnumerable<InventorySlot> Slots { get; }
+
         /// <summary>
         /// Dump the contents of this inventory.
         /// </summary>
