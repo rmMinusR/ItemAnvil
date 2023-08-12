@@ -11,17 +11,17 @@ namespace rmMinusR.ItemAnvil.UI
     public sealed class ViewInventorySlot : BaseViewItemStack
     {
         public InventoryHolder inventoryHolder { get; internal set; }
-        public ReadOnlyItemStack mostRecentStack { get; private set; }
+        public ReadOnlyInventorySlot slot { get; internal set; }
 
-        public void WriteStack(ReadOnlyItemStack src)
+        public void WriteSlot(ReadOnlyInventorySlot src)
         {
-            mostRecentStack = src;
+            slot = src;
 
-            if (src != null && src.itemType != null)
+            if (slot != null && !slot.IsEmpty)
             {
                 //Has data, show
-                WriteCount(src.quantity);
-                WriteType (src.itemType);
+                WriteCount(slot.Contents.quantity);
+                WriteType (slot.Contents.itemType);
             }
             else
             {

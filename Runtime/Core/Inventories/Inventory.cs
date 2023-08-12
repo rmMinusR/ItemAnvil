@@ -9,14 +9,14 @@ namespace rmMinusR.ItemAnvil
     public abstract class Inventory
     {
         /// <summary>
-        /// Add an item
+        /// Attempt to add an item
         /// </summary>
         /// <param name="itemType">Type of the item to add</param>
         /// <param name="quantity">How many to add</param>
-        public virtual void AddItem(Item itemType, int quantity) => AddItem(new ItemStack(itemType, quantity));
+        public virtual void AddItem(Item itemType, int quantity = 1) => AddItem(new ItemStack(itemType, quantity));
 
         /// <summary>
-        /// Add an item using an ItemStack
+        /// Attempt to add an ItemStack. If the stack can't be fully transferred, the ItemStack will be changed to reflect that.
         /// </summary>
         /// <param name="newStack">Stack to add</param>
         public abstract void AddItem(ItemStack newStack);
@@ -93,15 +93,25 @@ namespace rmMinusR.ItemAnvil
         public abstract IEnumerable<ItemStack> FindAll(Item type);
 
         /// <summary>
+        /// Get a given slot, which can then be freely manipulated. Errors if outside the range [0, SlotCount)
+        /// </summary>
+        public abstract InventorySlot GetSlot(int id);
+
+        /// <summary>
+        /// How many slots are present, regardless of whether they are filled or not?
+        /// </summary>
+        public abstract int SlotCount { get; }
+
+        /// <summary>
         /// Dump the contents of this inventory.
         /// </summary>
         /// <remarks>
-        /// Note that these are the original instances, and changes made will reflect in the inventory.
+        /// Note that these are the original instances. If downcast, changes made will reflect in the inventory.
         /// </remarks>
         public abstract IEnumerable<ReadOnlyItemStack> GetContents();
 
         /// <summary>
-        /// Make a deep clone of the contents of this inventory, which may be manipulated freely without affecting the inventory
+        /// Make a deep clone of the contents of this inventory, which may be manipulated freely without affecting the inventory's copy.
         /// </summary>
         public abstract List<ItemStack> CloneContents();
     
@@ -125,6 +135,11 @@ namespace rmMinusR.ItemAnvil
             public HeuristicComparer(Func<ReadOnlyItemStack, float> heuristic) => this.heuristic = heuristic;
             public int Compare(ReadOnlyItemStack x, ReadOnlyItemStack y) => Comparer<float>.Default.Compare(heuristic(x), heuristic(y));
         }
+
+        /// <summary>
+        /// Ensure state is valid (such as slot IDs). Also handles API upgrades.
+        /// </summary>
+        public abstract void Validate();
     }
 
 }

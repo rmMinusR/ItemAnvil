@@ -104,6 +104,8 @@ namespace rmMinusR.ItemAnvil
         }
 
         #endregion
+
+        public static bool IsEmpty(ReadOnlyItemStack stack) => stack == null || stack.itemType == null || stack.quantity <= 0;
     }
 
     public interface ReadOnlyItemStack

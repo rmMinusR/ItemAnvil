@@ -30,6 +30,11 @@ namespace rmMinusR.ItemAnvil
                 }
             }
         }
+
+        private void OnValidate()
+        {
+            if (inventory != null) inventory.Validate();
+        }
     }
 
 }
