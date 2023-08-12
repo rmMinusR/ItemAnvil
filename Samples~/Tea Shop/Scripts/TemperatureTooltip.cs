@@ -14,9 +14,9 @@ public class TemperatureTooltip : TooltipPart
 
     protected override void UpdateTarget(Tooltippable newTarget)
     {
-        if (newTarget.TryGetComponent(out ViewInventorySlot view))
+        if (newTarget.TryGetComponent(out ViewInventorySlot view) && !view.slot.IsEmpty)
         {
-            temperature = view.mostRecentStack.instanceProperties.Get<Temperature>();
+            temperature = view.slot.Contents.instanceProperties.Get<Temperature>();
         }
         else temperature = null;
 
