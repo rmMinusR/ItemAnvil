@@ -1682,7 +1682,7 @@ GameObject:
   - component: {fileID: 8916308239390158621}
   - component: {fileID: 8916308239390158622}
   m_Layer: 5
-  m_Name: Inventory view
+  m_Name: Grid inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1726,6 +1726,7 @@ MonoBehaviour:
   itemStackUIPrefab: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
   displayFilter:
     id: 0
+  filterBehavior: 0
   emptyHint: {fileID: 7722870441552781792}
   stackViewParent: {fileID: 8916308239693641514}
   references:

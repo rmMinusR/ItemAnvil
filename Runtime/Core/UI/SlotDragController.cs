@@ -10,7 +10,7 @@ namespace rmMinusR.ItemAnvil.UI
 {
 
     [RequireComponent(typeof(ViewInventorySlot))]
-    public sealed class SlotDragController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
+    public sealed class SlotDragController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         private ViewInventorySlot slotView;
 
@@ -19,8 +19,15 @@ namespace rmMinusR.ItemAnvil.UI
             slotView = GetComponent<ViewInventorySlot>();
         }
 
-        public void OnPointerDown(PointerEventData eventData) { }
-        public void OnBeginDrag(PointerEventData eventData) { }
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (!slotView.slot.IsEmpty)
+            {
+                eventData.Use();
+                EventSystem.current.SetSelectedGameObject(gameObject);
+            }
+        }
+
         public void OnDrag(PointerEventData eventData) { }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -31,6 +38,7 @@ namespace rmMinusR.ItemAnvil.UI
                 if (dragTarget != null)
                 {
                     InventorySlot.SwapContents(dragTarget.slotView.slot, slotView.slot);
+                    eventData.Use();
                 }
             }
         }

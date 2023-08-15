@@ -175,6 +175,12 @@ namespace rmMinusR.ItemAnvil
 
         #region Obsolete functions/variables, and upgrader
 
+        private void ValidateIDs()
+        {
+            //Ensure slots have correct IDs
+            for (int i = 0; i < slots.Count; ++i) slots[i].ID = i;
+        }
+
         public override void Validate()
         {
             //Update obsolete members
@@ -194,8 +200,7 @@ namespace rmMinusR.ItemAnvil
             }
 #pragma warning restore CS0612
 
-            //Ensure slots have correct IDs
-            for (int i = 0; i < slots.Count; ++i) slots[i].ID = i;
+            ValidateIDs();
         }
 
         /// <summary>
