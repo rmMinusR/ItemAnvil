@@ -146,8 +146,9 @@ GameObject:
   - component: {fileID: 8404864555278384922}
   - component: {fileID: 850478763162269824}
   - component: {fileID: -4232041595824965192}
+  - component: {fileID: -7029298591109712969}
   m_Layer: 5
-  m_Name: Item display - for grid
+  m_Name: Grid inventory slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,6 +228,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <tooltipRenderer>k__BackingField: {fileID: 0}
   fallbackTooltipRenderer: {fileID: 0}
+--- !u!114 &-7029298591109712969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8404864555278384924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2440793b62a134b9fc7cd4533f3109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8404864556372771998
 GameObject:
   m_ObjectHideFlags: 0

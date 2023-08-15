@@ -15,7 +15,7 @@ namespace rmMinusR.ItemAnvil
         }
 
         [SerializeField] private ItemStack _contents;
-        [SerializeField] private int _id;
+        [SerializeField] [HideInInspector] private int _id;
         
         public bool IsEmpty => ItemStack.IsEmpty(_contents);
 

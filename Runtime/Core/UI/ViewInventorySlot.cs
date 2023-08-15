@@ -11,9 +11,9 @@ namespace rmMinusR.ItemAnvil.UI
     public sealed class ViewInventorySlot : BaseViewItemStack
     {
         public InventoryHolder inventoryHolder { get; internal set; }
-        public ReadOnlyInventorySlot slot { get; internal set; }
+        public InventorySlot slot { get; internal set; }
 
-        public void WriteSlot(ReadOnlyInventorySlot src)
+        public void WriteSlot(InventorySlot src)
         {
             slot = src;
 

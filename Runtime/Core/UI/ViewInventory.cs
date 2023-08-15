@@ -43,7 +43,7 @@ namespace rmMinusR.ItemAnvil.UI
         {
             //Build which ItemStacks to show
             //TODO can we do this more efficiently with enumerators?
-            List<ReadOnlyInventorySlot> slots = new List<ReadOnlyInventorySlot>(inventoryHolder.inventory.Slots);
+            List<InventorySlot> slots = new List<InventorySlot>(inventoryHolder.inventory.Slots);
             if (displayFilter != null) slots.RemoveAll(i => displayFilter.Matches(i.Contents));
             
             //Ensure we have the same number of UI elements as ItemStacks

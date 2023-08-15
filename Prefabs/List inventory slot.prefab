@@ -182,8 +182,9 @@ GameObject:
   - component: {fileID: 5260930331247484198}
   - component: {fileID: 3921234939269012156}
   - component: {fileID: -2370294232265034537}
+  - component: {fileID: -1538152741277126210}
   m_Layer: 5
-  m_Name: Item display - for vertical
+  m_Name: List inventory slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -263,6 +264,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <tooltipRenderer>k__BackingField: {fileID: 0}
   fallbackTooltipRenderer: {fileID: 0}
+--- !u!114 &-1538152741277126210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5260930331247484192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd2440793b62a134b9fc7cd4533f3109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5260930332343461538
 GameObject:
   m_ObjectHideFlags: 0
