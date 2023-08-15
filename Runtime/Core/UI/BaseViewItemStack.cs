@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace rmMinusR.ItemAnvil.UI
 {
-
-    public abstract class BaseViewItemStack : MonoBehaviour
+    [Serializable]
+    public sealed class ItemStackViewCommon
     {
-        [Header("Render targets")]
-        [SerializeField] protected Image icon;
-        [SerializeField] protected TMP_Text count;
-        [SerializeField] protected string countFormat = "x{0}";
-        [SerializeField] protected TMP_Text sellPrice;
-        [SerializeField] protected TMP_Text buyPrice;
-        [SerializeField] protected string priceFormat = "${0}";
+        [SerializeField] public Image icon;
+        [SerializeField] public TMP_Text count;
+        [SerializeField] public string countFormat = "x{0}";
+        [SerializeField] public TMP_Text sellPrice;
+        [SerializeField] public TMP_Text buyPrice;
+        [SerializeField] public string priceFormat = "${0}";
 
-        protected virtual void WriteType(Item type)
+        public void WriteType(Item type)
         {
             if (type == null)
             {
@@ -49,7 +46,7 @@ namespace rmMinusR.ItemAnvil.UI
             }
         }
 
-        protected void WriteIcon(Sprite sprite)
+        public void WriteIcon(Sprite sprite)
         {
             if (icon != null)
             {
@@ -62,32 +59,32 @@ namespace rmMinusR.ItemAnvil.UI
             }
         }
 
-        protected void WriteCount(int count)
+        public void WriteCount(int count)
         {
             WriteCount(string.Format(countFormat, count));
         }
 
-        protected void WriteCount(string text)
+        public void WriteCount(string text)
         {
             if (count != null) count.text = text;
         }
     
-        protected void WriteSellPrice(int price)
+        public void WriteSellPrice(int price)
         {
             WriteSellPrice(string.Format(priceFormat, price));
         }
 
-        protected void WriteSellPrice(string text)
+        public void WriteSellPrice(string text)
         {
             if (sellPrice != null) sellPrice.text = text;
         }
     
-        protected void WriteBuyPrice(int price)
+        public void WriteBuyPrice(int price)
         {
             WriteBuyPrice(string.Format(priceFormat, price));
         }
 
-        protected void WriteBuyPrice(string text)
+        public void WriteBuyPrice(string text)
         {
             if (buyPrice != null) buyPrice.text = text;
         }

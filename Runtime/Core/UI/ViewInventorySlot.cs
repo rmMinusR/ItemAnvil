@@ -9,8 +9,11 @@ using UnityEngine.UI;
 namespace rmMinusR.ItemAnvil.UI
 {
 
-    public sealed class ViewInventorySlot : BaseViewItemStack, IPointerClickHandler, ISelectHandler
+    public sealed class ViewInventorySlot : Selectable, IPointerClickHandler, ISelectHandler
     {
+        [SerializeField] private ItemStackViewCommon rendering;
+        [SerializeField] private GameObject highlightCursor;
+
         public InventoryHolder inventoryHolder { get; internal set; }
         public InventorySlot slot { get; internal set; }
 
@@ -21,19 +24,30 @@ namespace rmMinusR.ItemAnvil.UI
             if (slot != null && !slot.IsEmpty)
             {
                 //Has data, show
-                WriteCount(slot.Contents.quantity);
-                WriteType (slot.Contents.itemType);
+                rendering.WriteCount(slot.Contents.quantity);
+                rendering.WriteType(slot.Contents.itemType);
             }
             else
             {
                 //No data, show blank
-                WriteCount("");
-                WriteIcon(null);
+                rendering.WriteCount("");
+                rendering.WriteIcon(null);
             }
         }
 
         public void OnPointerClick(PointerEventData eventData) => EventSystem.current.SetSelectedGameObject(gameObject);
-        public void OnSelect(BaseEventData eventData) => ScrollTo();
+        public override void OnSelect(BaseEventData eventData)
+        {
+            base.OnSelect(eventData);
+            ScrollTo();
+            highlightCursor.SetActive(true);
+        }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            base.OnDeselect(eventData);
+            highlightCursor.SetActive(false);
+        }
 
         public void ScrollTo() => GetComponentInParent<ViewInventory>().ScrollTo(this);
     }

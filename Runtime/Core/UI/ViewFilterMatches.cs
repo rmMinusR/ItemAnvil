@@ -8,8 +8,10 @@ using UnityEngine.UI;
 namespace rmMinusR.ItemAnvil.UI
 {
 
-    public sealed class ViewFilterMatches : BaseViewItemStack
+    public sealed class ViewFilterMatches : MonoBehaviour
     {
+        [SerializeField] private ItemStackViewCommon rendering;
+
         [Header("Data source")]
         [SerializeReference] [TypeSwitcher] public ItemFilter filter = new FilterMatchReference();
         public InventoryHolder inventoryHolder;
@@ -24,8 +26,8 @@ namespace rmMinusR.ItemAnvil.UI
         {
             if(filter != null)
             {
-                if (inventoryHolder == null || inventoryHolder.inventory == null) WriteCount("NO INV");
-                else WriteCount(inventoryHolder.inventory.Count(filter));
+                if (inventoryHolder == null || inventoryHolder.inventory == null) rendering.WriteCount("NO INV");
+                else rendering.WriteCount(inventoryHolder.inventory.Count(filter));
             }
         }
     }

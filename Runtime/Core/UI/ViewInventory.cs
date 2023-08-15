@@ -86,8 +86,10 @@ namespace rmMinusR.ItemAnvil.UI
         {
             ScrollRect scroller = GetComponent<ScrollRect>();
             scroller.StopMovement();
+
             Vector2 deltaToApply = ScrollRectExtensions.GetAreaOutOfBounds(scroller.viewport, (RectTransform)slotViews[slotID].transform);
-            
+            if (deltaToApply == Vector2.zero) yield break; //Halt early if nothing to do
+
             float t = 0;
             float endTime = autoScrollCurve.keys.Last().time;
             Vector2 contentStartPos = scroller.content.position;
