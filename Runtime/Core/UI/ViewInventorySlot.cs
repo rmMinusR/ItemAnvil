@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace rmMinusR.ItemAnvil.UI
 {
 
-    public sealed class ViewInventorySlot : BaseViewItemStack
+    public sealed class ViewInventorySlot : BaseViewItemStack, IPointerClickHandler, ISelectHandler
     {
         public InventoryHolder inventoryHolder { get; internal set; }
         public InventorySlot slot { get; internal set; }
@@ -27,9 +28,14 @@ namespace rmMinusR.ItemAnvil.UI
             {
                 //No data, show blank
                 WriteCount("");
-                WriteIcon(blankSprite);
+                WriteIcon(null);
             }
         }
+
+        public void OnPointerClick(PointerEventData eventData) => EventSystem.current.SetSelectedGameObject(gameObject);
+        public void OnSelect(BaseEventData eventData) => ScrollTo();
+
+        public void ScrollTo() => GetComponentInParent<ViewInventory>().ScrollTo(this);
     }
 
 }

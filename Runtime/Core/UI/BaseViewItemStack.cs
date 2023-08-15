@@ -10,8 +10,6 @@ namespace rmMinusR.ItemAnvil.UI
 
     public abstract class BaseViewItemStack : MonoBehaviour
     {
-        [SerializeField] protected Sprite blankSprite;
-
         [Header("Render targets")]
         [SerializeField] protected Image icon;
         [SerializeField] protected TMP_Text count;
@@ -53,7 +51,15 @@ namespace rmMinusR.ItemAnvil.UI
 
         protected void WriteIcon(Sprite sprite)
         {
-            if (icon != null) icon.sprite = sprite;
+            if (icon != null)
+            {
+                if (sprite != null)
+                {
+                    icon.gameObject.SetActive(true);
+                    icon.sprite = sprite;
+                }
+                else icon.gameObject.SetActive(false);
+            }
         }
 
         protected void WriteCount(int count)
