@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,18 +5,22 @@ using UnityEngine.UI;
 namespace rmMinusR.ItemAnvil.UI
 {
 
-    public sealed class ViewInventorySlot : Selectable, IPointerClickHandler, ISelectHandler
+    public sealed class ViewInventorySlot : Selectable
     {
         [SerializeField] private ItemStackViewCommon rendering;
-        [SerializeField] private GameObject highlightCursor;
 
         public InventoryHolder inventoryHolder { get; internal set; }
-        public InventorySlot slot { get; internal set; }
-
-        public void WriteSlot(InventorySlot src)
+        
+        private int slotID = -1;
+        public InventorySlot slot => (0 <= slotID && slotID < inventoryHolder.inventory.SlotCount) ? inventoryHolder.inventory.GetSlot(slotID) : null;
+        
+        public void WriteSlot(int slotID)
         {
-            slot = src;
+            this.slotID = slotID;
+        }
 
+        private void Update()
+        {
             if (slot != null && !slot.IsEmpty)
             {
                 //Has data, show
@@ -35,7 +35,8 @@ namespace rmMinusR.ItemAnvil.UI
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData) => EventSystem.current.SetSelectedGameObject(gameObject);
+        public bool IsSelected => EventSystem.current.currentSelectedGameObject == gameObject;
+
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);

@@ -1,0 +1,74 @@
+{
+    "name": "DefaultInventoryControls",
+    "maps": [
+        {
+            "name": "Default",
+            "id": "e7cd7d71-cfd7-48a3-9364-0102842a6a0e",
+            "actions": [
+                {
+                    "name": "Start swap",
+                    "type": "Button",
+                    "id": "b8bcb963-b187-4bdf-b4a3-d10194e3d5e1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Finish swap",
+                    "type": "Button",
+                    "id": "78fdd1b8-5bd4-4654-80d8-959d87578db4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5430aa6b-8417-4df6-8a0d-116f2bd78042",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start swap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e4c79bb-6016-4a9f-a5c2-c25f9aa4276c",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Start swap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5c538e46-3730-45c2-a678-e2126d4dbf02",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Finish swap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec5312b9-bb6b-4728-a142-6cc5e15a2924",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Finish swap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

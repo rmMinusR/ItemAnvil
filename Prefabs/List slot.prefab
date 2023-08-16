@@ -338,7 +338,6 @@ MonoBehaviour:
     sellPrice: {fileID: 0}
     buyPrice: {fileID: 0}
     priceFormat: ${0}
-  highlightCursor: {fileID: 1841067905011171822}
 --- !u!114 &-2370294232265034537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,6 +364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd2440793b62a134b9fc7cd4533f3109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startSwapControl: {fileID: 362795768225536304, guid: 5ff9d1bf34a2bd545906f70b39174c41, type: 3}
+  finishSwapControl: {fileID: 5153343043684589560, guid: 5ff9d1bf34a2bd545906f70b39174c41, type: 3}
 --- !u!95 &-1349813899477698551
 Animator:
   serializedVersion: 3

@@ -54,6 +54,8 @@ namespace rmMinusR.ItemAnvil.UI
             while (slotViews.Count < slots.Count)
             {
                 ViewInventorySlot view = Instantiate(itemStackUIPrefab, contentContainer);
+                view.inventoryHolder = inventoryHolder;
+                view.name = $"Slot {slotViews.Count}";
                 slotViews.Add(view);
             }
             while (slotViews.Count > slots.Count)
@@ -62,8 +64,8 @@ namespace rmMinusR.ItemAnvil.UI
                 slotViews.RemoveAt(slotViews.Count-1);
             }
 
-            //Write stack data
-            for (int i = 0; i < slots.Count; ++i) slotViews[i].WriteSlot(slots[i]);
+            //Write slot IDs
+            for (int i = 0; i < slots.Count; ++i) slotViews[i].WriteSlot(slots[i].ID);
 
             //Show/hide empty hint
             if (emptyHint != null) emptyHint.SetActive(slots.Count == 0);
