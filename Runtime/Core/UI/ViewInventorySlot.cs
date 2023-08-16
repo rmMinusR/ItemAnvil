@@ -40,13 +40,13 @@ namespace rmMinusR.ItemAnvil.UI
         {
             base.OnSelect(eventData);
             ScrollTo();
-            highlightCursor.SetActive(true);
+            if (TryGetComponent(out Animator animator)) animator.SetBool("isCurrentSelection", true);
         }
 
         public override void OnDeselect(BaseEventData eventData)
         {
             base.OnDeselect(eventData);
-            highlightCursor.SetActive(false);
+            if (TryGetComponent(out Animator animator)) animator.SetBool("isCurrentSelection", false);
         }
 
         public void ScrollTo() => GetComponentInParent<ViewInventory>().ScrollTo(this);

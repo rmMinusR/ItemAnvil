@@ -38,6 +38,7 @@ namespace rmMinusR.ItemAnvil.UI
                 if (dragTarget != null)
                 {
                     InventorySlot.SwapContents(dragTarget.slotView.slot, slotView.slot);
+                    dragTarget.slotView.Select();
                     eventData.Use();
                 }
             }
