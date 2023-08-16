@@ -50,8 +50,6 @@ namespace rmMinusR.ItemAnvil.UI
                     //Start drag
                     beingDragged = true;
                     SuppressInputsThisFrame();
-
-                    Debug.Log("Started dragging "+this);
                 }
             }
             else
@@ -72,8 +70,6 @@ namespace rmMinusR.ItemAnvil.UI
 
                     beingDragged = false;
                     SuppressInputsThisFrame();
-
-                    Debug.Log("Stopped dragging "+this);
                 }
             }
         }
@@ -82,16 +78,12 @@ namespace rmMinusR.ItemAnvil.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Assert(kbmHoverTarget == null);
             kbmHoverTarget = this;
-            Debug.Log("Now hovering "+gameObject.name);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Assert(kbmHoverTarget == this);
-            kbmHoverTarget = null;
-            Debug.Log("Now no longer hovering "+gameObject.name);
+            if (kbmHoverTarget == this) kbmHoverTarget = null;
         }
 
         //Consume mouse drag events (although they are actually handled elsewhere)
