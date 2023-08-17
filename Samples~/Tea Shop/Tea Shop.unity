@@ -323,8 +323,24 @@ PrefabInstance:
       value: ItemAnvil rmMinusR.ItemAnvil.CondensingInventory
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
-      propertyPath: inventory.contents.Array.size
+      propertyPath: inventory.slots.Array.size
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.contents.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[1]._id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._id
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[3]._id
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: managedReferences[0].contents.Array.size
@@ -360,6 +376,38 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: aa1a4ccfbed3f104786a4f234b72359f, type: 2}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: inventory.contents.Array.data[3]._quantity
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[0]._contents._itemType
+      value: 
+      objectReference: {fileID: 11400000, guid: be55e0532d7cbd84c8c1e7aa4e1654f9, type: 2}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[0]._contents._quantity
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[1]._contents._itemType
+      value: 
+      objectReference: {fileID: 11400000, guid: c4ed985b1747fc94c9952b74a322ee03, type: 2}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[1]._contents._quantity
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._contents._itemType
+      value: 
+      objectReference: {fileID: 11400000, guid: e800f0e5887f86147aceb257ac7865c9, type: 2}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._contents._quantity
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[3]._contents._itemType
+      value: 
+      objectReference: {fileID: 11400000, guid: aa1a4ccfbed3f104786a4f234b72359f, type: 2}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[3]._contents._quantity
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
@@ -463,6 +511,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[0]._contents._instanceProperties.contents.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._contents._instanceProperties.contents.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: inventory.contents.Array.data[0]._instanceProperties.contents.Array.data[0].value
       value: Assembly-CSharp Temperature
       objectReference: {fileID: 0}
@@ -476,6 +532,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: inventory.contents.Array.data[3]._instanceProperties.contents.Array.data[0].value
+      value: Assembly-CSharp Temperature
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[0]._contents._instanceProperties.contents.Array.data[0].value
+      value: Assembly-CSharp Temperature
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._contents._instanceProperties.contents.Array.data[0].value
       value: Assembly-CSharp Temperature
       objectReference: {fileID: 0}
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
@@ -509,6 +573,22 @@ PrefabInstance:
     - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: inventory.contents.Array.data[3]._instanceProperties.contents.Array.data[0].value.temperature
       value: 311.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[0]._contents._instanceProperties.contents.Array.data[0].value.heatLoss
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._contents._instanceProperties.contents.Array.data[0].value.heatLoss
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[0]._contents._instanceProperties.contents.Array.data[0].value.temperature
+      value: 312
+      objectReference: {fileID: 0}
+    - target: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: inventory.slots.Array.data[2]._contents._instanceProperties.contents.Array.data[0].value.temperature
+      value: 312
       objectReference: {fileID: 0}
     - target: {fileID: 2280552296559470880, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: m_AnchorMax.y
@@ -710,6 +790,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7934587795989216870, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
+      propertyPath: <Other>k__BackingField
+      value: 
+      objectReference: {fileID: 951530249}
     - target: {fileID: 7947520442634774915, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -738,14 +822,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8309785243933354524, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
-      propertyPath: inventoryHolder
-      value: 
-      objectReference: {fileID: 698260915}
-    - target: {fileID: 8309785243933354524, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
-      propertyPath: itemStackUIPrefab
-      value: 
-      objectReference: {fileID: 2911936217983836761, guid: 06e8d8f92ceff98428748e024604d74c, type: 3}
     - target: {fileID: 8309785243933354524, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
       propertyPath: doNotShow.Array.size
       value: 1
@@ -1397,17 +1473,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &698260915 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2185640670207477761, guid: aec247b6100a6f841a5e3abe6a671448, type: 3}
-  m_PrefabInstance: {fileID: 65187327}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5159e1608df6bbd49a300da89537f100, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &748097954
 GameObject:
   m_ObjectHideFlags: 0
@@ -1722,11 +1787,14 @@ MonoBehaviour:
     00000000:
       type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
-        contents:
-        - _itemType: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
-          _quantity: 1000
-          _instanceProperties:
-            contents: []
+        slots:
+        - _contents:
+            _itemType: {fileID: 11400000, guid: 49161284988acec4eb8f896b8021672a, type: 2}
+            _quantity: 1000
+            _instanceProperties:
+              contents: []
+          _id: 0
+        contents: []
 --- !u!4 &951530250
 Transform:
   m_ObjectHideFlags: 0

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 namespace rmMinusR.ItemAnvil.UI
 {
-    [RequireComponent(typeof(ScrollRect))]
     public sealed class ViewInventory : MonoBehaviour
     {
         public InventoryHolder inventoryHolder;
@@ -93,6 +92,7 @@ namespace rmMinusR.ItemAnvil.UI
         private IEnumerator ScrollTo_Ticker(int slotID)
         {
             ScrollRect scroller = GetComponent<ScrollRect>();
+            if (!scroller) yield break;
             scroller.StopMovement();
 
             Vector2 deltaToApply = ScrollRectExtensions.GetAreaOutOfBounds(scroller.viewport, (RectTransform)slotViews[slotID].transform);

@@ -439,6 +439,7 @@ MonoBehaviour:
     00000000:
       type: {class: CondensingInventory, ns: rmMinusR.ItemAnvil, asm: ItemAnvil}
       data:
+        slots: []
         contents: []
 --- !u!1 &8760210325834219565
 GameObject:
@@ -451,6 +452,7 @@ GameObject:
   - component: {fileID: 8332845089688360650}
   - component: {fileID: 8309785243933354524}
   - component: {fileID: 9122712975512511322}
+  - component: {fileID: 7934587795989216870}
   m_Layer: 0
   m_Name: Item display container
   m_TagString: Untagged
@@ -489,12 +491,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58693054c8bc23343a392e28e743d49a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryHolder: {fileID: 0}
+  inventoryHolder: {fileID: 2185640670207477761}
+  <EditableByPlayer>k__BackingField: 0
   itemStackUIPrefab: {fileID: 4422317747195910169, guid: 65972b4a020eb544f8c7f162ee753363, type: 3}
-  doNotShow: []
+  displayFilter:
+    id: 0
+  filterBehavior: 0
+  autoScrollCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 3.3333333
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 1
+      inSlope: 3.3333333
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   emptyHint: {fileID: 0}
-  stackViewParent: {fileID: 8332845089688360650}
-  stackViews: []
+  contentContainer: {fileID: 8332845089688360650}
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }
 --- !u!114 &9122712975512511322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,6 +551,20 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &7934587795989216870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8760210325834219565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf6c36af1956c749850c7a5c6dba867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Other>k__BackingField: {fileID: 0}
+  <PlayerAction>k__BackingField: 0
 --- !u!1001 &1227752784086270208
 PrefabInstance:
   m_ObjectHideFlags: 0
