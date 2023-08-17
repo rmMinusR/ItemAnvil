@@ -33,7 +33,7 @@ namespace rmMinusR.ItemAnvil.UI
             finishSwapControl.action.performed -= HandleDragStateChange;
         }
 
-        private bool beingDragged = false;
+        private bool beingSwapped = false;
         private int nextFrameCanHandleInput = 0;
         private void SuppressInputsThisFrame() => nextFrameCanHandleInput = Time.frameCount+1;
 
@@ -42,14 +42,15 @@ namespace rmMinusR.ItemAnvil.UI
             //Input cooldown
             if (Time.frameCount < nextFrameCanHandleInput) return;
 
-            if (!beingDragged)
+            if (!beingSwapped)
             {
                 bool isTarget = kbmHoverTarget == this || (kbmHoverTarget == null && slotView.IsSelected);
                 if (ctx.action == startSwapControl.action && isTarget && slotView.IsInteractable() && !slotView.slot.IsEmpty)
                 {
                     //Start drag
-                    beingDragged = true;
+                    beingSwapped = true;
                     SuppressInputsThisFrame();
+                    if (slotView.TryGetComponent(out Animator animator)) animator.SetBool("beingSwapped", true);
                 }
             }
             else
@@ -68,8 +69,9 @@ namespace rmMinusR.ItemAnvil.UI
                         dragTarget.slotView.Select();
                     }
 
-                    beingDragged = false;
+                    beingSwapped = false;
                     SuppressInputsThisFrame();
+                    if (slotView.TryGetComponent(out Animator animator)) animator.SetBool("beingSwapped", false);
                 }
             }
         }

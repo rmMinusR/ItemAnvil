@@ -1723,6 +1723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryHolder: {fileID: 0}
+  <EditableByPlayer>k__BackingField: 1
   itemStackUIPrefab: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
   displayFilter:
     id: 0

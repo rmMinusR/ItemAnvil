@@ -8,6 +8,7 @@ namespace rmMinusR.ItemAnvil.UI
     public sealed class ViewInventorySlot : Selectable
     {
         [SerializeField] private ItemStackViewCommon rendering;
+        internal ViewInventory owner;
 
         public InventoryHolder inventoryHolder { get; internal set; }
         
@@ -17,6 +18,12 @@ namespace rmMinusR.ItemAnvil.UI
         public void WriteSlot(int slotID)
         {
             this.slotID = slotID;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            rendering.priceMode = GetComponentInParent<MarketTransactionContext>().PlayerAction;
         }
 
         private void Update()
@@ -51,6 +58,11 @@ namespace rmMinusR.ItemAnvil.UI
         }
 
         public void ScrollTo() => GetComponentInParent<ViewInventory>().ScrollTo(this);
+
+        public override bool IsInteractable()
+        {
+            return base.IsInteractable() && (owner?.EditableByPlayer ?? true);
+        }
     }
 
 }

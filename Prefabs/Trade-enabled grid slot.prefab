@@ -32,9 +32,9 @@ RectTransform:
   m_Father: {fileID: 4771186305095425924}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -55, y: 25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 20, y: 25}
   m_SizeDelta: {x: 95, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8123423272963437011
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 4
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -146,40 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638ae27f78bd08044bca8e7ba27d9cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryA: {fileID: 0}
-  inventoryB: {fileID: 0}
-  itemType: {fileID: 0}
-  currencyItem: {fileID: 0}
-  onLMB:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3760923770173253090}
-        m_TargetAssemblyTypeName: ShopTransactionController, ItemSystem
-        m_MethodName: TrySell
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onRMB:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3760923770173253090}
-        m_TargetAssemblyTypeName: ShopTransactionController, ItemSystem
-        m_MethodName: TrySell
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  <BatchQuantity>k__BackingField: 5
 --- !u!1001 &3932411455617917081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -192,16 +159,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2949878120107387491}
     - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: sellPrice
+      propertyPath: buyPrice
       value: 
       objectReference: {fileID: 2949878120107387491}
     - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: countFormat
       value: x{0}
       objectReference: {fileID: 0}
+    - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: rendering.priceText
+      value: 
+      objectReference: {fileID: 2949878120107387491}
+    - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: rendering.sellPrice
+      value: 
+      objectReference: {fileID: 2949878120107387491}
+    - target: {fileID: 850478763162269824, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: rendering.countFormat
+      value: x{0}
+      objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715752, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_text
-      value: x999
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715752, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_fontSize
@@ -229,15 +208,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715752, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_VerticalAlignment
-      value: 256
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715752, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_HorizontalAlignment
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -245,15 +236,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 55
+      value: -30
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555214715755, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -269,7 +264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555278384924, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_Name
-      value: Item display - shop sell
+      value: Trade-enabled grid slot
       objectReference: {fileID: 0}
     - target: {fileID: 8404864555278384925, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_Pivot.x
@@ -355,21 +350,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
+    - target: {fileID: 8404864556372771998, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
       propertyPath: m_SizeDelta.x
@@ -379,13 +362,9 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 100
       objectReference: {fileID: 0}
-    - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8404864556372771999, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
+    - target: {fileID: 8867587945473116582, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2898835097709720888, guid: a587f2f271ec43f43a51a86233391ea7, type: 3}

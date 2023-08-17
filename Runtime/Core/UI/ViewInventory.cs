@@ -10,6 +10,7 @@ namespace rmMinusR.ItemAnvil.UI
     public sealed class ViewInventory : MonoBehaviour
     {
         public InventoryHolder inventoryHolder;
+        [field: SerializeField] public bool EditableByPlayer { get; private set; } = true;
         [SerializeField] private ViewInventorySlot itemStackUIPrefab;
 
         [Space]
@@ -47,15 +48,16 @@ namespace rmMinusR.ItemAnvil.UI
             //Build which ItemStacks to show
             //TODO can we do this more efficiently with enumerators?
             List<InventorySlot> slots = new List<InventorySlot>(inventoryHolder.inventory.Slots);
-            if (displayFilter != null) slots.RemoveAll(i => displayFilter.Matches(i.Contents));
-            
+            if (displayFilter != null && filterBehavior == FilterBehavior.HideSlot) slots.RemoveAll(i => displayFilter.Matches(i.Contents));
+
             //Ensure we have the same number of UI elements as ItemStacks
             //TODO can be optimized
             while (slotViews.Count < slots.Count)
             {
                 ViewInventorySlot view = Instantiate(itemStackUIPrefab, contentContainer);
+                view.owner = this;
                 view.inventoryHolder = inventoryHolder;
-                view.name = $"Slot {slotViews.Count}";
+                view.name = $"Slot view {slotViews.Count}"; //NOTE: For debug purposes only, does not necessarily correspond to ID of displayed slot
                 slotViews.Add(view);
             }
             while (slotViews.Count > slots.Count)
@@ -65,7 +67,11 @@ namespace rmMinusR.ItemAnvil.UI
             }
 
             //Write slot IDs
-            for (int i = 0; i < slots.Count; ++i) slotViews[i].WriteSlot(slots[i].ID);
+            for (int i = 0; i < slots.Count; ++i)
+            {
+                bool showBlankInstead = displayFilter != null && filterBehavior == FilterBehavior.HideSlot && displayFilter.Matches(slots[i].Contents);
+                slotViews[i].WriteSlot(showBlankInstead ? -1 : slots[i].ID);
+            }
 
             //Show/hide empty hint
             if (emptyHint != null) emptyHint.SetActive(slots.Count == 0);

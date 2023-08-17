@@ -11,8 +11,8 @@ namespace rmMinusR.ItemAnvil.UI
         [SerializeField] public Image icon;
         [SerializeField] public TMP_Text count;
         [SerializeField] public string countFormat = "x{0}";
-        [SerializeField] public TMP_Text sellPrice;
-        [SerializeField] public TMP_Text buyPrice;
+        [SerializeField] public TMP_Text priceText;
+        internal Marketable.Mode priceMode;
         [SerializeField] public string priceFormat = "${0}";
 
         public void WriteType(Item type)
@@ -21,27 +21,22 @@ namespace rmMinusR.ItemAnvil.UI
             {
                 WriteIcon(null);
                 WriteCount("NO ITEM");
-                if (sellPrice != null) sellPrice.gameObject.SetActive(true);
-                if (buyPrice  != null) buyPrice .gameObject.SetActive(true);
-                WriteSellPrice("NO ITEM");
-                WriteBuyPrice ("NO ITEM");
+                if (priceText) priceText.gameObject.SetActive(true);
+                WritePrice("NO ITEM");
             }
             else
             {
                 WriteIcon(type.displayIcon);
 
-                if (type.Properties.TryGet(out Marketable m)) //TODO convert to object chaining?
+                if (type.Properties.Contains<Marketable>()) //TODO convert to object chaining?
                 {
-                    if (sellPrice != null) sellPrice.gameObject.SetActive(m.isSellable);
-                    if (buyPrice  != null) buyPrice .gameObject.SetActive(m.isBuyable );
-
-                    WriteSellPrice(m.sellPrice);
-                    WriteBuyPrice (m.buyPrice );
+                    MarketTransactionContext.StaticAssess(type, priceMode, out bool showPrice, out int priceAmount);
+                    if (priceText) priceText.gameObject.SetActive(showPrice);
+                    WritePrice(priceAmount);
                 }
                 else
                 {
-                    if (sellPrice != null) sellPrice.gameObject.SetActive(false);
-                    if (buyPrice  != null) buyPrice .gameObject.SetActive(false);
+                    if (priceText) priceText.gameObject.SetActive(false);
                 }
             }
         }
@@ -69,24 +64,14 @@ namespace rmMinusR.ItemAnvil.UI
             if (count != null) count.text = text;
         }
     
-        public void WriteSellPrice(int price)
+        public void WritePrice(int price)
         {
-            WriteSellPrice(string.Format(priceFormat, price));
+            WritePrice(string.Format(priceFormat, price));
         }
 
-        public void WriteSellPrice(string text)
+        public void WritePrice(string text)
         {
-            if (sellPrice != null) sellPrice.text = text;
-        }
-    
-        public void WriteBuyPrice(int price)
-        {
-            WriteBuyPrice(string.Format(priceFormat, price));
-        }
-
-        public void WriteBuyPrice(string text)
-        {
-            if (buyPrice != null) buyPrice.text = text;
+            if (priceText != null) priceText.text = text;
         }
     }
 

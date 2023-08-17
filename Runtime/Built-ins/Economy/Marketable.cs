@@ -18,6 +18,12 @@ namespace rmMinusR.ItemAnvil
 
         public bool isSellable;
         [Min(0)] public int sellPrice;
+
+        public enum Mode
+        {
+            Buying,
+            Selling
+        }
     }
 
 }
