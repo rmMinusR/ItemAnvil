@@ -37,7 +37,6 @@ namespace rmMinusR.ItemAnvil.UI
         
         private void Update()
         {
-            if (beingSwapped == this && (slotView.slot.IsEmpty || !slotView.IsSelected)) beingSwapped = null;
             if (animator) animator.SetBool("beingSwapped", beingSwapped==this);
         }
 
