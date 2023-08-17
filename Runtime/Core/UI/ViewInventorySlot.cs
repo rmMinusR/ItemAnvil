@@ -23,7 +23,9 @@ namespace rmMinusR.ItemAnvil.UI
         protected override void Start()
         {
             base.Start();
-            rendering.priceMode = GetComponentInParent<MarketTransactionContext>().PlayerAction;
+
+            MarketTransactionContext marketContext = GetComponentInParent<MarketTransactionContext>();
+            if (marketContext) rendering.priceMode = marketContext.PlayerAction;
         }
 
         private void Update()

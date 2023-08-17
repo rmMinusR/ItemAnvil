@@ -10,6 +10,7 @@ namespace rmMinusR.ItemAnvil.UI
     public sealed class SlotSwapController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         private ViewInventorySlot slotView;
+        private Animator animator; // Optional
 
         [SerializeField] private InputActionReference startSwapControl;
         [SerializeField] private InputActionReference finishSwapControl;
@@ -17,6 +18,7 @@ namespace rmMinusR.ItemAnvil.UI
         private void OnEnable()
         {
             slotView = GetComponent<ViewInventorySlot>();
+            animator = GetComponent<Animator>();
 
             //Note: HandleDragStateChange is safe against being called twice in the same frame, so start and finish could be the same control
             startSwapControl.action.performed += HandleDragStateChange;
@@ -32,28 +34,33 @@ namespace rmMinusR.ItemAnvil.UI
             startSwapControl.action.performed -= HandleDragStateChange;
             finishSwapControl.action.performed -= HandleDragStateChange;
         }
+        
+        private void Update()
+        {
+            if (beingSwapped == this && (slotView.slot.IsEmpty || !slotView.IsSelected)) beingSwapped = null;
+            if (animator) animator.SetBool("beingSwapped", beingSwapped==this);
+        }
 
-        private bool beingSwapped = false;
+        private static SlotSwapController beingSwapped;
         private int nextFrameCanHandleInput = 0;
-        private void SuppressInputsThisFrame() => nextFrameCanHandleInput = Time.frameCount+1;
+        private void SuppressInputs(int nFrames = 1) => nextFrameCanHandleInput = Time.frameCount+nFrames;
 
         private void HandleDragStateChange(InputAction.CallbackContext ctx)
         {
             //Input cooldown
             if (Time.frameCount < nextFrameCanHandleInput) return;
 
-            if (!beingSwapped)
+            if (beingSwapped == null)
             {
                 bool isTarget = kbmHoverTarget == this || (kbmHoverTarget == null && slotView.IsSelected);
                 if (ctx.action == startSwapControl.action && isTarget && slotView.IsInteractable() && !slotView.slot.IsEmpty)
                 {
                     //Start drag
-                    beingSwapped = true;
-                    SuppressInputsThisFrame();
-                    if (slotView.TryGetComponent(out Animator animator)) animator.SetBool("beingSwapped", true);
+                    beingSwapped = this;
+                    SuppressInputs();
                 }
             }
-            else
+            else if (beingSwapped == this)
             {
                 if (ctx.action == finishSwapControl.action && slotView.IsInteractable())
                 {
@@ -64,14 +71,13 @@ namespace rmMinusR.ItemAnvil.UI
                     if (dragTarget != null && dragTarget != this && dragTarget.slotView.IsInteractable())
                     {
                         //Try to perform swap
-                        dragTarget.SuppressInputsThisFrame();
+                        dragTarget.SuppressInputs();
                         InventorySlot.SwapContents(dragTarget.slotView.slot, slotView.slot);
                         dragTarget.slotView.Select();
                     }
 
-                    beingSwapped = false;
-                    SuppressInputsThisFrame();
-                    if (slotView.TryGetComponent(out Animator animator)) animator.SetBool("beingSwapped", false);
+                    beingSwapped = null;
+                    SuppressInputs();
                 }
             }
         }
