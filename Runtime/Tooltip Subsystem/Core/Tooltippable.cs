@@ -14,6 +14,10 @@ namespace rmMinusR.Tooltips
         [Tooltip("If no TooltipDisplay is provided to Show(), and none is found on the hierarchy, this will be used instead.")]
         [SerializeField] protected TooltipDisplay fallbackTooltipRenderer;
 
+        [Tooltip("Optional: uses own transform if unset")]
+        [SerializeField] private Transform _tooltipAnchor;
+        public Transform TooltipAnchor => _tooltipAnchor != null ? _tooltipAnchor : transform;
+
         protected void Show(TooltipDisplay target = null)
         {
             if (tooltipRenderer == null)

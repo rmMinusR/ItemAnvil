@@ -22,19 +22,16 @@ namespace rmMinusR.Tooltips
 
         [SerializeField] private Tooltippable target;
 
-        /*
-        // Buggy. Disabled for now.
-
-        [SerializeField] private PositionMode positionMode;
-        [SerializeField] private PositionMode defaultPositionMode = PositionMode.FollowTarget;
+        [SerializeField] private PositionMode positionMode = PositionMode.Default;
 
         public enum PositionMode
         {
-            NoAction = 0,
-            FollowCursor = 1,
-            FollowTarget = 2
+            FixedPosition,
+            FollowCursor,
+            FollowTarget,
+
+            Default = FollowTarget
         }
-        */
 
         public Tooltippable GetTarget()
         {
@@ -46,7 +43,7 @@ namespace rmMinusR.Tooltips
             if (newTarget == null) throw new ArgumentNullException("Cannot target null - use ClearTarget instead");
 
             target = newTarget;
-            //this.positionMode = positionMode ?? defaultPositionMode;
+            //positionMode = newTarget.positionMode ?? PositionMode.Default;
             renderRoot.SetActive(true);
 
             foreach (TooltipSectionManager l in sections) l.UpdateTarget(newTarget);
@@ -71,12 +68,9 @@ namespace rmMinusR.Tooltips
         {
             if(target != null)
             {
-                PositionToCursor();
-                /*
-                //Update position
                 switch (positionMode)
                 {
-                    case PositionMode.NoAction:
+                    case PositionMode.FixedPosition:
                         //Do nothing
                         break;
 
@@ -88,13 +82,12 @@ namespace rmMinusR.Tooltips
                         PositionToTarget();
                         break;
 
-                    default: throw new System.NotImplementedException("Unknown PositionMode "+positionMode);
+                    default: throw new NotImplementedException("Unknown PositionMode "+positionMode);
                 }
-                */
             }
         }
 
-        private void PositionToCursor()
+        public void PositionToCursor() //NOTE: Do not use for controller input schemes
         {
             Canvas canvas = GetComponentInParent<Canvas>();
             if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
@@ -121,53 +114,68 @@ namespace rmMinusR.Tooltips
 #endif
         }
 
-        private void PositionToTarget()
+        public void PositionToTarget()
         {
-            Canvas canvas = GetComponentInParent<Canvas>();
-            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            //Determine target pos in screen coordinates
+            Canvas targetCanvas = target.GetComponentInParent<Canvas>();
+            Vector2 targetPosOnScreen;
+            if (targetCanvas && targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay) targetPosOnScreen = target.TooltipAnchor.position * targetCanvas.scaleFactor;
+            else targetPosOnScreen = Camera.main.WorldToScreenPoint(target.TooltipAnchor.position);
+
+            //Determine pos in parent coordinates such that our screen pos = target screen pos
+            Canvas ownCanvas = GetComponentInParent<Canvas>();
+            switch (ownCanvas.renderMode)
             {
-                //Convert world point to screen space
-                transform.position = Camera.main.WorldToScreenPoint(target.transform.position);
-            }
-            else
-            {
-                //Raycast world point onto canvas plane
-                transform.position = target.transform.position;
-                Plane canvasPlane = new Plane(canvas.transform.forward, canvas.transform.position);
-                Ray cameraToTargetRay = new Ray(Camera.main.transform.position, (target.transform.position-Camera.main.transform.position).normalized);
-                canvasPlane.Raycast(cameraToTargetRay, out float dist);
-                transform.position = cameraToTargetRay.GetPoint(dist);
+                case RenderMode.ScreenSpaceOverlay:
+                    //Convert screen space to canvas space
+                    transform.position = targetPosOnScreen / ownCanvas.scaleFactor;
+                    break;
+
+                case RenderMode.ScreenSpaceCamera:
+                case RenderMode.WorldSpace:
+                    //Raycast onto canvas plane
+                    transform.position = target.transform.position;
+                    Plane canvasPlane = new Plane(ownCanvas.transform.forward, ownCanvas.transform.position);
+                    Ray cameraRay = Camera.main.ScreenPointToRay(targetPosOnScreen);
+                    canvasPlane.Raycast(cameraRay, out float dist);
+                    transform.position = cameraRay.GetPoint(dist);
+                    break;
+
+                default: throw new NotImplementedException();
             }
         }
 
-    #region Cache
+        #region Cache
 
-        private static List<TooltipDisplay> __instances = new List<TooltipDisplay>();
+        //Transform is the scope which the display applies to (aka its parent)
+        private static Dictionary<Transform, TooltipDisplay> __instances = new Dictionary<Transform, TooltipDisplay>();
 
         public static TooltipDisplay GetInstance(Transform target)
         {
-            bool selector(TooltipDisplay r) => r.transform == target || r.transform.parent == target.parent;
+            //Try to lookup
+            if (__instances.TryGetValue(target, out TooltipDisplay display)) return display;
+            else
+            {
+                //Try to recurse
+                if (target.parent != null) return GetInstance(target.parent);
 
-            //Scan current hierarchy
-            if (__instances.Any(selector)) return __instances.First(selector);
-
-            //Try to grab from scene
-            if (target.parent != null) return GetInstance(target.parent);
-
-            //None present
-            else return null;
+                //Nothing present in hierarchy
+                else return null;
+            }
         }
 
         private void OnEnable()
         {
-            if (!__instances.Contains(this)) __instances.Add(this);
-            else Debug.LogError("TooltipDisplay already registered!", this);
+            if (!__instances.ContainsKey(transform.parent)) __instances.Add(transform.parent, this);
+            else Debug.LogError("TooltipDisplays cannot be siblings! Try putting one at a different hierarchy level?", this);
         }
 
         private void OnDisable()
         {
-            if (__instances.Contains(this)) __instances.Remove(this);
-            else Debug.LogError("TooltipDisplay instance already disabled? This should never happen!");
+            if (__instances.TryGetValue(transform.parent, out TooltipDisplay display) && display == this)
+            {
+                __instances.Remove(transform.parent);
+            }
         }
 
         #endregion

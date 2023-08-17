@@ -1,5 +1,40 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1504850606136913058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239521307378571634}
+  m_Layer: 5
+  m_Name: Tooltip anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &239521307378571634
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1504850606136913058}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8404864555278384925}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2648411268195133436
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +250,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 999
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -295,7 +330,7 @@ GameObject:
   - component: {fileID: 8404864555278384925}
   - component: {fileID: 8404864555278384922}
   - component: {fileID: 850478763162269824}
-  - component: {fileID: -4232041595824965192}
+  - component: {fileID: 6820846090871272842}
   - component: {fileID: -7029298591109712969}
   - component: {fileID: -4194523903660669629}
   m_Layer: 5
@@ -320,6 +355,7 @@ RectTransform:
   - {fileID: 8404864556372771999}
   - {fileID: 8867587945473116582}
   - {fileID: 8404864555214715755}
+  - {fileID: 239521307378571634}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -393,10 +429,9 @@ MonoBehaviour:
     icon: {fileID: 8404864556372771996}
     count: {fileID: 8404864555214715752}
     countFormat: '{0}'
-    sellPrice: {fileID: 0}
-    buyPrice: {fileID: 0}
+    priceText: {fileID: 0}
     priceFormat: ${0}
---- !u!114 &-4232041595824965192
+--- !u!114 &6820846090871272842
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,11 +440,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8404864555278384924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb5f5ac5bffd9664da6d8ad27e12f175, type: 3}
+  m_Script: {fileID: 11500000, guid: db6161338c0c1114a8067f7722a6ba3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <tooltipRenderer>k__BackingField: {fileID: 0}
   fallbackTooltipRenderer: {fileID: 0}
+  _tooltipAnchor: {fileID: 239521307378571634}
 --- !u!114 &-7029298591109712969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -460,7 +496,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8404864556372771999
 RectTransform:
   m_ObjectHideFlags: 0
