@@ -31,8 +31,7 @@ namespace rmMinusR.ItemAnvil
             return hash;
         }
 
-        public virtual bool ShouldTick => false;
-        public virtual void Tick() { }
+        public virtual void Tick(InventorySlot slot, Inventory inventory, Component @object) { }
     }
 
 }

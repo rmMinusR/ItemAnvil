@@ -25,7 +25,7 @@ namespace rmMinusR.ItemAnvil
                 timeSinceLastTick += Time.deltaTime;
                 if (timeSinceLastTick > tickInterval)
                 {
-                    inventory.Tick();
+                    inventory.Tick(this);
                     timeSinceLastTick = 0;
                 }
             }

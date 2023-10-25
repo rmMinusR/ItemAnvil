@@ -119,13 +119,14 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public abstract List<ItemStack> CloneContents();
     
-        public virtual void Tick()
+        public virtual void Tick(Component owningObject)
         {
-            foreach (ReadOnlyItemStack i in GetContents())
+            for (int i = 0; i < SlotCount; ++i)
             {
-                if (i != null) foreach (ItemInstanceProperty p in i.instanceProperties)
+                InventorySlot slot = GetSlot(i);
+                if (!slot.IsEmpty) foreach (ItemInstanceProperty p in slot.Contents.instanceProperties)
                 {
-                    if (p.ShouldTick) p.Tick(); //FIXME this breaks read-only contract
+                    p.Tick(slot, this, owningObject);
                 }
             }
         }
@@ -170,13 +171,14 @@ namespace rmMinusR.ItemAnvil
         STANDARD IMPLEMENTATION:
 
         #region Hook interface
-        [SerializeField, HideInInspector] private InventoryHooksImplDetail hooks;
-        public override void HookAddItem   (AddItemHook     listener, int priority) => hooks.HookAddItem   (listener, priority);
-        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => hooks.HookRemoveItem(listener, priority);
-        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => hooks.HookSwapSlots (listener, priority);
-        public override void UnhookAddItem   (AddItemHook     listener) => hooks.UnhookAddItem   (listener);
-        public override void UnhookRemoveItem(ConsumeItemHook listener) => hooks.UnhookRemoveItem(listener);
-        public override void UnhookSwapSlots (SwapSlotsHook   listener) => hooks.UnhookSwapSlots (listener);
+        [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
+        private InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
+        public override void HookAddItem   (AddItemHook     listener, int priority) => Hooks.HookAddItem   (listener, priority);
+        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => Hooks.HookRemoveItem(listener, priority);
+        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => Hooks.HookSwapSlots (listener, priority);
+        public override void UnhookAddItem   (AddItemHook     listener) => Hooks.UnhookAddItem   (listener);
+        public override void UnhookRemoveItem(ConsumeItemHook listener) => Hooks.UnhookRemoveItem(listener);
+        public override void UnhookSwapSlots (SwapSlotsHook   listener) => Hooks.UnhookSwapSlots (listener);
         #endregion
 
          */

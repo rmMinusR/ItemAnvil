@@ -178,13 +178,14 @@ namespace rmMinusR.ItemAnvil
         }
 
         #region Hook interface
-        [SerializeField, HideInInspector] private InventoryHooksImplDetail hooks;
-        public override void HookAddItem   (AddItemHook     listener, int priority) => hooks.HookAddItem   (listener, priority);
-        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => hooks.HookRemoveItem(listener, priority);
-        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => hooks.HookSwapSlots (listener, priority);
-        public override void UnhookAddItem   (AddItemHook     listener) => hooks.UnhookAddItem   (listener);
-        public override void UnhookRemoveItem(ConsumeItemHook listener) => hooks.UnhookRemoveItem(listener);
-        public override void UnhookSwapSlots (SwapSlotsHook   listener) => hooks.UnhookSwapSlots (listener);
+        [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
+        private InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
+        public override void HookAddItem   (AddItemHook     listener, int priority) => Hooks.HookAddItem   (listener, priority);
+        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => Hooks.HookRemoveItem(listener, priority);
+        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => Hooks.HookSwapSlots (listener, priority);
+        public override void UnhookAddItem   (AddItemHook     listener) => Hooks.UnhookAddItem   (listener);
+        public override void UnhookRemoveItem(ConsumeItemHook listener) => Hooks.UnhookRemoveItem(listener);
+        public override void UnhookSwapSlots (SwapSlotsHook   listener) => Hooks.UnhookSwapSlots (listener);
         #endregion
 
 
