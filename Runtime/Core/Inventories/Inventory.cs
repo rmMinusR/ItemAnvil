@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using rmMinusR.ItemAnvil.Hooks.Inventory;
+using UnityEngine;
 
 namespace rmMinusR.ItemAnvil
 {
@@ -142,6 +144,38 @@ namespace rmMinusR.ItemAnvil
         /// Ensure state is valid (such as slot IDs). Also handles API upgrades.
         /// </summary>
         public abstract void Validate();
+
+
+        #region Hook interface
+
+        /*
+         * Hooks execute in ascending priority. For events that only listen without modifying behavior (such as UI), register for priority = int.MaxValue.
+         */
+
+        public abstract void HookAddItem   (AddItemHook     listener, int priority);
+        public abstract void HookRemoveItem(ConsumeItemHook listener, int priority);
+        public abstract void HookSwapSlots (SwapSlotsHook   listener, int priority);
+        public abstract void UnhookAddItem   (AddItemHook     listener);
+        public abstract void UnhookRemoveItem(ConsumeItemHook listener);
+        public abstract void UnhookSwapSlots (SwapSlotsHook   listener);
+
+        /*
+        
+        STANDARD IMPLEMENTATION:
+
+        #region Hook interface
+        [SerializeField, HideInInspector] private InventoryHooksImplDetail hooks;
+        public override void HookAddItem   (AddItemHook     listener, int priority) => hooks.HookAddItem   (listener, priority);
+        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => hooks.HookRemoveItem(listener, priority);
+        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => hooks.HookSwapSlots (listener, priority);
+        public override void UnhookAddItem   (AddItemHook     listener) => hooks.UnhookAddItem   (listener);
+        public override void UnhookRemoveItem(ConsumeItemHook listener) => hooks.UnhookRemoveItem(listener);
+        public override void UnhookSwapSlots (SwapSlotsHook   listener) => hooks.UnhookSwapSlots (listener);
+        #endregion
+
+         */
+
+        #endregion
     }
 
 }

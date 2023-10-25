@@ -1,3 +1,4 @@
+using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,6 +172,16 @@ namespace rmMinusR.ItemAnvil
         public override IEnumerable<ItemStack> FindAll(Item type) => slots.Where(i => !i.IsEmpty).Select(i => i.Contents).Where(i => i.itemType == type);
 
         public override void Sort(IComparer<ReadOnlyItemStack> comparer) => contents.Sort(comparer);
+
+        #region Hook interface
+        [SerializeField, HideInInspector] private InventoryHooksImplDetail hooks;
+        public override void HookAddItem   (AddItemHook     listener, int priority) => hooks.HookAddItem   (listener, priority);
+        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => hooks.HookRemoveItem(listener, priority);
+        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => hooks.HookSwapSlots (listener, priority);
+        public override void UnhookAddItem   (AddItemHook     listener) => hooks.UnhookAddItem   (listener);
+        public override void UnhookRemoveItem(ConsumeItemHook listener) => hooks.UnhookRemoveItem(listener);
+        public override void UnhookSwapSlots (SwapSlotsHook   listener) => hooks.UnhookSwapSlots (listener);
+        #endregion
 
 
         #region Obsolete functions/variables, and upgrader
