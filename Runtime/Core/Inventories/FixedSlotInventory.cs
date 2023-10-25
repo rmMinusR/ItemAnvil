@@ -171,7 +171,11 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public override IEnumerable<ItemStack> FindAll(Item type) => slots.Where(i => !i.IsEmpty).Select(i => i.Contents).Where(i => i.itemType == type);
 
-        public override void Sort(IComparer<ReadOnlyItemStack> comparer) => contents.Sort(comparer);
+        public override void Sort(IComparer<ReadOnlyItemStack> comparer)
+        {
+            slots.Sort(new ItemStackToSlotComparer(comparer));
+            Validate();
+        }
 
         #region Hook interface
         [SerializeField, HideInInspector] private InventoryHooksImplDetail hooks;

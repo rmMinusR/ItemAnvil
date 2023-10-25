@@ -133,11 +133,17 @@ namespace rmMinusR.ItemAnvil
         //NOTE: Comparers and heuristics must be null-safe!
         public abstract void Sort(IComparer<ReadOnlyItemStack> comparer);
         public virtual void Sort(Func<ReadOnlyItemStack, float> heuristic) => Sort(new HeuristicComparer(heuristic));
-        private class HeuristicComparer : IComparer<ReadOnlyItemStack>
+        protected class HeuristicComparer : IComparer<ReadOnlyItemStack>
         {
             Func<ReadOnlyItemStack, float> heuristic;
             public HeuristicComparer(Func<ReadOnlyItemStack, float> heuristic) => this.heuristic = heuristic;
             public int Compare(ReadOnlyItemStack x, ReadOnlyItemStack y) => Comparer<float>.Default.Compare(heuristic(x), heuristic(y));
+        }
+        protected class ItemStackToSlotComparer : IComparer<ReadOnlyInventorySlot> //Proxies an IComparer<ReadOnlyItemStack> so slots can be sortable
+        {
+            IComparer<ReadOnlyItemStack> wrapped;
+            public ItemStackToSlotComparer(IComparer<ReadOnlyItemStack> wrapped) => this.wrapped = wrapped;
+            public int Compare(ReadOnlyInventorySlot x, ReadOnlyInventorySlot y) => wrapped.Compare(x.Contents, y.Contents);
         }
 
         /// <summary>
