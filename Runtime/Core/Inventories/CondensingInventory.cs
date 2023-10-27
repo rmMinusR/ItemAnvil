@@ -29,6 +29,7 @@ namespace rmMinusR.ItemAnvil
         /// Add an item using an ItemStack
         /// </summary>
         /// <param name="newStack">Stack to add</param>
+        /// 
         public override void AddItem(ItemStack newStack)
         {
             if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
@@ -51,25 +52,7 @@ namespace rmMinusR.ItemAnvil
             //We couldn't accept the full stack
         }
 
-        #region TryRemove family
-
-        /// <summary>
-        /// Attempt to remove items. If not enough are available, no changes will be made.
-        /// </summary>
-        /// <param name="filter">Filter specifying what to remove</param>
-        /// <param name="totalToRemove">How many to be removed</param>
-        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-        public override IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove) => TryRemove_Impl(filter.Matches, totalToRemove);
-
-        /// <summary>
-        /// Attempt to remove items. If not enough are available, no changes will be made.
-        /// </summary>
-        /// <param name="typeToRemove">Item type to be removed</param>
-        /// <param name="totalToRemove">How many to be removed</param>
-        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-        public override IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove) => TryRemove_Impl(stack => stack.itemType == typeToRemove, totalToRemove);
-
-        private IEnumerable<ItemStack> TryRemove_Impl(Func<ItemStack, bool> filter, int totalToRemove)
+        public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove)
         {
             List<InventorySlot> matches = slots.Where(i => !i.IsEmpty && filter(i.Contents)).ToList();
 
@@ -115,23 +98,7 @@ namespace rmMinusR.ItemAnvil
             }
         }
 
-        #endregion
-
-        #region RemoveAll family
-
-        /// <summary>
-        /// Remove all items that match the given filter
-        /// </summary>
-        /// <returns>How many items were removed</returns>
-        public override int RemoveAll(ItemFilter filter) => RemoveAll_Impl(filter.Matches);
-
-        /// <summary>
-        /// Remove all items of the given type
-        /// </summary>
-        /// <returns>How many items were removed</returns>
-        public override int RemoveAll(Item typeToRemove) => RemoveAll_Impl(s => s.itemType == typeToRemove);
-
-        private int RemoveAll_Impl(Func<ItemStack, bool> filter)
+        public override int RemoveAll(Predicate<ItemStack> filter)
         {
             bool wrappedFilter(InventorySlot i) => !i.IsEmpty && filter(i.Contents);
             int nRemoved = slots.Where(wrappedFilter).Sum(i => i.Contents.quantity);
@@ -139,18 +106,11 @@ namespace rmMinusR.ItemAnvil
             if (nRemoved != 0) ValidateIDs();
             return nRemoved;
         }
-
-        #endregion
-
+        
         /// <summary>
         /// Check how many items match the given filter
         /// </summary>
-        public override int Count(ItemFilter filter) => slots.Where(i => filter.Matches(i.Contents)).Sum(stack => stack.Contents.quantity);
-
-        /// <summary>
-        /// Check how many items are present of the given type
-        /// </summary>
-        public override int Count(Item itemType) => slots.Where(stack => !stack.IsEmpty && stack.Contents.itemType == itemType).Sum(stack => stack.Contents.quantity);
+        public override int Count(Predicate<ItemStack> filter) => slots.Where(i => filter(i.Contents)).Sum(stack => stack.Contents.quantity);
 
         /// <summary>
         /// Dump the contents of this inventory. Note that these the original instances.
@@ -170,12 +130,7 @@ namespace rmMinusR.ItemAnvil
         /// <summary>
         /// Find all ItemStacks that match the filter
         /// </summary>
-        public override IEnumerable<ItemStack> FindAll(ItemFilter filter) => slots.Where(i => filter.Matches(i.Contents)).Select(i => i.Contents);
-
-        /// <summary>
-        /// Find all ItemStacks with the given type
-        /// </summary>
-        public override IEnumerable<ItemStack> FindAll(Item type) => slots.Where(i => !i.IsEmpty && i.Contents.itemType == type).Select(i => i.Contents);
+        public override IEnumerable<ItemStack> FindAll(Predicate<ItemStack> filter) => slots.Where(i => filter(i.Contents)).Select(i => i.Contents);
 
         public override void Sort(IComparer<ReadOnlyItemStack> comparer)
         {

@@ -29,37 +29,24 @@ namespace rmMinusR.ItemAnvil
         /// <param name="filter">Filter specifying what to remove</param>
         /// <param name="totalToRemove">How many to be removed</param>
         /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-        public abstract IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove);
+        public abstract IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove);
+        public virtual IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove) => TryRemove(filter.Matches, totalToRemove);
+        public virtual IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove) => TryRemove(s => s.itemType == typeToRemove, totalToRemove);
 
-        /// <summary>
-        /// Attempt to remove items. If not enough are available, no changes will be made.
-        /// </summary>
-        /// <param name="typeToRemove">Item type to be removed</param>
-        /// <param name="totalToRemove">How many to be removed</param>
-        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-        public abstract IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove);
-    
         /// <summary>
         /// Remove all items that match the given filter
         /// </summary>
         /// <returns>How many items were removed</returns>
-        public abstract int RemoveAll(ItemFilter filter);
-
-        /// <summary>
-        /// Remove all items of the given type
-        /// </summary>
-        /// <returns>How many items were removed</returns>
-        public abstract int RemoveAll(Item typeToRemove);
+        public abstract int RemoveAll(Predicate<ItemStack> filter);
+        public virtual int RemoveAll(ItemFilter filter) => RemoveAll(filter.Matches);
+        public virtual int RemoveAll(Item typeToRemove) => RemoveAll(s => s.itemType == typeToRemove);
 
         /// <summary>
         /// Check how many items match the given filter
         /// </summary>
-        public abstract int Count(ItemFilter filter);
-
-        /// <summary>
-        /// Check how many items are present of the given type
-        /// </summary>
-        public abstract int Count(Item itemType);
+        public abstract int Count(Predicate<ItemStack> filter);
+        public virtual int Count(ItemFilter filter) => Count(filter.Matches);
+        public virtual int Count(Item typeToCount)  => Count(s => s.itemType == typeToCount);
 
         /// <summary>
         /// Find the first ItemStack of the given type.
@@ -68,15 +55,9 @@ namespace rmMinusR.ItemAnvil
         /// Note that these are the original instances, and changes made will reflect in the inventory.
         /// </remarks>
         /// <returns>The matching ItemStack if a match was present, else null</returns>
-        public virtual ItemStack FindFirst(ItemFilter filter) => FindAll(filter).FirstOrDefault();
-
-        /// <summary>
-        /// Find the first item of the given type.
-        /// </summary>
-        /// <remarks>
-        /// Note that these are the original instances, and changes made will reflect in the inventory.
-        /// </remarks>
-        public virtual ItemStack FindFirst(Item type) => FindAll(type).FirstOrDefault();
+        public virtual ItemStack FindFirst(Predicate<ItemStack> filter) => FindAll(filter).FirstOrDefault();
+        public virtual ItemStack FindFirst(ItemFilter filter) => FindFirst(filter.Matches);
+        public virtual ItemStack FindFirst(Item typeToCount)  => FindFirst(s => s.itemType == typeToCount);
 
         /// <summary>
         /// Find all ItemStacks that match the filter.
@@ -84,16 +65,10 @@ namespace rmMinusR.ItemAnvil
         /// <remarks>
         /// Note that these are the original instances, and changes made will reflect in the inventory.
         /// </remarks>
-        public abstract IEnumerable<ItemStack> FindAll(ItemFilter filter);
-
-        /// <summary>
-        /// Find all ItemStacks with the given type.
-        /// </summary>
-        /// <remarks>
-        /// Note that these are the original instances, and changes made will reflect in the inventory.
-        /// </remarks>
-        public abstract IEnumerable<ItemStack> FindAll(Item type);
-
+        public abstract IEnumerable<ItemStack> FindAll(Predicate<ItemStack> filter);
+        public virtual IEnumerable<ItemStack> FindAll(ItemFilter filter) => FindAll(filter.Matches);
+        public virtual IEnumerable<ItemStack> FindAll(Item typeToCount)  => FindAll(s => s.itemType == typeToCount);
+        
         /// <summary>
         /// Get a given slot, which can then be freely manipulated. Errors if outside the range [0, SlotCount)
         /// </summary>
