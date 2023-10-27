@@ -37,9 +37,17 @@ namespace rmMinusR.ItemAnvil
 
         public static void SwapContents(InventorySlot a, InventorySlot b)
         {
+            a.UninstallHooks();
+            b.UninstallHooks();
+
             ItemStack tmp = a._contents;
             a._contents = b._contents;
             b._contents = tmp;
+
+            a.InstallHooks();
+            b.InstallHooks();
+
+            //TODO implement swap hook
         }
 
         public bool CanAccept(ItemStack newStack)

@@ -15,10 +15,14 @@ namespace rmMinusR.ItemAnvil
     [Serializable]
     public sealed class CondensingInventory : StandardInventory
     {
-        public CondensingInventory()
+        public override void DoSetup()
         {
+            //Install inventory-level hooks
             Hooks.postAddItem.InsertHook(_HandleOverflows, 0);
             Hooks.postRemove.InsertHook(_Condense, 0);
+            
+            //Install item-level hooks
+            base.DoSetup();
         }
 
         //On overflow: add more slots and try again

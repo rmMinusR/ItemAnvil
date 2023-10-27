@@ -37,7 +37,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         #endregion
 
 
-        public List<HookContainer<AddItemHook      >> addItem       = new List<HookContainer<AddItemHook      >>();
+        public List<HookContainer<CanAddItemHook   >> canAddItem    = new List<HookContainer<CanAddItemHook   >>();
         public List<HookContainer<CanSlotAcceptHook>> canSlotAccept = new List<HookContainer<CanSlotAcceptHook>>();
         public List<HookContainer<PostAddItemHook  >> postAddItem   = new List<HookContainer<PostAddItemHook  >>();
         public List<HookContainer<RemoveItemHook   >> removeItem    = new List<HookContainer<RemoveItemHook   >>();
@@ -52,7 +52,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
          */
         
         //TODO: Horrible practice. Is there a better way that's still performant?
-        public QueryEventResult ExecuteAddItem          (ItemStack final, ReadOnlyItemStack original                                     , object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<AddItemHook      > i in addItem      ) { res = i.hook(final, original,                cause); if (res != QueryEventResult.Allow   ) break; } return res; }
+        public QueryEventResult ExecuteCanAddItem       (ItemStack final, ReadOnlyItemStack original                                     , object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<CanAddItemHook   > i in canAddItem   ) { res = i.hook(final, original,                cause); if (res != QueryEventResult.Allow   ) break; } return res; }
         public QueryEventResult ExecuteCanSlotAccept    (ReadOnlyInventorySlot slot, ReadOnlyItemStack stack                             , object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<CanSlotAcceptHook> i in canSlotAccept) { res = i.hook(slot, stack,                    cause); if (res != QueryEventResult.Allow   ) break; } return res; }
         public PostEventResult  ExecutePostAddItem      (ItemStack stack                                                                 , object cause) { PostEventResult  res = PostEventResult. Continue; foreach(HookContainer<PostAddItemHook  > i in postAddItem  ) { res = i.hook(stack,                          cause); if (res != PostEventResult .Continue) break; } return res; }
         public QueryEventResult ExecuteRemoveItems      (ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<RemoveItemHook   > i in removeItem   ) { res = i.hook(slot, removed, originalRemoved, cause); if (res != QueryEventResult.Allow   ) break; } return res; }

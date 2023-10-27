@@ -137,9 +137,9 @@ namespace rmMinusR.ItemAnvil
         public abstract void Validate();
 
         /// <summary>
-        /// Called exactly once when the inventory is created. Handles stuff like installing hooks.
+        /// Should be called exactly once when the inventory is created. Handles stuff like installing hooks.
         /// </summary>
-        protected internal abstract void DoSetup();
+        public abstract void DoSetup();
         
         #region Hook interface
 
@@ -148,14 +148,14 @@ namespace rmMinusR.ItemAnvil
          * See StandardInventory for a reusable implementation using InventoryHooksImplDetail
          */
 
-        public abstract void Hook(AddItemHook       listener, int priority);
+        public abstract void Hook(CanAddItemHook    listener, int priority);
         public abstract void Hook(CanSlotAcceptHook listener, int priority);
         public abstract void Hook(PostAddItemHook   listener, int priority);
         public abstract void Hook(RemoveItemHook    listener, int priority);
         public abstract void Hook(PostRemoveHook    listener, int priority);
         public abstract void Hook(TrySortSlotHook   listener, int priority);
         public abstract void Hook(PostSortHook      listener, int priority);
-        public abstract void Unhook(AddItemHook       listener);
+        public abstract void Unhook(CanAddItemHook  listener);
         public abstract void Unhook(CanSlotAcceptHook listener);
         public abstract void Unhook(PostAddItemHook   listener);
         public abstract void Unhook(RemoveItemHook    listener);
