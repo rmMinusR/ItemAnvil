@@ -159,12 +159,18 @@ namespace rmMinusR.ItemAnvil
          * Hooks execute in ascending priority. For events that only listen without modifying behavior (such as UI), register for priority = int.MaxValue.
          */
 
-        public abstract void HookAddItem   (AddItemHook     listener, int priority);
-        public abstract void HookRemoveItem(ConsumeItemHook listener, int priority);
-        public abstract void HookSwapSlots (SwapSlotsHook   listener, int priority);
-        public abstract void UnhookAddItem   (AddItemHook     listener);
-        public abstract void UnhookRemoveItem(ConsumeItemHook listener);
-        public abstract void UnhookSwapSlots (SwapSlotsHook   listener);
+        public abstract void Hook(AddItemHook       listener, int priority);
+        public abstract void Hook(CanSlotAcceptHook listener, int priority);
+        public abstract void Hook(PostAddItemHook   listener, int priority);
+        public abstract void Hook(RemoveItemHook    listener, int priority);
+        public abstract void Hook(TrySortSlotHook   listener, int priority);
+        public abstract void Hook(PostSortHook      listener, int priority);
+        public abstract void Unhook(AddItemHook       listener);
+        public abstract void Unhook(CanSlotAcceptHook listener);
+        public abstract void Unhook(PostAddItemHook   listener);
+        public abstract void Unhook(RemoveItemHook    listener);
+        public abstract void Unhook(TrySortSlotHook   listener);
+        public abstract void Unhook(PostSortHook      listener);
 
         /*
         
@@ -173,12 +179,18 @@ namespace rmMinusR.ItemAnvil
         #region Hook interface
         [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
         private InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
-        public override void HookAddItem   (AddItemHook     listener, int priority) => Hooks.HookAddItem   (listener, priority);
-        public override void HookRemoveItem(ConsumeItemHook listener, int priority) => Hooks.HookRemoveItem(listener, priority);
-        public override void HookSwapSlots (SwapSlotsHook   listener, int priority) => Hooks.HookSwapSlots (listener, priority);
-        public override void UnhookAddItem   (AddItemHook     listener) => Hooks.UnhookAddItem   (listener);
-        public override void UnhookRemoveItem(ConsumeItemHook listener) => Hooks.UnhookRemoveItem(listener);
-        public override void UnhookSwapSlots (SwapSlotsHook   listener) => Hooks.UnhookSwapSlots (listener);
+        public override void Hook(AddItemHook       listener, int priority) => Hooks.addItem      .InsertHook(listener, priority);
+        public override void Hook(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept.InsertHook(listener, priority);
+        public override void Hook(PostAddItemHook   listener, int priority) => Hooks.postAddItem  .InsertHook(listener, priority);
+        public override void Hook(RemoveItemHook    listener, int priority) => Hooks.removeItem   .InsertHook(listener, priority);
+        public override void Hook(TrySortSlotHook   listener, int priority) => Hooks.trySortSlot  .InsertHook(listener, priority);
+        public override void Hook(PostSortHook      listener, int priority) => Hooks.postSort     .InsertHook(listener, priority);
+        public override void Unhook(AddItemHook       listener) => Hooks.addItem      .RemoveHook(listener);
+        public override void Unhook(CanSlotAcceptHook listener) => Hooks.canSlotAccept.RemoveHook(listener);
+        public override void Unhook(PostAddItemHook   listener) => Hooks.postAddItem  .RemoveHook(listener);
+        public override void Unhook(RemoveItemHook    listener) => Hooks.removeItem   .RemoveHook(listener);
+        public override void Unhook(TrySortSlotHook   listener) => Hooks.trySortSlot  .RemoveHook(listener);
+        public override void Unhook(PostSortHook      listener) => Hooks.postSort     .RemoveHook(listener);
         #endregion
 
          */

@@ -28,15 +28,56 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
     {
         #region Helper details
 
-        private struct HookContainer<T> where T : class
+        public struct HookContainer<T> where T : class
         {
             public T hook;
             public int priority;
         }
 
-        private static void InsertHook<T>(List<HookContainer<T>> hooks, T hook, int priority) where T : class
+        #endregion
+
+
+        public List<HookContainer<AddItemHook      >> addItem;
+        public List<HookContainer<CanSlotAcceptHook>> canSlotAccept;
+        public List<HookContainer<PostAddItemHook  >> postAddItem;
+        public List<HookContainer<RemoveItemHook   >> removeItem;
+        public List<HookContainer<TrySortSlotHook  >> trySortSlot;
+        public List<HookContainer<PostSortHook     >> postSort;
+        public List<HookContainer<SwapSlotsHook    >> swapSlots;
+
+
+        /*
+         * Hooks execute in ascending priority. For events that only listen without modifying behavior (such as UI), register for priority = int.MaxValue.
+         */
+        
+        //TODO: Horrible practice. Is there a better way that's still performant?
+        public EventResult ExecuteAddItem          (ItemStack final, ReadOnlyItemStack original                                     , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<AddItemHook      > i in addItem      ) { res = i.hook(final, original,                cause); if (res != EventResult.Allow) break; } return res; }
+        public EventResult ExecuteCanSlotAccept    (ReadOnlyInventorySlot slot, ReadOnlyItemStack stack                             , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<CanSlotAcceptHook> i in canSlotAccept) { res = i.hook(slot, stack,                    cause); if (res != EventResult.Allow) break; } return res; }
+        public EventResult ExecutePostAddItem      (ItemStack stack                                                                 , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<PostAddItemHook  > i in postAddItem  ) { res = i.hook(stack,                          cause); if (res != EventResult.Allow) break; } return res; }
+        public EventResult ExecuteRemoveItems      (ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<RemoveItemHook   > i in removeItem   ) { res = i.hook(slot, removed, originalRemoved, cause); if (res != EventResult.Allow) break; } return res; }
+        public EventResult ExecuteTrySort          (ReadOnlyInventorySlot slot                                                      , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<TrySortSlotHook  > i in trySortSlot  ) { res = i.hook(slot,                           cause); if (res != EventResult.Allow) break; } return res; }
+        public EventResult ExecutePostSort         (                                                                                  object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<PostSortHook     > i in postSort     ) { res = i.hook(                                cause); if (res != EventResult.Allow) break; } return res; }
+
+        /*
+        ONELINER:
+        public EventResult ExecuteMyHook(...) { EventResult res = EventResult.Allow; foreach(HookContainer<...> i in ...) { res = i.hook(...); if (res != EventResult.Allow) break; } return res; }
+
+        TEMPLATE:
+        EventResult res = EventResult.Allow;
+        foreach(HookContainer<...> i in ...)
         {
-            HookContainer<T> container = new HookContainer<T>()
+            res = i.hook(...);
+            if (res != EventResult.Allow) break;
+        }
+        return res;
+        */
+    }
+
+    internal static class InventoryHooksImplDetailHelperFuncs
+    {
+        public static void InsertHook<T>(this List<InventoryHooksImplDetail.HookContainer<T>> hooks, T hook, int priority) where T : class
+        {
+            InventoryHooksImplDetail.HookContainer<T> container = new InventoryHooksImplDetail.HookContainer<T>()
             {
                 hook = hook,
                 priority = priority
@@ -51,34 +92,9 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
             }
         }
 
-        private static void RemoveHook<T>(List<HookContainer<T>> hooks, T hook) where T : class
+        public static void RemoveHook<T>(this List<InventoryHooksImplDetail.HookContainer<T>> hooks, T hook) where T : class
         {
             hooks.RemoveAll(i => i.hook == hook);
         }
-
-        #endregion
-
-        private List<HookContainer<AddItemHook    >> _addItem;
-        private List<HookContainer<ConsumeItemHook>> _consumeItem;
-        private List<HookContainer<SwapSlotsHook  >> _swapSlots;
-
-
-        /*
-         * Hooks execute in ascending priority. For events that only listen without modifying behavior (such as UI), register for priority = int.MaxValue.
-         */
-
-        public void HookAddItem   (AddItemHook     listener, int priority) => InsertHook(_addItem    , listener, priority);
-        public void HookRemoveItem(ConsumeItemHook listener, int priority) => InsertHook(_consumeItem, listener, priority);
-        public void HookSwapSlots (SwapSlotsHook   listener, int priority) => InsertHook(_swapSlots  , listener, priority);
-
-        public void UnhookAddItem   (AddItemHook     listener) => RemoveHook(_addItem    , listener);
-        public void UnhookRemoveItem(ConsumeItemHook listener) => RemoveHook(_consumeItem, listener);
-        public void UnhookSwapSlots (SwapSlotsHook   listener) => RemoveHook(_swapSlots  , listener);
-
-        //TODO: Horrible practice. Is there a better way that's still performant?
-        public EventResult ExecuteHookAddItem   (ItemStack stack, ref InventorySlot destinationSlot, object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<AddItemHook    > i in _addItem    ) { res = i.hook(stack, ref destinationSlot, cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecuteHookRemoveItem(InventorySlot slot, ref int amountConsumed,         object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<ConsumeItemHook> i in _consumeItem) { res = i.hook(slot, ref amountConsumed,   cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecuteHookSwapSlots (InventorySlot slotA, InventorySlot slotB,           object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<SwapSlotsHook  > i in _swapSlots  ) { res = i.hook(slotA, slotB,               cause); if (res != EventResult.Allow) break; } return res; }
     }
-
 }

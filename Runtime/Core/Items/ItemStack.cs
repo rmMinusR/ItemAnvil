@@ -72,7 +72,7 @@ namespace rmMinusR.ItemAnvil
             //TODO Could do better decoupling
             if (dst._itemType != null && dst._itemType.Properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
             src._quantity = totalAmt-dst._quantity;
-
+            
             return true;
         }
     

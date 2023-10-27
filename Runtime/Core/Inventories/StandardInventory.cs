@@ -1,27 +1,37 @@
+using rmMinusR.ItemAnvil.Hooks;
 using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Graphs;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace rmMinusR.ItemAnvil
 {
 
     /// <summary>
-    /// An inventory with a fixed number of slots. Attempting to add more items when full will fail. Slots may be null if empty.
+    /// A generic inventory that can be customized via InventoryProperties.
     /// </summary>
     [Serializable]
-    public sealed class FixedSlotInventory : Inventory
+    public sealed class StandardInventory : Inventory
     {
         [SerializeField] private List<InventorySlot> slots = new List<InventorySlot>();
         public override IEnumerable<InventorySlot> Slots => slots;
         public override InventorySlot GetSlot(int id) => slots[id];
         public override int SlotCount => slots.Count;
 
-        public FixedSlotInventory() { }
-        public FixedSlotInventory(int size)
+        public StandardInventory() { }
+        public StandardInventory(int size)
         {
             for (int i = 0; i < size; ++i) slots.Add(new InventorySlot(i));
+        }
+
+        public InventorySlot AddSlot()
+        {
+            InventorySlot s = new InventorySlot(slots.Count);
+            slots.Add(s);
+            return s;
         }
 
         /// <summary>
@@ -32,21 +42,27 @@ namespace rmMinusR.ItemAnvil
         {
             if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
 
+            //Check hooks to see if we're allowed to add this item
+            if (Hooks.ExecuteAddItem(newStack, newStack.Clone(), cause) != EventResult.Allow) return;
+
             //First try to merge with existing stacks
             foreach (InventorySlot slot in slots)
             {
-                if (!slot.IsEmpty && slot.CanAccept(newStack)) slot.TryAccept(newStack);
+                //Check hooks to see if slot can accept this stack
+                if (!slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == EventResult.Allow) slot.TryAccept(newStack);
                 if (newStack.quantity == 0) return;
             }
 
             //Then try to merge into empty slots
             foreach (InventorySlot slot in slots)
             {
-                if (slot.IsEmpty && slot.CanAccept(newStack)) slot.TryAccept(newStack);
+                //Check hooks to see if slot can accept this stack 
+                if (slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == EventResult.Allow) slot.TryAccept(newStack);
                 if (newStack.quantity == 0) return;
             }
 
-            //We couldn't accept the full stack
+            //We couldn't accept the full stack, run appropriate hook
+            Hooks.ExecutePostAddItem(newStack, cause);
         }
 
         /// <summary>
@@ -95,34 +111,53 @@ namespace rmMinusR.ItemAnvil
             return TryRemove_Impl(s => s.itemType == typeToRemove, totalToRemove);
         }
 
+        //Generic removal helper routine
         private IEnumerable<ItemStack> TryRemove_Impl(Func<ItemStack, bool> filter, int totalToRemove)
         {
-            List<ItemStack> @out = new List<ItemStack>();
-
+            //Item removal routine
+            List<(ItemStack, InventorySlot)> everythingRemoved = new List<(ItemStack, InventorySlot)>();
             for (int i = 0; i < slots.Count; ++i)
             {
                 if (!slots[i].IsEmpty && filter(slots[i].Contents))
                 {
-                    if (slots[i].Contents.quantity >= totalToRemove)
+                    //Create dummy removedStack
+                    ItemStack removedStack = slots[i].Contents.Clone();
+                    removedStack.quantity = Mathf.Min(totalToRemove, slots[i].Contents.quantity);
+
+                    //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
+                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == EventResult.Allow && removedStack.quantity > 0)
                     {
-                        //This stack is enough to complete requirements. Stop consuming.
-                        ItemStack tmp = slots[i].Contents.Clone();
-                        tmp.quantity = totalToRemove;
-                        @out.Add(tmp);
-                        slots[i].Contents.quantity -= totalToRemove;
-                        return @out;
-                    }
-                    else
-                    {
-                        //This stack is not enough to complete requirements. Continue consuming.
-                        totalToRemove -= slots[i].Contents.quantity;
-                        @out.Add(slots[i].Contents);
-                        slots[i].Contents = null;
+                        //Make sure we aren't overcharging and leaving the slot with negative quantities
+                        removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
+
+                        //Log it
+                        everythingRemoved.Add((removedStack, slots[i]));
+
+                        //Update slot
+                        slots[i].Contents.quantity -= removedStack.quantity;
+                        if (slots[i].Contents.quantity <= 0) slots[i].Contents = null;
+                        
+                        //Update totalToRemove
+                        totalToRemove -= removedStack.quantity;
+                        if (totalToRemove <= 0) break;
                     }
                 }
             }
 
-            throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
+            //If we still have things to remove, continue
+            if (totalToRemove > 0)
+            {
+                //Prevent covariants
+                foreach ((ItemStack stack, InventorySlot slot) in everythingRemoved)
+                {
+                    //Should not call add hook here, since we're reverting a failed operation
+                    slot.TryAccept(stack); //Merge back in (TODO: make more performant?)
+                }
+
+                //Complain
+                throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
+            }
+            else return everythingRemoved.Select(i => i.Item1);
         }
 
         #endregion
@@ -143,9 +178,31 @@ namespace rmMinusR.ItemAnvil
     
         private int RemoveAll_Impl(Func<ItemStack, bool> filter)
         {
-            bool wrappedFilter(InventorySlot i) => !i.IsEmpty && filter(i.Contents);
-            int nRemoved = slots.Where(wrappedFilter).Sum(i => i.Contents.quantity);
-            foreach (InventorySlot slot in slots.Where(wrappedFilter)) slot.Contents = null;
+            int nRemoved = 0;
+
+            for (int i = 0; i < slots.Count; ++i)
+            {
+                if (!slots[i].IsEmpty && filter(slots[i].Contents))
+                {
+                    //Create dummy removedStack
+                    ItemStack removedStack = slots[i].Contents.Clone();
+                    
+                    //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
+                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == EventResult.Allow && removedStack.quantity > 0)
+                    {
+                        //Make sure we aren't overcharging and leaving the slot with negative quantities
+                        removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
+
+                        //Log it
+                        nRemoved += removedStack.quantity;
+
+                        //Update slot
+                        slots[i].Contents.quantity -= removedStack.quantity;
+                        if (slots[i].Contents.quantity <= 0) slots[i].Contents = null;
+                    }
+                }
+            }
+
             return nRemoved;
         }
 
@@ -173,8 +230,26 @@ namespace rmMinusR.ItemAnvil
 
         public override void Sort(IComparer<ReadOnlyItemStack> comparer)
         {
-            slots.Sort(new ItemStackToSlotComparer(comparer));
+            //Find what slots can be sorted, and sort them
+            List<InventorySlot> sortables = new List<InventorySlot>(slots);
+            sortables.RemoveAll(slot => Hooks.ExecuteTrySort(slot, cause));
+            sortables.Sort(new ItemStackToSlotComparer(comparer));
+
+            //Rearrange the sortable set in the original slots
+            //This is all legal since it's just references
+            int sortableIndex = 0;
+            for (int slotIndex = 0; slotIndex < slots.Count; slotIndex++)
+            {
+                if (sortables.Contains(slots[slotIndex]))
+                {
+                    slots[slotIndex] = sortables[sortableIndex];
+                    sortableIndex++;
+                }
+            }
+
             ValidateIDs();
+
+            Hooks.ExecutePostSort(cause);
         }
 
         #region Hook interface
