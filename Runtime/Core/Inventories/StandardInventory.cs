@@ -238,7 +238,7 @@ namespace rmMinusR.ItemAnvil
         #region Hook interface
         [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
         protected InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
-        public override void Hook(CanAddItemHook    listener, int priority) => Hooks.canAddItem    .InsertHook(listener, priority);
+        public override void Hook(CanAddItemHook    listener, int priority) => Hooks.canAddItem   .InsertHook(listener, priority);
         public override void Hook(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept.InsertHook(listener, priority);
         public override void Hook(PostAddItemHook   listener, int priority) => Hooks.postAddItem  .InsertHook(listener, priority);
         public override void Hook(RemoveItemHook    listener, int priority) => Hooks.removeItem   .InsertHook(listener, priority);
