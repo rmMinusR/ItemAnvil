@@ -10,18 +10,24 @@ namespace rmMinusR.ItemAnvil.Tests
     [TestFixture]
     public class FixedSlotInventoryTests : InventoryTests<FixedSlotInventory>
     {
-        protected override FixedSlotInventory CreateInventory() => new FixedSlotInventory(30);
+        protected override FixedSlotInventory _CreateInventory() => new FixedSlotInventory(30);
     }
 
     [TestFixture]
     public class CondensingInventoryTests : InventoryTests<CondensingInventory>
     {
-        protected override CondensingInventory CreateInventory() => new CondensingInventory();
+        protected override CondensingInventory _CreateInventory() => new CondensingInventory();
     }
 
     public abstract class InventoryTests<TInventory> where TInventory : Inventory
     {
-        protected abstract TInventory CreateInventory();
+        protected abstract TInventory _CreateInventory();
+        private TInventory CreateInventory()
+        {
+            TInventory inv = _CreateInventory();
+            inv.DoSetup();
+            return inv;
+        }
 
         [Test, Combinatorial]
         public void AddItem_AddsItemToInventory([Values(1, 2, 5, 10)] int nToAdd)
@@ -61,20 +67,32 @@ namespace rmMinusR.ItemAnvil.Tests
             inventory.AddItem(item, startingCount, null);
 
             // Act
-            IEnumerable<ItemStack> removedStacks = inventory.TryRemove(item, nToRemove, null);
+            IEnumerable<ItemStack> removedStacks = null;
+            bool errored = false;
+            try
+            {
+                removedStacks = inventory.TryRemove(item, nToRemove, null);
+            }
+            catch(InvalidOperationException)
+            {
+                errored = true;
+            }
 
             // Assert
             if (startingCount >= nToRemove)
             {
                 // Had enough items
+                Assert.IsNotNull(removedStacks);
+                Assert.IsFalse(errored);
                 Assert.AreEqual(startingCount-nToRemove, inventory.Count(item));
                 Assert.AreEqual(nToRemove, removedStacks.Sum(stack => stack.quantity));
             }
             else
             {
                 // Didn't have enough items
+                Assert.IsNull(removedStacks);
+                Assert.IsTrue(errored);
                 Assert.AreEqual(startingCount, inventory.Count(item));
-                Assert.AreEqual(0, removedStacks.Count());
             }
         }
 

@@ -6,12 +6,19 @@ namespace rmMinusR.ItemAnvil.Tests
 
     public class TransactionTests
     {
+        private Inventory CreateInventory()
+        {
+            Inventory inv = new CondensingInventory();
+            inv.DoSetup();
+            return inv;
+        }
+
         [Test]
         public void TryExchange_ValidTransaction_SuccessfullyExchangesItems()
         {
             // Arrange
-            var inventoryA = new CondensingInventory();
-            var inventoryB = new CondensingInventory();
+            var inventoryA = CreateInventory();
+            var inventoryB = CreateInventory();
 
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
@@ -50,8 +57,8 @@ namespace rmMinusR.ItemAnvil.Tests
         public void TryExchange_InvalidTransaction_DoesNotExchangeItems()
         {
             // Arrange
-            var inventoryA = new CondensingInventory();
-            var inventoryB = new CondensingInventory();
+            var inventoryA = CreateInventory();
+            var inventoryB = CreateInventory();
 
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
@@ -84,8 +91,8 @@ namespace rmMinusR.ItemAnvil.Tests
         public void IsValid_ValidTransaction_ReturnsTrue()
         {
             // Arrange
-            var inventoryA = new CondensingInventory();
-            var inventoryB = new CondensingInventory();
+            var inventoryA = CreateInventory();
+            var inventoryB = CreateInventory();
 
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
@@ -116,8 +123,8 @@ namespace rmMinusR.ItemAnvil.Tests
         public void IsValid_InvalidTransaction_ReturnsFalse()
         {
             // Arrange
-            var inventoryA = new CondensingInventory();
-            var inventoryB = new CondensingInventory();
+            var inventoryA = CreateInventory();
+            var inventoryB = CreateInventory();
 
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
