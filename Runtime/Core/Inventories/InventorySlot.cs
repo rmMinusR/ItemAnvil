@@ -9,11 +9,13 @@ namespace rmMinusR.ItemAnvil
     [Serializable]
     public sealed class InventorySlot : ReadOnlyInventorySlot
     {
-        public InventorySlot(int id)
+        public InventorySlot(int id, Inventory inventory)
         {
             _id = id;
+            this.inventory = inventory;
         }
 
+        public Inventory inventory { get; private set; }
         [SerializeField] private ItemStack _contents;
         [SerializeField] [HideInInspector] private int _id;
         
@@ -55,6 +57,18 @@ namespace rmMinusR.ItemAnvil
             }
 
             ItemStack.TryMerge(newStack, Contents);
+        }
+
+        internal void InstallHooks()
+        {
+            //Stub for slot and item property hooks
+            //TODO IMPLEMENT
+        }
+
+        internal void UninstallHooks()
+        {
+            //Stub for slot and item property hooks
+            //TODO IMPLEMENT
         }
     }
 

@@ -24,7 +24,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
     /// Serialization happens almost constantly when editing (or even sometimes viewing)
     /// objects via Inspector.
     /// </remarks>
-    internal class InventoryHooksImplDetail : ScriptableObject
+    public class InventoryHooksImplDetail : ScriptableObject
     {
         #region Helper details
 
@@ -37,13 +37,14 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         #endregion
 
 
-        public List<HookContainer<AddItemHook      >> addItem;
-        public List<HookContainer<CanSlotAcceptHook>> canSlotAccept;
-        public List<HookContainer<PostAddItemHook  >> postAddItem;
-        public List<HookContainer<RemoveItemHook   >> removeItem;
-        public List<HookContainer<TrySortSlotHook  >> trySortSlot;
-        public List<HookContainer<PostSortHook     >> postSort;
-        public List<HookContainer<SwapSlotsHook    >> swapSlots;
+        public List<HookContainer<AddItemHook      >> addItem       = new List<HookContainer<AddItemHook      >>();
+        public List<HookContainer<CanSlotAcceptHook>> canSlotAccept = new List<HookContainer<CanSlotAcceptHook>>();
+        public List<HookContainer<PostAddItemHook  >> postAddItem   = new List<HookContainer<PostAddItemHook  >>();
+        public List<HookContainer<RemoveItemHook   >> removeItem    = new List<HookContainer<RemoveItemHook   >>();
+        public List<HookContainer<PostRemoveHook   >> postRemove    = new List<HookContainer<PostRemoveHook   >>();
+        public List<HookContainer<TrySortSlotHook  >> trySortSlot   = new List<HookContainer<TrySortSlotHook  >>();
+        public List<HookContainer<PostSortHook     >> postSort      = new List<HookContainer<PostSortHook     >>();
+        public List<HookContainer<SwapSlotsHook    >> swapSlots     = new List<HookContainer<SwapSlotsHook    >>();
 
 
         /*
@@ -51,12 +52,13 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
          */
         
         //TODO: Horrible practice. Is there a better way that's still performant?
-        public EventResult ExecuteAddItem          (ItemStack final, ReadOnlyItemStack original                                     , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<AddItemHook      > i in addItem      ) { res = i.hook(final, original,                cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecuteCanSlotAccept    (ReadOnlyInventorySlot slot, ReadOnlyItemStack stack                             , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<CanSlotAcceptHook> i in canSlotAccept) { res = i.hook(slot, stack,                    cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecutePostAddItem      (ItemStack stack                                                                 , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<PostAddItemHook  > i in postAddItem  ) { res = i.hook(stack,                          cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecuteRemoveItems      (ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<RemoveItemHook   > i in removeItem   ) { res = i.hook(slot, removed, originalRemoved, cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecuteTrySort          (ReadOnlyInventorySlot slot                                                      , object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<TrySortSlotHook  > i in trySortSlot  ) { res = i.hook(slot,                           cause); if (res != EventResult.Allow) break; } return res; }
-        public EventResult ExecutePostSort         (                                                                                  object cause) { EventResult res = EventResult.Allow; foreach(HookContainer<PostSortHook     > i in postSort     ) { res = i.hook(                                cause); if (res != EventResult.Allow) break; } return res; }
+        public QueryEventResult ExecuteAddItem          (ItemStack final, ReadOnlyItemStack original                                     , object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<AddItemHook      > i in addItem      ) { res = i.hook(final, original,                cause); if (res != QueryEventResult.Allow   ) break; } return res; }
+        public QueryEventResult ExecuteCanSlotAccept    (ReadOnlyInventorySlot slot, ReadOnlyItemStack stack                             , object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<CanSlotAcceptHook> i in canSlotAccept) { res = i.hook(slot, stack,                    cause); if (res != QueryEventResult.Allow   ) break; } return res; }
+        public PostEventResult  ExecutePostAddItem      (ItemStack stack                                                                 , object cause) { PostEventResult  res = PostEventResult. Continue; foreach(HookContainer<PostAddItemHook  > i in postAddItem  ) { res = i.hook(stack,                          cause); if (res != PostEventResult .Continue) break; } return res; }
+        public QueryEventResult ExecuteRemoveItems      (ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<RemoveItemHook   > i in removeItem   ) { res = i.hook(slot, removed, originalRemoved, cause); if (res != QueryEventResult.Allow   ) break; } return res; }
+        public void             ExecutePostRemove       (                                                                                  object cause) {                                                   foreach(HookContainer<PostRemoveHook   > i in postRemove   ) {       i.hook(                                cause);                                              }             }
+        public QueryEventResult ExecuteTrySort          (ReadOnlyInventorySlot slot                                                      , object cause) { QueryEventResult res = QueryEventResult.Allow   ; foreach(HookContainer<TrySortSlotHook  > i in trySortSlot  ) { res = i.hook(slot,                           cause); if (res != QueryEventResult.Allow   ) break; } return res; }
+        public PostEventResult  ExecutePostSort         (                                                                                  object cause) { PostEventResult  res = PostEventResult .Continue; foreach(HookContainer<PostSortHook     > i in postSort     ) { res = i.hook(                                cause); if (res != PostEventResult .Continue) break; } return res; }
 
         /*
         ONELINER:
@@ -73,7 +75,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         */
     }
 
-    internal static class InventoryHooksImplDetailHelperFuncs
+    public static class InventoryHooksImplDetailHelperFuncs
     {
         public static void InsertHook<T>(this List<InventoryHooksImplDetail.HookContainer<T>> hooks, T hook, int priority) where T : class
         {

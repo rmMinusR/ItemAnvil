@@ -5,31 +5,32 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Graphs;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace rmMinusR.ItemAnvil
 {
 
     /// <summary>
-    /// A generic inventory that can be customized via InventoryProperties.
+    /// A generic inventory that can be customized via InventoryProperties and hooks.
     /// </summary>
     [Serializable]
-    public sealed class StandardInventory : Inventory
+    public class StandardInventory : Inventory
     {
-        [SerializeField] private List<InventorySlot> slots = new List<InventorySlot>();
+        [SerializeField] protected List<InventorySlot> slots = new List<InventorySlot>();
         public override IEnumerable<InventorySlot> Slots => slots;
         public override InventorySlot GetSlot(int id) => slots[id];
         public override int SlotCount => slots.Count;
 
         public StandardInventory() { }
-        public StandardInventory(int size)
+        public StandardInventory(int size) : this()
         {
-            for (int i = 0; i < size; ++i) slots.Add(new InventorySlot(i));
+            for (int i = 0; i < size; ++i) AppendSlot();
         }
 
-        public InventorySlot AddSlot()
+        protected virtual InventorySlot AppendSlot()
         {
-            InventorySlot s = new InventorySlot(slots.Count);
+            InventorySlot s = new InventorySlot(slots.Count, this);
             slots.Add(s);
             return s;
         }
@@ -44,13 +45,15 @@ namespace rmMinusR.ItemAnvil
             if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
 
             //Check hooks to see if we're allowed to add this item
-            if (Hooks.ExecuteAddItem(newStack, newStack.Clone(), cause) != EventResult.Allow) return;
+            if (Hooks.ExecuteAddItem(newStack, newStack.Clone(), cause) != QueryEventResult.Allow) return;
+
+        retry:
 
             //First try to merge with existing stacks
             foreach (InventorySlot slot in slots)
             {
                 //Check hooks to see if slot can accept this stack
-                if (!slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == EventResult.Allow) slot.TryAccept(newStack);
+                if (!slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == QueryEventResult.Allow) slot.TryAccept(newStack);
                 if (newStack.quantity == 0) return;
             }
 
@@ -58,12 +61,12 @@ namespace rmMinusR.ItemAnvil
             foreach (InventorySlot slot in slots)
             {
                 //Check hooks to see if slot can accept this stack 
-                if (slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == EventResult.Allow) slot.TryAccept(newStack);
+                if (slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == QueryEventResult.Allow) slot.TryAccept(newStack);
                 if (newStack.quantity == 0) return;
             }
 
             //We couldn't accept the full stack, run appropriate hook
-            Hooks.ExecutePostAddItem(newStack, cause);
+            if (Hooks.ExecutePostAddItem(newStack, cause) == PostEventResult.Retry) goto retry;
         }
 
         /// <summary>
@@ -102,7 +105,7 @@ namespace rmMinusR.ItemAnvil
                     removedStack.quantity = Mathf.Min(totalToRemove, slots[i].Contents.quantity);
 
                     //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
-                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == EventResult.Allow && removedStack.quantity > 0)
+                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
                     {
                         //Make sure we aren't overcharging and leaving the slot with negative quantities
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
@@ -134,7 +137,11 @@ namespace rmMinusR.ItemAnvil
                 //Complain
                 throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
             }
-            else return everythingRemoved.Select(i => i.Item1);
+            else
+            {
+                Hooks.ExecutePostRemove(cause);
+                return everythingRemoved.Select(i => i.Item1);
+            }
         }
 
         /// <summary>
@@ -153,7 +160,7 @@ namespace rmMinusR.ItemAnvil
                     ItemStack removedStack = slots[i].Contents.Clone();
                     
                     //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
-                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == EventResult.Allow && removedStack.quantity > 0)
+                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
                     {
                         //Make sure we aren't overcharging and leaving the slot with negative quantities
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
@@ -168,6 +175,7 @@ namespace rmMinusR.ItemAnvil
                 }
             }
 
+            Hooks.ExecutePostRemove(cause);
             return nRemoved;
         }
 
@@ -183,9 +191,11 @@ namespace rmMinusR.ItemAnvil
 
         public override void Sort(IComparer<ReadOnlyItemStack> comparer, object cause)
         {
+        retry:
+
             //Find what slots can be sorted, and sort them
             List<InventorySlot> sortables = new List<InventorySlot>(slots);
-            sortables.RemoveAll(slot => Hooks.ExecuteTrySort(slot, cause) != EventResult.Allow);
+            sortables.RemoveAll(slot => Hooks.ExecuteTrySort(slot, cause) != QueryEventResult.Allow);
             sortables.Sort(new ItemStackToSlotComparer(comparer));
 
             //Rearrange the sortable set in the original slots
@@ -202,22 +212,32 @@ namespace rmMinusR.ItemAnvil
 
             ValidateIDs();
 
-            Hooks.ExecutePostSort(cause);
+            if (Hooks.ExecutePostSort(cause) == PostEventResult.Retry) goto retry;
+        }
+
+        protected internal override void DoSetup()
+        {
+            for (int i = 0; i < slots.Count; i++)
+            {
+                if (!slots[i].IsEmpty) slots[i].InstallHooks();
+            }
         }
 
         #region Hook interface
         [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
-        private InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
+        protected InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
         public override void Hook(AddItemHook       listener, int priority) => Hooks.addItem      .InsertHook(listener, priority);
         public override void Hook(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept.InsertHook(listener, priority);
         public override void Hook(PostAddItemHook   listener, int priority) => Hooks.postAddItem  .InsertHook(listener, priority);
         public override void Hook(RemoveItemHook    listener, int priority) => Hooks.removeItem   .InsertHook(listener, priority);
+        public override void Hook(PostRemoveHook    listener, int priority) => Hooks.postRemove   .InsertHook(listener, priority);
         public override void Hook(TrySortSlotHook   listener, int priority) => Hooks.trySortSlot  .InsertHook(listener, priority);
         public override void Hook(PostSortHook      listener, int priority) => Hooks.postSort     .InsertHook(listener, priority);
         public override void Unhook(AddItemHook       listener) => Hooks.addItem      .RemoveHook(listener);
         public override void Unhook(CanSlotAcceptHook listener) => Hooks.canSlotAccept.RemoveHook(listener);
         public override void Unhook(PostAddItemHook   listener) => Hooks.postAddItem  .RemoveHook(listener);
         public override void Unhook(RemoveItemHook    listener) => Hooks.removeItem   .RemoveHook(listener);
+        public override void Unhook(PostRemoveHook    listener) => Hooks.postRemove   .RemoveHook(listener);
         public override void Unhook(TrySortSlotHook   listener) => Hooks.trySortSlot  .RemoveHook(listener);
         public override void Unhook(PostSortHook      listener) => Hooks.postSort     .RemoveHook(listener);
         #endregion
@@ -225,7 +245,7 @@ namespace rmMinusR.ItemAnvil
 
         #region Obsolete functions/variables, and upgrader
 
-        private void ValidateIDs()
+        protected void ValidateIDs()
         {
             //Ensure slots have correct IDs
             for (int i = 0; i < slots.Count; ++i) slots[i].ID = i;
@@ -233,32 +253,8 @@ namespace rmMinusR.ItemAnvil
 
         public override void Validate()
         {
-            //Update obsolete members
-#pragma warning disable CS0612
-            if (contents.Count != 0)
-            {
-                if (slots.Count != 0) throw new InvalidOperationException("Cannot update storage -- destination 'slots' must be empty");
-
-                for (int i = 0; i < contents.Count; ++i)
-                {
-                    InventorySlot s = new InventorySlot(i);
-                    s.Contents = contents[i];
-                    slots.Add(s);
-                }
-                contents.Clear();
-
-            }
-#pragma warning restore CS0612
-
             ValidateIDs();
         }
-
-        /// <summary>
-        /// OUTDATED as of 0.5.1 - use "slots" instead
-        /// Validate() should handle the upgrade gracefully
-        /// </summary>
-        [HideInInspector, Obsolete]
-        [SerializeField] private List<ItemStack> contents = new List<ItemStack>();
 
         #endregion
     }

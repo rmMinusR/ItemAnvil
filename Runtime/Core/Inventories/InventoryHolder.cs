@@ -18,6 +18,11 @@ namespace rmMinusR.ItemAnvil
         [TypeSwitcher(keepData = true, order = 2)]
         [SerializeReference] public Inventory inventory;
 
+        private void Start()
+        {
+            if (inventory != null) inventory.DoSetup();
+        }
+
         private void Update()
         {
             if (doTick)
