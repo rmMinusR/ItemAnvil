@@ -29,8 +29,8 @@ namespace rmMinusR.ItemAnvil
         /// Add an item using an ItemStack
         /// </summary>
         /// <param name="newStack">Stack to add</param>
-        /// 
-        public override void AddItem(ItemStack newStack)
+        /// <param name="cause"></param>
+        public override void AddItem(ItemStack newStack, object cause)
         {
             if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
             
@@ -52,7 +52,7 @@ namespace rmMinusR.ItemAnvil
             //We couldn't accept the full stack
         }
 
-        public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove)
+        public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause)
         {
             List<InventorySlot> matches = slots.Where(i => !i.IsEmpty && filter(i.Contents)).ToList();
 
@@ -98,7 +98,7 @@ namespace rmMinusR.ItemAnvil
             }
         }
 
-        public override int RemoveAll(Predicate<ItemStack> filter)
+        public override int RemoveAll(Predicate<ItemStack> filter, object cause)
         {
             bool wrappedFilter(InventorySlot i) => !i.IsEmpty && filter(i.Contents);
             int nRemoved = slots.Where(wrappedFilter).Sum(i => i.Contents.quantity);
@@ -132,7 +132,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public override IEnumerable<ItemStack> FindAll(Predicate<ItemStack> filter) => slots.Where(i => filter(i.Contents)).Select(i => i.Contents);
 
-        public override void Sort(IComparer<ReadOnlyItemStack> comparer)
+        public override void Sort(IComparer<ReadOnlyItemStack> comparer, object cause)
         {
             slots.Sort(new ItemStackToSlotComparer(comparer));
             ValidateIDs();

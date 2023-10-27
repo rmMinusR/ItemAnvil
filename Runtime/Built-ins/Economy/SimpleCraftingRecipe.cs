@@ -67,7 +67,7 @@ namespace rmMinusR.ItemAnvil
             {
                 foreach (Ingredient i in inputs)
                 {
-                    IEnumerable<ItemStack> inputs_removed = crafter.TryRemove(i.itemType, i.quantity * multiplier);
+                    IEnumerable<ItemStack> inputs_removed = crafter.TryRemove(i.itemType, i.quantity * multiplier, this);
                     inputs_instanced.AddRange(inputs_removed);
                     stillValid &= inputs_removed.Count() > 0;
                 }
@@ -77,7 +77,7 @@ namespace rmMinusR.ItemAnvil
             catch (Exception e)
             {
                 //Something went wrong! Refund items.
-                foreach (ItemStack s in inputs_instanced) crafter.AddItem(s);
+                foreach (ItemStack s in inputs_instanced) crafter.AddItem(s, this);
 
                 throw new Exception("Something went wrong while processing SimpleCraftingRecipe!", e);
             }
@@ -89,7 +89,7 @@ namespace rmMinusR.ItemAnvil
                 {
                     ItemStack stack = i.Clone();
                     stack.quantity *= multiplier; //FIXME is this safe?
-                    crafter.AddItem(stack);
+                    crafter.AddItem(stack, this);
                 }
             }
 

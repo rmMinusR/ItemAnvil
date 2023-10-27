@@ -54,8 +54,8 @@ namespace rmMinusR.ItemAnvil.UI
             //FIXME there has to be a better way to do this
         }
 
-        public void SortByNameAZ() => inventory.Sort(NameComparer.INSTANCE_AZ);
-        public void SortByNameZA() => inventory.Sort(NameComparer.INSTANCE_ZA);
+        public void SortByNameAZ() => inventory.Sort(NameComparer.INSTANCE_AZ, this);
+        public void SortByNameZA() => inventory.Sort(NameComparer.INSTANCE_ZA, this);
 
         private class NameComparer : IComparer<ReadOnlyItemStack>
         {
@@ -67,11 +67,11 @@ namespace rmMinusR.ItemAnvil.UI
             public int Compare(ReadOnlyItemStack x, ReadOnlyItemStack y) => CaseInsensitiveComparer.Default.Compare(x?.itemType.displayName ?? "", y?.itemType.displayName ?? "") * (invert?-1:1);
         }
 
-        public void SortByQuantityDesc() => inventory.Sort(i => -i?.quantity ?? 0);
-        public void SortByQuantityAsc () => inventory.Sort(i =>  i?.quantity ?? 0);
+        public void SortByQuantityDesc() => inventory.Sort(i => -i?.quantity ?? 0, this);
+        public void SortByQuantityAsc () => inventory.Sort(i =>  i?.quantity ?? 0, this);
 
-        public void SortByPriceDesc() => inventory.Sort(i => -EvalPrice(i?.itemType) ?? 0);
-        public void SortByPriceAsc () => inventory.Sort(i =>  EvalPrice(i?.itemType) ?? 0);
+        public void SortByPriceDesc() => inventory.Sort(i => -EvalPrice(i?.itemType) ?? 0, this);
+        public void SortByPriceAsc () => inventory.Sort(i =>  EvalPrice(i?.itemType) ?? 0, this);
         private float? EvalPrice(Item type)
         {
             if (type == null || !type.Properties.TryGet(out Marketable market)) return null;
@@ -82,8 +82,8 @@ namespace rmMinusR.ItemAnvil.UI
             else return null;
         }
 
-        public void SortByInstancePropertyCountDesc() => inventory.Sort(i => -i?.instanceProperties.Count() ?? 0);
-        public void SortByInstancePropertyCountAsc () => inventory.Sort(i =>  i?.instanceProperties.Count() ?? 0);
+        public void SortByInstancePropertyCountDesc() => inventory.Sort(i => -i?.instanceProperties.Count() ?? 0, this);
+        public void SortByInstancePropertyCountAsc () => inventory.Sort(i =>  i?.instanceProperties.Count() ?? 0, this);
     }
 
 }

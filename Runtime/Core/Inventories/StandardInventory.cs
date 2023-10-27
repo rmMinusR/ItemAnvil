@@ -38,8 +38,8 @@ namespace rmMinusR.ItemAnvil
         /// Add an item using an ItemStack
         /// </summary>
         /// <param name="newStack">Stack to add</param>
-        /// 
-        public override void AddItem(ItemStack newStack)
+        /// <param name="cause"></param>
+        public override void AddItem(ItemStack newStack, object cause)
         {
             if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
 
@@ -89,7 +89,7 @@ namespace rmMinusR.ItemAnvil
         /// <param name="totalToRemove">How many to be removed</param>
         /// <param name="cause">User-defined data to provide additional context</param>
         /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-        public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove)
+        public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause)
         {
             //Item removal routine
             List<(ItemStack, InventorySlot)> everythingRemoved = new List<(ItemStack, InventorySlot)>();
@@ -141,7 +141,7 @@ namespace rmMinusR.ItemAnvil
         /// Remove all items that match the given filter
         /// </summary>
         /// <returns>How many items were removed</returns>
-        public override int RemoveAll(Predicate<ItemStack> filter)
+        public override int RemoveAll(Predicate<ItemStack> filter, object cause)
         {
             int nRemoved = 0;
 
@@ -181,11 +181,11 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         public override IEnumerable<ItemStack> FindAll(Predicate<ItemStack> filter) => slots.Where(i => !i.IsEmpty && filter(i.Contents)).Select(i => i.Contents);
 
-        public override void Sort(IComparer<ReadOnlyItemStack> comparer)
+        public override void Sort(IComparer<ReadOnlyItemStack> comparer, object cause)
         {
             //Find what slots can be sorted, and sort them
             List<InventorySlot> sortables = new List<InventorySlot>(slots);
-            sortables.RemoveAll(slot => Hooks.ExecuteTrySort(slot, cause));
+            sortables.RemoveAll(slot => Hooks.ExecuteTrySort(slot, cause) != EventResult.Allow);
             sortables.Sort(new ItemStackToSlotComparer(comparer));
 
             //Rearrange the sortable set in the original slots

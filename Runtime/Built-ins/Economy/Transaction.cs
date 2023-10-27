@@ -58,21 +58,21 @@ namespace rmMinusR.ItemAnvil
             try
             {
                 //Capture items to be moved, and remove from original inventories
-                for (int i = 0; i < itemsAToB.Length; ++i) itemsAToB_instanced.AddRange(inventoryA.TryRemove(itemsAToB[i].itemType, itemsAToB[i].quantity));
-                for (int i = 0; i < itemsBToA.Length; ++i) itemsBToA_instanced.AddRange(inventoryB.TryRemove(itemsBToA[i].itemType, itemsBToA[i].quantity));
+                for (int i = 0; i < itemsAToB.Length; ++i) itemsAToB_instanced.AddRange(inventoryA.TryRemove(itemsAToB[i].itemType, itemsAToB[i].quantity, this));
+                for (int i = 0; i < itemsBToA.Length; ++i) itemsBToA_instanced.AddRange(inventoryB.TryRemove(itemsBToA[i].itemType, itemsBToA[i].quantity, this));
             }
             catch(Exception e)
             {
                 //Something went wrong! Refund items.
-                foreach (ItemStack i in itemsAToB_instanced) inventoryA.AddItem(i);
-                foreach (ItemStack i in itemsBToA_instanced) inventoryB.AddItem(i);
+                foreach (ItemStack i in itemsAToB_instanced) inventoryA.AddItem(i, null);
+                foreach (ItemStack i in itemsBToA_instanced) inventoryB.AddItem(i, null);
 
                 throw new Exception("Something went wrong while processing Transaction!", e);
             }
 
             //Add items to destination inventories
-            foreach (ItemStack i in itemsAToB_instanced) inventoryB.AddItem(i);
-            foreach (ItemStack i in itemsBToA_instanced) inventoryA.AddItem(i);
+            foreach (ItemStack i in itemsAToB_instanced) inventoryB.AddItem(i, null);
+            foreach (ItemStack i in itemsBToA_instanced) inventoryA.AddItem(i, null);
         }
 
         public object Clone()

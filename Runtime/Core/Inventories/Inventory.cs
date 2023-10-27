@@ -11,17 +11,23 @@ namespace rmMinusR.ItemAnvil
     public abstract class Inventory
     {
         /// <summary>
+        /// Attempt to add one of an item
+        /// </summary>
+        /// <param name="itemType">Type of the item to add</param>
+        public virtual void AddItem(Item itemType, object cause) => AddItem(itemType, 1, cause);
+
+        /// <summary>
         /// Attempt to add an item
         /// </summary>
         /// <param name="itemType">Type of the item to add</param>
         /// <param name="quantity">How many to add</param>
-        public virtual void AddItem(Item itemType, int quantity = 1) => AddItem(new ItemStack(itemType, quantity));
+        public virtual void AddItem(Item itemType, int quantity, object cause) => AddItem(new ItemStack(itemType, quantity), cause);
 
         /// <summary>
         /// Attempt to add an ItemStack. If the stack can't be fully transferred, the ItemStack will be changed to reflect that.
         /// </summary>
         /// <param name="newStack">Stack to add</param>
-        public abstract void AddItem(ItemStack newStack);
+        public abstract void AddItem(ItemStack newStack, object cause);
 
         /// <summary>
         /// Attempt to remove items. If not enough are available, no changes will be made.
@@ -29,17 +35,17 @@ namespace rmMinusR.ItemAnvil
         /// <param name="filter">Filter specifying what to remove</param>
         /// <param name="totalToRemove">How many to be removed</param>
         /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
-        public abstract IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove);
-        public virtual IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove) => TryRemove(filter.Matches, totalToRemove);
-        public virtual IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove) => TryRemove(s => s.itemType == typeToRemove, totalToRemove);
+        public abstract IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause);
+        public virtual IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove, object cause) => TryRemove(filter.Matches, totalToRemove, cause);
+        public virtual IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove, object cause) => TryRemove(s => s.itemType == typeToRemove, totalToRemove, cause);
 
         /// <summary>
         /// Remove all items that match the given filter
         /// </summary>
         /// <returns>How many items were removed</returns>
-        public abstract int RemoveAll(Predicate<ItemStack> filter);
-        public virtual int RemoveAll(ItemFilter filter) => RemoveAll(filter.Matches);
-        public virtual int RemoveAll(Item typeToRemove) => RemoveAll(s => s.itemType == typeToRemove);
+        public abstract int RemoveAll(Predicate<ItemStack> filter, object cause);
+        public virtual int RemoveAll(ItemFilter filter, object cause) => RemoveAll(filter.Matches, cause);
+        public virtual int RemoveAll(Item typeToRemove, object cause) => RemoveAll(s => s.itemType == typeToRemove, cause);
 
         /// <summary>
         /// Check how many items match the given filter
@@ -53,6 +59,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         /// <remarks>
         /// Note that these are the original instances, and changes made will reflect in the inventory.
+        /// Note also that changes made will NOT trigger events.
         /// </remarks>
         /// <returns>The matching ItemStack if a match was present, else null</returns>
         public virtual ItemStack FindFirst(Predicate<ItemStack> filter) => FindAll(filter).FirstOrDefault();
@@ -64,6 +71,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         /// <remarks>
         /// Note that these are the original instances, and changes made will reflect in the inventory.
+        /// Note also that changes made will NOT trigger events.
         /// </remarks>
         public abstract IEnumerable<ItemStack> FindAll(Predicate<ItemStack> filter);
         public virtual IEnumerable<ItemStack> FindAll(ItemFilter filter) => FindAll(filter.Matches);
@@ -86,6 +94,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         /// <remarks>
         /// Note that these are the original instances. If downcast, changes made will reflect in the inventory.
+        /// Note also that changes made will NOT trigger events.
         /// </remarks>
         public abstract IEnumerable<ReadOnlyItemStack> GetContents();
 
@@ -107,8 +116,8 @@ namespace rmMinusR.ItemAnvil
         }
 
         //NOTE: Comparers and heuristics must be null-safe!
-        public abstract void Sort(IComparer<ReadOnlyItemStack> comparer);
-        public virtual void Sort(Func<ReadOnlyItemStack, float> heuristic) => Sort(new HeuristicComparer(heuristic));
+        public abstract void Sort(IComparer<ReadOnlyItemStack> comparer, object cause);
+        public virtual void Sort(Func<ReadOnlyItemStack, float> heuristic, object cause) => Sort(new HeuristicComparer(heuristic), cause);
         protected class HeuristicComparer : IComparer<ReadOnlyItemStack>
         {
             Func<ReadOnlyItemStack, float> heuristic;

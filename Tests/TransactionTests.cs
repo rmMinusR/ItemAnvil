@@ -16,8 +16,8 @@ namespace rmMinusR.ItemAnvil.Tests
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
 
-            inventoryA.AddItem(itemA, 3);
-            inventoryB.AddItem(itemB, 2);
+            inventoryA.AddItem(itemA, 3, null);
+            inventoryB.AddItem(itemB, 2, null);
 
             var itemsAtoB = new List<ItemStack>
             {
@@ -56,8 +56,8 @@ namespace rmMinusR.ItemAnvil.Tests
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
 
-            inventoryA.AddItem(itemA, 3);
-            inventoryB.AddItem(itemB, 2);
+            inventoryA.AddItem(itemA, 3, null);
+            inventoryB.AddItem(itemB, 2, null);
 
             var itemsAtoB = new List<ItemStack>
             {
@@ -90,8 +90,8 @@ namespace rmMinusR.ItemAnvil.Tests
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
 
-            inventoryA.AddItem(itemA, 3);
-            inventoryB.AddItem(itemB, 2);
+            inventoryA.AddItem(itemA, 3, null);
+            inventoryB.AddItem(itemB, 2, null);
 
             var itemsAtoB = new List<ItemStack>
             {
@@ -122,8 +122,8 @@ namespace rmMinusR.ItemAnvil.Tests
             var itemA = new Item() { displayName = "ItemA" };
             var itemB = new Item() { displayName = "ItemB" };
 
-            inventoryA.AddItem(itemA, 3);
-            inventoryB.AddItem(itemB, 2);
+            inventoryA.AddItem(itemA, 3, null);
+            inventoryB.AddItem(itemB, 2, null);
 
             var itemsAtoB = new List<ItemStack>
             {
