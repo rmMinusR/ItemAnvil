@@ -22,17 +22,31 @@ namespace rmMinusR.ItemAnvil
         public override InventorySlot GetSlot(int id) => slots[id];
         public override int SlotCount => slots.Count;
 
+        public PropertyBag<InventoryProperty> properties = new PropertyBag<InventoryProperty>();
+
         public StandardInventory() { }
         public StandardInventory(int size) : this()
         {
             for (int i = 0; i < size; ++i) AppendSlot();
         }
 
-        protected virtual InventorySlot AppendSlot()
+        protected internal virtual InventorySlot AppendSlot()
         {
             InventorySlot s = new InventorySlot(slots.Count, this);
             slots.Add(s);
             return s;
+        }
+
+        protected internal virtual void Condense()
+        {
+            //Remove empty slots
+            for (int i = slots.Count-1; i >= 0; --i)
+            {
+                if (slots[i].IsEmpty) slots.RemoveAt(i);
+            }
+
+            //Fix IDs
+            Validate();
         }
 
         /// <summary>
@@ -54,7 +68,7 @@ namespace rmMinusR.ItemAnvil
             {
                 //Check hooks to see if slot can accept this stack
                 if (!slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == QueryEventResult.Allow) slot.TryAccept(newStack);
-                if (newStack.quantity == 0) return;
+                if (newStack.quantity == 0) goto done;
             }
 
             //Then try to merge into empty slots
@@ -66,9 +80,10 @@ namespace rmMinusR.ItemAnvil
                     slot.TryAccept(newStack);
                     slot.InstallHooks();
                 }
-                if (newStack.quantity == 0) return;
+                if (newStack.quantity == 0) goto done;
             }
 
+        done:
             //Run post hook. Handles stuff like overflow.
             if (Hooks.ExecutePostAddItem(newStack, cause) == PostEventResult.Retry) goto retry;
         }
@@ -95,7 +110,7 @@ namespace rmMinusR.ItemAnvil
         /// <param name="typeToRemove">Item type to be removed</param>
         /// <param name="totalToRemove">How many to be removed</param>
         /// <param name="cause">User-defined data to provide additional context</param>
-        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
+        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise null, and no changes were made.</returns>
         public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause)
         {
             //Item removal routine
@@ -132,18 +147,18 @@ namespace rmMinusR.ItemAnvil
                 }
             }
 
-            //If we still have things to remove, continue
+            //If we haven't met our quota, revert
             if (totalToRemove > 0)
             {
-                //Prevent covariants
+                //Undo operation to prevent covariants
                 foreach ((ItemStack stack, InventorySlot slot) in everythingRemoved)
                 {
                     //Should not call add hook here, since we're reverting a failed operation
-                    slot.TryAccept(stack); //Merge back in (TODO: make more performant?)
+                    if (slot.Contents == null) slot.Contents = stack;
+                    else slot.Contents.quantity += stack.quantity;
                 }
 
-                //Complain
-                throw new InvalidOperationException("Counted sufficient items, but somehow didn't have enough. This should never happen!");
+                return null;
             }
             else
             {
@@ -229,6 +244,8 @@ namespace rmMinusR.ItemAnvil
 
         public override void DoSetup()
         {
+            foreach (InventoryProperty i in properties) i._InstallHooks(this);
+
             for (int i = 0; i < slots.Count; i++)
             {
                 if (!slots[i].IsEmpty) slots[i].InstallHooks();
@@ -238,20 +255,20 @@ namespace rmMinusR.ItemAnvil
         #region Hook interface
         [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
         protected InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
-        public override void Hook(CanAddItemHook    listener, int priority) => Hooks.canAddItem   .InsertHook(listener, priority);
-        public override void Hook(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept.InsertHook(listener, priority);
-        public override void Hook(PostAddItemHook   listener, int priority) => Hooks.postAddItem  .InsertHook(listener, priority);
-        public override void Hook(RemoveItemHook    listener, int priority) => Hooks.removeItem   .InsertHook(listener, priority);
-        public override void Hook(PostRemoveHook    listener, int priority) => Hooks.postRemove   .InsertHook(listener, priority);
-        public override void Hook(TrySortSlotHook   listener, int priority) => Hooks.trySortSlot  .InsertHook(listener, priority);
-        public override void Hook(PostSortHook      listener, int priority) => Hooks.postSort     .InsertHook(listener, priority);
-        public override void Unhook(CanAddItemHook    listener) => Hooks.canAddItem    .RemoveHook(listener);
-        public override void Unhook(CanSlotAcceptHook listener) => Hooks.canSlotAccept.RemoveHook(listener);
-        public override void Unhook(PostAddItemHook   listener) => Hooks.postAddItem  .RemoveHook(listener);
-        public override void Unhook(RemoveItemHook    listener) => Hooks.removeItem   .RemoveHook(listener);
-        public override void Unhook(PostRemoveHook    listener) => Hooks.postRemove   .RemoveHook(listener);
-        public override void Unhook(TrySortSlotHook   listener) => Hooks.trySortSlot  .RemoveHook(listener);
-        public override void Unhook(PostSortHook      listener) => Hooks.postSort     .RemoveHook(listener);
+        public override void HookCanAddItem(CanAddItemHook    listener, int priority) => Hooks.canAddItem   .InsertHook(listener, priority);
+        public override void HookCanSlotAccept(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept.InsertHook(listener, priority);
+        public override void HookPostAddItem(PostAddItemHook   listener, int priority) => Hooks.postAddItem  .InsertHook(listener, priority);
+        public override void HookRemoveItem(RemoveItemHook    listener, int priority) => Hooks.removeItem   .InsertHook(listener, priority);
+        public override void HookPostRemove(PostRemoveHook    listener, int priority) => Hooks.postRemove   .InsertHook(listener, priority);
+        public override void HookTrySortSlot(TrySortSlotHook   listener, int priority) => Hooks.trySortSlot  .InsertHook(listener, priority);
+        public override void HookPostSort(PostSortHook      listener, int priority) => Hooks.postSort     .InsertHook(listener, priority);
+        public override void UnhookCanAddItem(CanAddItemHook    listener) => Hooks.canAddItem    .RemoveHook(listener);
+        public override void UnhookCanSlotAccept(CanSlotAcceptHook listener) => Hooks.canSlotAccept.RemoveHook(listener);
+        public override void UnhookPostAddItem(PostAddItemHook   listener) => Hooks.postAddItem  .RemoveHook(listener);
+        public override void UnhookRemoveItem(RemoveItemHook    listener) => Hooks.removeItem   .RemoveHook(listener);
+        public override void UnhookPostRemove(PostRemoveHook    listener) => Hooks.postRemove   .RemoveHook(listener);
+        public override void UnhookTrySort(TrySortSlotHook   listener) => Hooks.trySortSlot  .RemoveHook(listener);
+        public override void UnhookPostSort(PostSortHook      listener) => Hooks.postSort     .RemoveHook(listener);
         #endregion
 
 
@@ -265,6 +282,8 @@ namespace rmMinusR.ItemAnvil
 
         public override void Validate()
         {
+            foreach (InventoryProperty i in properties) i._InstallHooks(this);
+
             ValidateIDs();
         }
 

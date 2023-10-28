@@ -10,7 +10,7 @@ namespace rmMinusR.ItemAnvil
 {
 
     /// <summary>
-    /// A unified way to store properties. In general, only one property of each type may exist per bag. Used in Items and ItemStacks to store ItemProperties and ItemInstanceProperties.
+    /// A unified way to store properties. In general, only one property of each type may exist per bag. Used in Items to store ItemProperties, ItemStacks store ItemInstanceProperties, and Inventories store InventoryProperties.
     /// </summary>
     /// <typeparam name="TBase">Base class of all properties</typeparam>
     [Serializable]

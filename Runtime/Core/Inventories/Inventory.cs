@@ -34,7 +34,7 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         /// <param name="filter">Filter specifying what to remove</param>
         /// <param name="totalToRemove">How many to be removed</param>
-        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise it will be empty, and no changes were made.</returns>
+        /// <returns>If enough items were present, an IEnumerable of those items. Otherwise null, and no changes were made.</returns>
         public abstract IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause);
         public virtual IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove, object cause) => TryRemove(filter.Matches, totalToRemove, cause);
         public virtual IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove, object cause) => TryRemove(s => s.itemType == typeToRemove, totalToRemove, cause);
@@ -148,20 +148,20 @@ namespace rmMinusR.ItemAnvil
          * See StandardInventory for a reusable implementation using InventoryHooksImplDetail
          */
 
-        public abstract void Hook(CanAddItemHook    listener, int priority);
-        public abstract void Hook(CanSlotAcceptHook listener, int priority);
-        public abstract void Hook(PostAddItemHook   listener, int priority);
-        public abstract void Hook(RemoveItemHook    listener, int priority);
-        public abstract void Hook(PostRemoveHook    listener, int priority);
-        public abstract void Hook(TrySortSlotHook   listener, int priority);
-        public abstract void Hook(PostSortHook      listener, int priority);
-        public abstract void Unhook(CanAddItemHook  listener);
-        public abstract void Unhook(CanSlotAcceptHook listener);
-        public abstract void Unhook(PostAddItemHook   listener);
-        public abstract void Unhook(RemoveItemHook    listener);
-        public abstract void Unhook(PostRemoveHook    listener);
-        public abstract void Unhook(TrySortSlotHook   listener);
-        public abstract void Unhook(PostSortHook      listener);
+        public abstract void HookCanAddItem   (CanAddItemHook    listener, int priority);
+        public abstract void HookCanSlotAccept(CanSlotAcceptHook listener, int priority);
+        public abstract void HookPostAddItem  (PostAddItemHook   listener, int priority);
+        public abstract void HookRemoveItem   (RemoveItemHook    listener, int priority);
+        public abstract void HookPostRemove   (PostRemoveHook    listener, int priority);
+        public abstract void HookTrySortSlot  (TrySortSlotHook   listener, int priority);
+        public abstract void HookPostSort     (PostSortHook      listener, int priority);
+        public abstract void UnhookCanAddItem   (CanAddItemHook  listener);
+        public abstract void UnhookCanSlotAccept(CanSlotAcceptHook listener);
+        public abstract void UnhookPostAddItem  (PostAddItemHook   listener);
+        public abstract void UnhookRemoveItem   (RemoveItemHook    listener);
+        public abstract void UnhookPostRemove   (PostRemoveHook    listener);
+        public abstract void UnhookTrySort      (TrySortSlotHook   listener);
+        public abstract void UnhookPostSort     (PostSortHook      listener);
 
         #endregion
     }

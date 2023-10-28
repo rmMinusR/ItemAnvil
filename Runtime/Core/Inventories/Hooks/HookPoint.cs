@@ -41,7 +41,7 @@ namespace rmMinusR.ItemAnvil.Hooks
 
         #region Hook processing
 
-        // Func is a lambda passing variables to individual hooks (thunk). Can be thought of like a visitor, except the ones that return EventResults are allwoed to halt early.
+        // Func is a lambda passing variables to individual hooks (thunk). Can be thought of like a visitor, except the ones that return EventResults are allowed to halt early.
 
         public void Process(Action<THook> func)
         {

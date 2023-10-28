@@ -8,23 +8,23 @@ namespace rmMinusR.ItemAnvil.Tests
 {
 
     [TestFixture]
-    public class FixedSlotInventoryTests : InventoryTests<FixedSlotInventory>
+    public class StandardInventoryTests : InventoryTests
     {
-        protected override FixedSlotInventory _CreateInventory() => new FixedSlotInventory(30);
+        protected override Inventory _CreateInventory() => new StandardInventory(30);
     }
 
     [TestFixture]
-    public class CondensingInventoryTests : InventoryTests<CondensingInventory>
+    public class CondensingInventoryTests : InventoryTests
     {
-        protected override CondensingInventory _CreateInventory() => new CondensingInventory();
+        protected override Inventory _CreateInventory() => new CondensingInventory();
     }
 
-    public abstract class InventoryTests<TInventory> where TInventory : Inventory
+    public abstract class InventoryTests
     {
-        protected abstract TInventory _CreateInventory();
-        private TInventory CreateInventory()
+        protected abstract Inventory _CreateInventory();
+        private Inventory CreateInventory()
         {
-            TInventory inv = _CreateInventory();
+            Inventory inv = _CreateInventory();
             inv.DoSetup();
             return inv;
         }
@@ -33,7 +33,7 @@ namespace rmMinusR.ItemAnvil.Tests
         public void AddItem_AddsItemToInventory([Values(1, 2, 5, 10)] int nToAdd)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
 
             // Act
@@ -47,7 +47,7 @@ namespace rmMinusR.ItemAnvil.Tests
         public void AddItemStack_AddsItemStackToInventory([Values(1, 2, 5, 10)] int nToAdd)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
             ItemStack stack = new ItemStack(item, nToAdd);
 
@@ -62,28 +62,18 @@ namespace rmMinusR.ItemAnvil.Tests
         public void TryRemove_RemovesItemsFromInventory([Values(1, 2, 5, 10)] int startingCount, [Values(1, 2, 5, 10)] int nToRemove)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
             inventory.AddItem(item, startingCount, null);
 
             // Act
-            IEnumerable<ItemStack> removedStacks = null;
-            bool errored = false;
-            try
-            {
-                removedStacks = inventory.TryRemove(item, nToRemove, null);
-            }
-            catch(InvalidOperationException)
-            {
-                errored = true;
-            }
+            IEnumerable<ItemStack> removedStacks = removedStacks = inventory.TryRemove(item, nToRemove, null);
 
             // Assert
             if (startingCount >= nToRemove)
             {
                 // Had enough items
                 Assert.IsNotNull(removedStacks);
-                Assert.IsFalse(errored);
                 Assert.AreEqual(startingCount-nToRemove, inventory.Count(item));
                 Assert.AreEqual(nToRemove, removedStacks.Sum(stack => stack.quantity));
             }
@@ -91,7 +81,6 @@ namespace rmMinusR.ItemAnvil.Tests
             {
                 // Didn't have enough items
                 Assert.IsNull(removedStacks);
-                Assert.IsTrue(errored);
                 Assert.AreEqual(startingCount, inventory.Count(item));
             }
         }
@@ -100,7 +89,7 @@ namespace rmMinusR.ItemAnvil.Tests
         public void RemoveAll_RemovesAllItemsOfTypeFromInventory([Values(1, 2, 5, 10)] int count)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
             inventory.AddItem(item, count, null);
 
@@ -116,7 +105,7 @@ namespace rmMinusR.ItemAnvil.Tests
         public void Count_ReturnsCorrectItemCount([Values(1, 2, 5, 10)] int realCount1, [Values(1, 2, 5, 10)] int realCount2)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item1 = ScriptableObject.CreateInstance<Item>();
             Item item2 = ScriptableObject.CreateInstance<Item>();
             inventory.AddItem(item1, realCount1, null);
@@ -135,7 +124,7 @@ namespace rmMinusR.ItemAnvil.Tests
         public void GetContents_ReturnsCorrectItemStacks([Values(1, 2, 5, 10)] int count1, [Values(1, 2, 5, 10)] int count2)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item1 = ScriptableObject.CreateInstance<Item>();
             Item item2 = ScriptableObject.CreateInstance<Item>();
             inventory.AddItem(item1, count1, null);
@@ -157,7 +146,7 @@ namespace rmMinusR.ItemAnvil.Tests
             [Values(0, 1, 2, 5, 10)] int confuserCount)
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item correct = ScriptableObject.CreateInstance<Item>();
             Item confuser = ScriptableObject.CreateInstance<Item>();
             correctItemStackIndex %= confuserCount+1;
@@ -180,7 +169,7 @@ namespace rmMinusR.ItemAnvil.Tests
         public void CloneContents_ReturnsDeepCopyOfContents()
         {
             // Arrange
-            TInventory inventory = CreateInventory();
+            Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
             inventory.AddItem(item, 5, null);
 

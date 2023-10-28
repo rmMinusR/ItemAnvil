@@ -6,9 +6,8 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
 {
 
     /// <summary>
-    /// Internal implementation detail to workaround a quirk of the Unity serializer.
-    /// By holding events for an Inventory implementation, it allows hooks to persist
-    /// across serialization.
+    /// Workaround for a quirk of the Unity serializer. By holding events for an
+    /// Inventory implementation, it allows hooks to persist across serialization.
     /// </summary>
     /// <remarks>
     /// When Unity deserializes a field marked SerializeReference, it creates a new
@@ -26,17 +25,6 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
     /// </remarks>
     public class InventoryHooksImplDetail : ScriptableObject
     {
-        #region Helper details
-
-        public struct HookContainer<T> where T : class
-        {
-            public T hook;
-            public int priority;
-        }
-
-        #endregion
-
-
         public HookPoint<CanAddItemHook   > canAddItem    = new HookPoint<CanAddItemHook   >();
         public HookPoint<CanSlotAcceptHook> canSlotAccept = new HookPoint<CanSlotAcceptHook>();
         public HookPoint<PostAddItemHook  > postAddItem   = new HookPoint<PostAddItemHook  >();
@@ -46,12 +34,10 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         public HookPoint<PostSortHook     > postSort      = new HookPoint<PostSortHook     >();
         public HookPoint<SwapSlotsHook    > swapSlots     = new HookPoint<SwapSlotsHook    >();
 
-
         /*
          * Hooks execute in ascending priority. For events that only listen without modifying behavior (such as UI), register for priority = int.MaxValue.
          */
         
-        //TODO: Horrible practice. Is there a better way that's still performant?
         public QueryEventResult ExecuteCanAddItem       (ItemStack final, ReadOnlyItemStack original                                     , object cause) => canAddItem   .Process(hook => hook(final, original,                cause));
         public QueryEventResult ExecuteCanSlotAccept    (ReadOnlyInventorySlot slot, ReadOnlyItemStack stack                             , object cause) => canSlotAccept.Process(hook => hook(slot, stack,                    cause));
         public PostEventResult  ExecutePostAddItem      (ItemStack stack                                                                 , object cause) => postAddItem  .Process(hook => hook(stack,                          cause));
@@ -59,20 +45,6 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         public void             ExecutePostRemove       (                                                                                  object cause) => postRemove   .Process(hook => hook(                                cause));
         public QueryEventResult ExecuteTrySort          (ReadOnlyInventorySlot slot                                                      , object cause) => trySortSlot  .Process(hook => hook(slot,                           cause));
         public PostEventResult  ExecutePostSort         (                                                                                  object cause) => postSort     .Process(hook => hook(                                cause));
-
-        /*
-        ONELINER:
-        public EventResult ExecuteMyHook(...) { EventResult res = EventResult.Allow; foreach(HookContainer<...> i in ...) { res = i.hook(...); if (res != EventResult.Allow) break; } return res; }
-
-        TEMPLATE:
-        EventResult res = EventResult.Allow;
-        foreach(HookContainer<...> i in ...)
-        {
-            res = i.hook(...);
-            if (res != EventResult.Allow) break;
-        }
-        return res;
-        */
     }
 
 }

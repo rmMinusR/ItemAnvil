@@ -20,8 +20,6 @@ namespace rmMinusR.ItemAnvil
             //Install inventory-level hooks
             Hooks.postAddItem.InsertHook(_HandleOverflows, 0);
             Hooks.postRemove.InsertHook(_Condense, 0);
-            
-            //Install item-level hooks
             base.DoSetup();
         }
 
@@ -38,18 +36,6 @@ namespace rmMinusR.ItemAnvil
 
         //After removal: Remove empty slots
         private void _Condense(object cause) => Condense();
-
-        private void Condense()
-        {
-            //Remove empty slots
-            for (int i = slots.Count-1; i >= 0; --i)
-            {
-                if (slots[i].IsEmpty) slots.RemoveAt(i);
-            }
-
-            //Fix IDs
-            Validate();
-        }
 
         #region Obsolete variable upgrader
 
