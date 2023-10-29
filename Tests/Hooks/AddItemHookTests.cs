@@ -56,6 +56,26 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
+        public void CanAddItemHook_AlterItem()
+        {
+            // Arrange
+            Inventory inventory = CreateInventory();
+            Item item = ScriptableObject.CreateInstance<Item>();
+
+            inventory.HookCanAddItem((ItemStack final, ReadOnlyItemStack original, object cause) =>
+            {
+                final.quantity++;
+                return QueryEventResult.Allow;
+            }, int.MaxValue);
+            
+            // Act
+            inventory.AddItem(item, null);
+
+            // Assert
+            Assert.AreEqual(2, inventory.Count(item));
+        }
+
+        [Test]
         public void CanSlotAcceptHook_Fires()
         {
             // Arrange

@@ -140,6 +140,45 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
+        public void RemoveItemHook_TryRemove_OverchargeLimited()
+        {
+            // Arrange
+            (Inventory inv, Item item) = Arrange(itemCount: 1);
+            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
+            {
+                removed.quantity++;
+                return QueryEventResult.Allow;
+            }, int.MaxValue);
+
+            // Act
+            IEnumerable<ItemStack> removed = inv.TryRemove(item, 1, null);
+
+            // Assert
+            Assert.AreEqual(1, removed.Sum(stack => stack.quantity));
+            Assert.Zero(inv.Count(item));
+        }
+
+        [Test]
+        public void RemoveItemHook_RemoveAll_OverchargeLimited()
+        {
+            // Arrange
+            (Inventory inv, Item item) = Arrange(itemCount: 1);
+            
+            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
+            {
+                removed.quantity++;
+                return QueryEventResult.Allow;
+            }, int.MaxValue);
+
+            // Act
+            int removed = inv.RemoveAll(item, null);
+
+            // Assert
+            Assert.AreEqual(1, removed);
+            Assert.Zero(inv.Count(item));
+        }
+
+        [Test]
         public void PostRemoveHook_TryRemove_Fires()
         {
             // Arrange
