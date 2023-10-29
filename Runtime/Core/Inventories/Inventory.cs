@@ -151,14 +151,14 @@ namespace rmMinusR.ItemAnvil
         public abstract void HookCanAddItem   (CanAddItemHook    listener, int priority);
         public abstract void HookCanSlotAccept(CanSlotAcceptHook listener, int priority);
         public abstract void HookPostAddItem  (PostAddItemHook   listener, int priority);
-        public abstract void HookRemoveItem   (RemoveItemHook    listener, int priority);
+        public abstract void HookTryRemoveItem(TryRemoveItemHook listener, int priority);
         public abstract void HookPostRemove   (PostRemoveHook    listener, int priority);
         public abstract void HookTrySortSlot  (TrySortSlotHook   listener, int priority);
         public abstract void HookPostSort     (PostSortHook      listener, int priority);
-        public abstract void UnhookCanAddItem   (CanAddItemHook  listener);
+        public abstract void UnhookCanAddItem   (CanAddItemHook    listener);
         public abstract void UnhookCanSlotAccept(CanSlotAcceptHook listener);
         public abstract void UnhookPostAddItem  (PostAddItemHook   listener);
-        public abstract void UnhookRemoveItem   (RemoveItemHook    listener);
+        public abstract void UnhookTryRemoveItem(TryRemoveItemHook listener);
         public abstract void UnhookPostRemove   (PostRemoveHook    listener);
         public abstract void UnhookTrySort      (TrySortSlotHook   listener);
         public abstract void UnhookPostSort     (PostSortHook      listener);

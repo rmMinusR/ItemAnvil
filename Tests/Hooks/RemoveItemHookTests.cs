@@ -29,7 +29,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inv, Item item) = Arrange();
             int timesFired = 0;
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => {
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => {
                 timesFired++;
                 return QueryEventResult.Allow;
             }, int.MaxValue);
@@ -48,7 +48,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inv, Item item) = Arrange();
             int timesFired = 0;
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => {
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => {
                 timesFired++;
                 return QueryEventResult.Allow;
             }, int.MaxValue);
@@ -68,7 +68,7 @@ namespace rmMinusR.ItemAnvil.Tests
             (Inventory inv, Item item) = Arrange();
             inv.GetSlot(1).Contents = new ItemStack(item);
 
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => slot.ID == 0 ? QueryEventResult.Deny : QueryEventResult.Allow, int.MaxValue);
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => slot.ID == 0 ? QueryEventResult.Deny : QueryEventResult.Allow, int.MaxValue);
 
             // Act
             IEnumerable<ItemStack> removed = inv.TryRemove(item, 1, null);
@@ -85,7 +85,7 @@ namespace rmMinusR.ItemAnvil.Tests
             (Inventory inv, Item item) = Arrange();
             inv.GetSlot(1).Contents = new ItemStack(item);
 
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => slot.ID == 0 ? QueryEventResult.Deny : QueryEventResult.Allow, int.MaxValue);
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => slot.ID == 0 ? QueryEventResult.Deny : QueryEventResult.Allow, int.MaxValue);
 
             // Act
             int removed = inv.RemoveAll(item, null);
@@ -102,7 +102,7 @@ namespace rmMinusR.ItemAnvil.Tests
             (Inventory inv, Item item) = Arrange(itemCount: 2);
             inv.GetSlot(1).Contents = inv.GetSlot(0).Contents.Clone();
 
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
             {
                 removed.quantity = Mathf.Min(removed.quantity, 1);
                 return QueryEventResult.Allow;
@@ -124,7 +124,7 @@ namespace rmMinusR.ItemAnvil.Tests
             (Inventory inv, Item item) = Arrange(itemCount: 2);
             inv.GetSlot(1).Contents = inv.GetSlot(0).Contents.Clone();
             
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
             {
                 removed.quantity = Mathf.Min(removed.quantity, 1);
                 return QueryEventResult.Allow;
@@ -144,7 +144,7 @@ namespace rmMinusR.ItemAnvil.Tests
         {
             // Arrange
             (Inventory inv, Item item) = Arrange(itemCount: 1);
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
             {
                 removed.quantity++;
                 return QueryEventResult.Allow;
@@ -164,7 +164,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inv, Item item) = Arrange(itemCount: 1);
             
-            inv.HookRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
+            inv.HookTryRemoveItem((ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) =>
             {
                 removed.quantity++;
                 return QueryEventResult.Allow;

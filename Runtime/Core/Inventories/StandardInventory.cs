@@ -124,7 +124,7 @@ namespace rmMinusR.ItemAnvil
                     removedStack.quantity = Mathf.Min(totalToRemove, slots[i].Contents.quantity);
 
                     //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
-                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
+                    if (Hooks.ExecuteTryRemoveItem(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
                     {
                         //Make sure we aren't overcharging and leaving the slot with negative quantities
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
@@ -183,7 +183,7 @@ namespace rmMinusR.ItemAnvil
                     ItemStack removedStack = slots[i].Contents.Clone();
                     
                     //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
-                    if (Hooks.ExecuteRemoveItems(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
+                    if (Hooks.ExecuteTryRemoveItem(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
                     {
                         //Make sure we aren't overcharging and leaving the slot with negative quantities
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
@@ -255,20 +255,20 @@ namespace rmMinusR.ItemAnvil
         #region Hook interface
         [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
         protected InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
-        public override void HookCanAddItem(CanAddItemHook    listener, int priority) => Hooks.canAddItem   .InsertHook(listener, priority);
-        public override void HookCanSlotAccept(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept.InsertHook(listener, priority);
-        public override void HookPostAddItem(PostAddItemHook   listener, int priority) => Hooks.postAddItem  .InsertHook(listener, priority);
-        public override void HookRemoveItem(RemoveItemHook    listener, int priority) => Hooks.removeItem   .InsertHook(listener, priority);
-        public override void HookPostRemove(PostRemoveHook    listener, int priority) => Hooks.postRemove   .InsertHook(listener, priority);
-        public override void HookTrySortSlot(TrySortSlotHook   listener, int priority) => Hooks.trySortSlot  .InsertHook(listener, priority);
-        public override void HookPostSort(PostSortHook      listener, int priority) => Hooks.postSort     .InsertHook(listener, priority);
-        public override void UnhookCanAddItem(CanAddItemHook    listener) => Hooks.canAddItem    .RemoveHook(listener);
-        public override void UnhookCanSlotAccept(CanSlotAcceptHook listener) => Hooks.canSlotAccept.RemoveHook(listener);
-        public override void UnhookPostAddItem(PostAddItemHook   listener) => Hooks.postAddItem  .RemoveHook(listener);
-        public override void UnhookRemoveItem(RemoveItemHook    listener) => Hooks.removeItem   .RemoveHook(listener);
-        public override void UnhookPostRemove(PostRemoveHook    listener) => Hooks.postRemove   .RemoveHook(listener);
-        public override void UnhookTrySort(TrySortSlotHook   listener) => Hooks.trySortSlot  .RemoveHook(listener);
-        public override void UnhookPostSort(PostSortHook      listener) => Hooks.postSort     .RemoveHook(listener);
+        public override void HookCanAddItem   (CanAddItemHook    listener, int priority) => Hooks.canAddItem      .InsertHook(listener, priority);
+        public override void HookCanSlotAccept(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept   .InsertHook(listener, priority);
+        public override void HookPostAddItem  (PostAddItemHook   listener, int priority) => Hooks.postAddItem     .InsertHook(listener, priority);
+        public override void HookTryRemoveItem(TryRemoveItemHook    listener, int priority) => Hooks.tryRemoveItem.InsertHook(listener, priority);
+        public override void HookPostRemove   (PostRemoveHook    listener, int priority) => Hooks.postRemove      .InsertHook(listener, priority);
+        public override void HookTrySortSlot  (TrySortSlotHook   listener, int priority) => Hooks.trySortSlot     .InsertHook(listener, priority);
+        public override void HookPostSort     (PostSortHook      listener, int priority) => Hooks.postSort        .InsertHook(listener, priority);
+        public override void UnhookCanAddItem   (CanAddItemHook    listener) => Hooks.canAddItem      .RemoveHook(listener);
+        public override void UnhookCanSlotAccept(CanSlotAcceptHook listener) => Hooks.canSlotAccept   .RemoveHook(listener);
+        public override void UnhookPostAddItem  (PostAddItemHook   listener) => Hooks.postAddItem     .RemoveHook(listener);
+        public override void UnhookTryRemoveItem(TryRemoveItemHook    listener) => Hooks.tryRemoveItem.RemoveHook(listener);
+        public override void UnhookPostRemove   (PostRemoveHook    listener) => Hooks.postRemove      .RemoveHook(listener);
+        public override void UnhookTrySort      (TrySortSlotHook   listener) => Hooks.trySortSlot     .RemoveHook(listener);
+        public override void UnhookPostSort     (PostSortHook      listener) => Hooks.postSort        .RemoveHook(listener);
         #endregion
 
 
