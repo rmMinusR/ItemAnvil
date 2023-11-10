@@ -137,7 +137,6 @@ namespace rmMinusR.ItemAnvil
                         if (slots[i].Contents.quantity <= 0)
                         {
                             slots[i].Contents = null;
-                            slots[i].UninstallHooks();
                         }
                         
                         //Update totalToRemove

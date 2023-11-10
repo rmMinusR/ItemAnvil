@@ -71,7 +71,7 @@ namespace rmMinusR.ItemAnvil.UI
                     {
                         //Try to perform swap
                         dragTarget.SuppressInputs();
-                        InventorySlot.SwapContents(dragTarget.slotView.slot, slotView.slot);
+                        InventorySlot.SwapContents(dragTarget.slotView.slot, slotView.slot, this);
                         dragTarget.slotView.Select();
                     }
 

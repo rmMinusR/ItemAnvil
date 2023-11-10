@@ -24,12 +24,15 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
     public delegate QueryEventResult CanAddItemHook   (ItemStack final, ReadOnlyItemStack original,                                      object cause);
     public delegate QueryEventResult CanSlotAcceptHook(ReadOnlyInventorySlot slot, ReadOnlyItemStack stack,                              object cause);
     public delegate PostEventResult  PostAddItemHook  (ItemStack stack,                                                                  object cause); //Overflow handling etc
+
     public delegate QueryEventResult TryRemoveItemHook(ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause);
     public delegate void             PostRemoveHook   (                                                                                  object cause);
+    
     public delegate QueryEventResult TrySortSlotHook  (ReadOnlyInventorySlot slot,                                                       object cause);
     public delegate PostEventResult  PostSortHook     (                                                                                  object cause);
 
     //If the swap goes between inventories, will be called on both inventories.
     //If only within the same inventory, will only be called once.
-    public delegate QueryEventResult SwapSlotsHook(InventorySlot slotA, InventorySlot slotB, object cause);
+    public delegate QueryEventResult TrySwapSlotsHook (InventorySlot slotA, InventorySlot slotB, object cause);
+    public delegate void             PostSwapSlotsHook(InventorySlot slotA, InventorySlot slotB, object cause);
 }

@@ -92,7 +92,9 @@ namespace rmMinusR.ItemAnvil
         public Item itemType
         {
             get => _itemType;
-            set => _itemType = value;
+            //set => _itemType = value;
+            //DEPRECATED 10/29: Create a new ItemStack instead.
+            //This change is necessary to ensure hook lifetimes are properly maintained in InventorySlot.Contents' setter.
         }
 
         public int quantity

@@ -71,14 +71,15 @@ namespace rmMinusR.ItemAnvil.Tests
             FilterMatchTypes filter = new FilterMatchTypes();
             filter.matches = new Item[] { match1, match2, nonMatch };
 
-            ItemStack matchingItemStack = CreateItemStack(match1);
-            matchingItemStack.itemType = match2;
-
             // Act
-            bool result = filter.Matches(matchingItemStack);
+            bool match1_result = filter.Matches(CreateItemStack(match1));
+            bool match2_result = filter.Matches(CreateItemStack(match2));
+            bool nonMatch_result = filter.Matches(CreateItemStack(nonMatch));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.IsTrue(match1_result);
+            Assert.IsTrue(match2_result);
+            Assert.IsFalse(nonMatch_result);
         }
     }
 

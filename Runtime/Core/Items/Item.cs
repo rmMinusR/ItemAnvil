@@ -29,6 +29,16 @@ namespace rmMinusR.ItemAnvil
         public List<ItemCategory> categories = new List<ItemCategory>();
 
         [field: Space, SerializeField] public PropertyBag<ItemProperty> Properties { get; private set; } = new PropertyBag<ItemProperty>();
+
+        internal void InstallHooks(InventorySlot inventorySlot)
+        {
+            foreach (ItemProperty p in Properties) p.InstallHooks(inventorySlot);
+        }
+
+        internal void UninstallHooks(InventorySlot inventorySlot)
+        {
+            foreach (ItemProperty p in Properties) p.UninstallHooks(inventorySlot);
+        }
     }
 
 }

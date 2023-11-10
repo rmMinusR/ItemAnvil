@@ -18,9 +18,7 @@ namespace rmMinusR.ItemAnvil.Tests
 
         private ItemStack CreateItemStack(Item item, int quantity)
         {
-            ItemStack itemStack = new ItemStack();
-            itemStack.itemType = item;
-            itemStack.quantity = quantity;
+            ItemStack itemStack = new ItemStack(item, quantity);
             return itemStack;
         }
 

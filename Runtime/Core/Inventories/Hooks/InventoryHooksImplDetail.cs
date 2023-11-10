@@ -32,7 +32,6 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         public HookPoint<PostRemoveHook   > postRemove    = new HookPoint<PostRemoveHook   >();
         public HookPoint<TrySortSlotHook  > trySortSlot   = new HookPoint<TrySortSlotHook  >();
         public HookPoint<PostSortHook     > postSort      = new HookPoint<PostSortHook     >();
-        public HookPoint<SwapSlotsHook    > swapSlots     = new HookPoint<SwapSlotsHook    >();
 
         /*
          * Hooks execute in ascending priority. For events that only listen for a final result without modifying behavior (such as UI), register for priority = int.MaxValue.
