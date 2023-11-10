@@ -91,8 +91,8 @@ namespace rmMinusR.ItemAnvil
                     Contents.quantity = 0;
                 }
 
-                ItemStack.MergeUnchecked(finalToMerge, Contents);
                 newStack.quantity -= finalToMerge.quantity;
+                ItemStack.MergeUnchecked(finalToMerge, Contents);
             }
 
         }
