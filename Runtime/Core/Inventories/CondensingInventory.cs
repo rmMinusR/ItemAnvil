@@ -18,8 +18,8 @@ namespace rmMinusR.ItemAnvil
         public override void DoSetup()
         {
             //Install inventory-level hooks
-            Hooks.postAddItem.InsertHook(_HandleOverflows, 0);
-            Hooks.postRemove.InsertHook(_Condense, 0);
+            Hooks.PostAddItem.InsertHook(_HandleOverflows, 0);
+            Hooks.PostRemove.InsertHook(_Condense, 0);
             base.DoSetup();
         }
 

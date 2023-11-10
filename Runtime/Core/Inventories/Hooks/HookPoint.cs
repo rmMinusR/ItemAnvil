@@ -1,25 +1,81 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace rmMinusR.ItemAnvil.Hooks
 {
+    #region Helper classes
+
+    public abstract class IExecuteOnlyHookPoint<THook> where THook : class
+    {
+        public struct OrderedHook
+        {
+            public THook hook;
+            public int priority;
+            public static implicit operator THook(OrderedHook h) => h.hook;
+        }
+        public abstract IEnumerable<OrderedHook> GetHooks();
+
+        #region Hook processing
+
+        // Func is a lambda passing variables to individual hooks (cross between a thunk and bind-expression). Can be thought of like a visitor, except the ones that return EventResults are allowed to halt early.
+        public virtual void Process(Action<THook> func)
+        {
+            foreach (THook h in GetHooks()) func(h);
+        }
+
+        public virtual QueryEventResult Process(Func<THook, QueryEventResult> func)
+        {
+            QueryEventResult res = QueryEventResult.Allow;
+            foreach (THook h in GetHooks())
+            {
+                res = func(h);
+                if (res != QueryEventResult.Allow) break;
+            }
+            return res;
+        }
+
+        public virtual PostEventResult Process(Func<THook, PostEventResult> func)
+        {
+            PostEventResult res = PostEventResult.Continue;
+            foreach (THook h in GetHooks())
+            {
+                res = func(h);
+                if (res != PostEventResult.Continue) break;
+            }
+            return res;
+        }
+
+        #endregion
+    }
+
+    public abstract class IHookPoint<THook> : IExecuteOnlyHookPoint<THook> where THook : class
+    {
+        public abstract void InsertHook(THook hook, int priority);
+        public abstract void RemoveHook(THook hook);
+
+
+        //Utility shorthand
+        public static IExecuteOnlyHookPoint<THook> Aggregate(params IHookPoint<THook>[] hookPoints)
+        {
+            return new AggregateHookPoint<THook>(hookPoints);
+        }
+    }
+
+    #endregion
+
     /// <summary>
     /// Helper class to manage hooks
     /// </summary>
     /// <typeparam name="THook">Hook type</typeparam>
-    public sealed class HookPoint<THook> where THook : class
+    public sealed class HookPoint<THook> : IHookPoint<THook> where THook : class
     {
-        private struct HookContainer<T> where T : class
-        {
-            public T hook;
-            public int priority;
-        }
+        private List<OrderedHook> hooks = new List<OrderedHook>();
+        public override IEnumerable<OrderedHook> GetHooks() => hooks;
 
-        private List<HookContainer<THook>> hooks = new List<HookContainer<THook>>();
-
-        public void InsertHook(THook hook, int priority)
+        public override void InsertHook(THook hook, int priority)
         {
-            HookContainer<THook> container = new HookContainer<THook>()
+            OrderedHook container = new OrderedHook()
             {
                 hook = hook,
                 priority = priority
@@ -34,42 +90,68 @@ namespace rmMinusR.ItemAnvil.Hooks
             }
         }
 
-        public void RemoveHook(THook hook)
+        public override void RemoveHook(THook hook)
         {
             hooks.RemoveAll(i => i.hook == hook);
         }
+    }
 
-        #region Hook processing
-
-        // Func is a lambda passing variables to individual hooks (thunk). Can be thought of like a visitor, except the ones that return EventResults are allowed to halt early.
-
-        public void Process(Action<THook> func)
+    /// <summary>
+    /// A lightweight view onto multiple HookPoints, allowing mixing hook scopes (ie. inventory-level vs slot-level) while maintaining correct order by interleaving hooks
+    /// </summary>
+    /// <typeparam name="THook"></typeparam>
+    public sealed class AggregateHookPoint<THook> : IExecuteOnlyHookPoint<THook> where THook : class
+    {
+        private IHookPoint<THook>[] hookPoints;
+        public AggregateHookPoint(IHookPoint<THook>[] hookPoints)
         {
-            foreach (HookContainer<THook> c in hooks) func(c.hook);
+            this.hookPoints = hookPoints;
         }
 
-        public QueryEventResult Process(Func<THook, QueryEventResult> func)
+        public override IEnumerable<OrderedHook> GetHooks()
         {
-            QueryEventResult res = QueryEventResult.Allow;
-            foreach (HookContainer<THook> c in hooks)
+            //Effectively a mergesort
+
+            //Prepare merge sources
+            IEnumerator<OrderedHook>[] wrapped = new IEnumerator<OrderedHook>[hookPoints.Length];
+            for (int i = 0; i < wrapped.Length; i++)
             {
-                res = func(c.hook);
-                if (res != QueryEventResult.Allow) break;
+                wrapped[i] = hookPoints[i].GetHooks().GetEnumerator();
+                if (!wrapped[i].MoveNext()) wrapped[i] = null;
             }
-            return res;
-        }
 
-        public PostEventResult Process(Func<THook, PostEventResult> func)
-        {
-            PostEventResult res = PostEventResult.Continue;
-            foreach (HookContainer<THook> c in hooks)
+            while(true)
             {
-                res = func(c.hook);
-                if (res != PostEventResult.Continue) break;
-            }
-            return res;
+                //Find next hook to execute
+                int? idx = FindMin(wrapped, i => i?.Current.priority);
+                if (!idx.HasValue) break;
+
+                //Yield hook
+                yield return wrapped[idx.Value].Current;
+
+                //Advance iterator
+                if (!wrapped[idx.Value].MoveNext()) wrapped[idx.Value] = null;
+            }            
         }
 
-        #endregion
+        private static int? FindMin<T>(IEnumerable<T> src, Func<T, int?> selector)
+        {
+            int? outIndex = null;
+            int minVal = int.MaxValue;
+
+            int curIndex = 0;
+            foreach (T v in src)
+            {
+                int? eval = selector(v);
+                if (eval.HasValue && eval.Value <= minVal)
+                {
+                    minVal = eval.Value;
+                    outIndex = curIndex;
+                }
+                ++curIndex;
+            }
+
+            return outIndex;
+        }
     }
 }

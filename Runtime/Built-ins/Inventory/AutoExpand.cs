@@ -27,8 +27,8 @@ namespace rmMinusR.ItemAnvil
         protected override void InstallHooks()
         {
             Debug.Assert(inventory is StandardInventory, $"{nameof(AutoExpand)} is only valid on {nameof(StandardInventory)} or its children");
-            inventory.HookPostAddItem(_HandleOverflows, 0);
-            inventory.HookPostRemove(_Condense, 0);
+            inventory.Hooks.PostAddItem.InsertHook(_HandleOverflows, 0);
+            inventory.Hooks.PostRemove.InsertHook(_Condense, 0);
         }
     }
 

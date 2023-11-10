@@ -3,7 +3,10 @@ using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using UnityEditor.Graphs;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace rmMinusR.ItemAnvil
 {
@@ -56,7 +59,7 @@ namespace rmMinusR.ItemAnvil
         public static bool SwapContents(InventorySlot a, InventorySlot b, object cause)
         {
             //Run pre hook
-            if (a.hooksImpl.ExecuteTrySwapSlots(a, b, cause) != QueryEventResult.Allow || b.hooksImpl.ExecuteTrySwapSlots(a, b, cause) != QueryEventResult.Allow) return false;
+            if (a.Hooks.ExecuteTrySwapSlots(a, b, cause) != QueryEventResult.Allow || b.Hooks.ExecuteTrySwapSlots(a, b, cause) != QueryEventResult.Allow) return false;
 
             //Swap (setter will handle hook refreshing)
             ItemStack tmp = a.Contents;
@@ -64,30 +67,40 @@ namespace rmMinusR.ItemAnvil
             b.Contents = tmp;
 
             //Run post hook
-            a.hooksImpl.ExecutePostSwapSlots(a, b, cause);
-            b.hooksImpl.ExecutePostSwapSlots(a, b, cause);
+            a.Hooks.ExecutePostSwapSlots(a, b, cause);
+            b.Hooks.ExecutePostSwapSlots(a, b, cause);
 
             return true;
         }
 
-        public bool CanAccept(ItemStack newStack)
+        public bool CanAccept(ItemStack newStack, object cause)
         {
-            return ItemStack.CanMerge(newStack, Contents);
+            return ItemStack.CanMerge(newStack, Contents)
+                && inventory.Hooks.CanSlotAccept.Process(h => h(this, newStack.Clone(), newStack, cause)) == QueryEventResult.Allow;
         }
 
-        public void TryAccept(ItemStack newStack)
+        public void TryAccept(ItemStack newStack, object cause)
         {
-            if (IsEmpty)
+            ItemStack finalToMerge = newStack.Clone();
+            if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
             {
-                //Create a dummy object to transfer into
-                Contents = newStack.Clone();
-                Contents.quantity = 0;
+                if (IsEmpty)
+                {
+                    //Create a dummy object to transfer so ItemStack.TryMerge works out of the gate
+                    Contents = finalToMerge.Clone();
+                    Contents.quantity = 0;
+                }
+
+                ItemStack.MergeUnchecked(finalToMerge, Contents);
+                newStack.quantity -= finalToMerge.quantity;
             }
 
-            ItemStack.TryMerge(newStack, Contents);
         }
 
         #region Hook lifetime helpers
+
+        private bool slotHooksInstalled = false;
+        private Item hookedItemType = null;
 
         internal void InstallHooks()
         {
@@ -103,42 +116,42 @@ namespace rmMinusR.ItemAnvil
 
         private void InstallSlotHooks()
         {
-            if (hooksImpl != null) throw new InvalidOperationException($"Slot #{ID}: hooks already installed");
-            hooksImpl = ScriptableObject.CreateInstance<SlotHooksImplDetail>();
-
-            foreach (SlotProperty p in SlotProperties) p.InstallHooks(this);
+            if (!slotHooksInstalled)
+            {
+                slotHooksInstalled = true;
+                foreach (SlotProperty p in SlotProperties) p.InstallHooks(this);
+            }
         }
 
         private void UninstallSlotHooks()
         {
-            if (hooksImpl == null) throw new InvalidOperationException($"Slot #{ID}: hooks already uninstalled");
-
-            foreach (SlotProperty p in SlotProperties) p.UninstallHooks(this);
-
-            ScriptableObject.Destroy(hooksImpl);
-            hooksImpl = null;
+            if (slotHooksInstalled)
+            {
+                slotHooksInstalled = false;
+                foreach (SlotProperty p in SlotProperties) p.UninstallHooks(this);
+            }
         }
 
         private void InstallItemHooks()
         {
-            if (Contents?.itemType != null) Contents.itemType.InstallHooks(this);
+            Item heldType = Contents?.itemType;
+            if (hookedItemType != heldType) UninstallItemHooks();
+            if (heldType != null) heldType.InstallHooks(this);
+            hookedItemType = heldType;
         }
 
         private void UninstallItemHooks()
         {
-            if (Contents?.itemType != null) Contents.itemType.UninstallHooks(this);
+            if (hookedItemType != null) hookedItemType.UninstallHooks(this);
+            hookedItemType = null;
         }
 
-        #endregion
+#endregion
 
         #region Hooks interface
 
-        [SerializeField, HideInInspector] private SlotHooksImplDetail hooksImpl;
-
-        public void HookTrySwapSlot  (TrySwapSlotsHook  listener, int priority) => hooksImpl.trySwapSlots .InsertHook(listener, priority);
-        public void HookPostSwapSlots(PostSwapSlotsHook listener, int priority) => hooksImpl.postSwapSlots.InsertHook(listener, priority);
-        public void UnhookTrySwapSlot  (TrySwapSlotsHook  listener) => hooksImpl.trySwapSlots .RemoveHook(listener);
-        public void UnhookPostSwapSlots(PostSwapSlotsHook listener) => hooksImpl.postSwapSlots.RemoveHook(listener);
+        [SerializeField, HideInInspector] private SlotHooksImplDetail _hooksImpl;
+        public SlotHooksImplDetail Hooks => _hooksImpl != null ? _hooksImpl : (_hooksImpl = ScriptableObject.CreateInstance<SlotHooksImplDetail>());
 
         #endregion
     }

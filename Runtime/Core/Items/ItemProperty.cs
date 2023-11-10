@@ -21,6 +21,9 @@ namespace rmMinusR.ItemAnvil
         {
             return MemberwiseClone();
         }
+
+        protected internal abstract void InstallHooks(InventorySlot context);
+        protected internal abstract void UninstallHooks(InventorySlot context);
     }
 
 }

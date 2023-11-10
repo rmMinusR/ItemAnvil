@@ -65,12 +65,15 @@ namespace rmMinusR.ItemAnvil
         public static bool TryMerge(ItemStack src, ItemStack dst)
         {
             if (!CanMerge(src, dst)) return false;
+            MergeUnchecked(src, dst);
+            return true;
+        }
 
+        internal static bool MergeUnchecked(ItemStack src, ItemStack dst)
+        {
             int totalAmt = src._quantity + dst._quantity;
 
             dst._quantity = totalAmt;
-            //TODO Could do better decoupling
-            if (dst._itemType != null && dst._itemType.Properties.TryGet(out MaxStackSize s)) dst._quantity = Mathf.Min(dst._quantity, s.size);
             src._quantity = totalAmt-dst._quantity;
             
             return true;

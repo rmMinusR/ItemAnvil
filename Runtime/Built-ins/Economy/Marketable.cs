@@ -24,6 +24,10 @@ namespace rmMinusR.ItemAnvil
             Buying,
             Selling
         }
+
+        //Data-carrier property: No active logic, no hooks to install or uninstall
+        protected internal override void InstallHooks(InventorySlot context) { }
+        protected internal override void UninstallHooks(InventorySlot context) { }
     }
 
 }

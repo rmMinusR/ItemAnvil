@@ -28,7 +28,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inventory, Item item) = Arrange();
             int fireCount = 0;
-            inventory.HookTrySortSlot((ReadOnlyInventorySlot slot, object cause) =>
+            inventory.Hooks.TrySortSlot.InsertHook((ReadOnlyInventorySlot slot, object cause) =>
             {
                 fireCount++;
                 return QueryEventResult.Allow;
@@ -48,7 +48,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inventory, Item item) = Arrange();
             // Pin slot with ID 2
-            inventory.HookTrySortSlot((ReadOnlyInventorySlot slot, object cause) => slot.ID == 2 ? QueryEventResult.Deny : QueryEventResult.Allow, int.MaxValue);
+            inventory.Hooks.TrySortSlot.InsertHook((ReadOnlyInventorySlot slot, object cause) => slot.ID == 2 ? QueryEventResult.Deny : QueryEventResult.Allow, int.MaxValue);
 
             // Act
             inventory.Sort(stack => -stack?.quantity ?? 0, null);
@@ -64,7 +64,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inventory, Item item) = Arrange();
             int fireCount = 0;
-            inventory.HookPostSort((object cause) =>
+            inventory.Hooks.PostSort.InsertHook((object cause) =>
             {
                 fireCount++;
                 return PostEventResult.Continue;
@@ -84,7 +84,7 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             (Inventory inventory, Item item) = Arrange();
             int fireCount = 0;
-            inventory.HookPostSort((object cause) =>
+            inventory.Hooks.PostSort.InsertHook((object cause) =>
             {
                 fireCount++;
                 return fireCount == 1 ? PostEventResult.Retry : PostEventResult.Continue;

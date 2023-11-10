@@ -59,7 +59,7 @@ namespace rmMinusR.ItemAnvil
             if (ItemStack.IsEmpty(newStack)) throw new ArgumentException("Cannot add nothing!");
 
             //Check hooks to see if we're allowed to add this item
-            if (Hooks.ExecuteCanAddItem(newStack, newStack.Clone(), cause) != QueryEventResult.Allow) return;
+            if (Hooks.CanAddItem.Process(h => h(newStack, newStack.Clone(), cause)) != QueryEventResult.Allow) return;
 
         retry: //NOTE: Not great performance, but re-run both for loops just in case
 
@@ -67,7 +67,7 @@ namespace rmMinusR.ItemAnvil
             foreach (InventorySlot slot in slots)
             {
                 //Check hooks to see if slot can accept this stack
-                if (!slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == QueryEventResult.Allow) slot.TryAccept(newStack);
+                if (!slot.IsEmpty) slot.TryAccept(newStack, cause);
                 if (newStack.quantity == 0) goto done;
             }
 
@@ -75,17 +75,13 @@ namespace rmMinusR.ItemAnvil
             foreach (InventorySlot slot in slots)
             {
                 //Check hooks to see if slot can accept this stack
-                if (slot.IsEmpty && slot.CanAccept(newStack) && Hooks.ExecuteCanSlotAccept(slot, newStack, cause) == QueryEventResult.Allow)
-                {
-                    slot.TryAccept(newStack);
-                    slot.InstallHooks();
-                }
+                if (slot.IsEmpty) slot.TryAccept(newStack, cause);
                 if (newStack.quantity == 0) goto done;
             }
 
         done:
             //Run post hook. Handles stuff like overflow.
-            if (Hooks.ExecutePostAddItem(newStack, cause) == PostEventResult.Retry) goto retry;
+            if (Hooks.PostAddItem.Process(h => h(newStack, cause)) == PostEventResult.Retry) goto retry;
         }
 
         /// <summary>
@@ -124,7 +120,7 @@ namespace rmMinusR.ItemAnvil
                     removedStack.quantity = Mathf.Min(totalToRemove, slots[i].Contents.quantity);
 
                     //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
-                    if (Hooks.ExecuteTryRemoveItem(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
+                    if (Hooks.TryRemoveItem.Process(h => h(slots[i], removedStack, removedStack.Clone(), cause)) == QueryEventResult.Allow && removedStack.quantity > 0)
                     {
                         //Make sure we aren't overcharging and leaving the slot with negative quantities
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
@@ -161,7 +157,7 @@ namespace rmMinusR.ItemAnvil
             }
             else
             {
-                Hooks.ExecutePostRemove(cause);
+                Hooks.PostRemove.Process(h => h(cause));
                 return everythingRemoved.Select(i => i.Item1);
             }
         }
@@ -182,7 +178,7 @@ namespace rmMinusR.ItemAnvil
                     ItemStack removedStack = slots[i].Contents.Clone();
                     
                     //Check hook to see if we can continue, then check to make sure no hooks are up to funny business
-                    if (Hooks.ExecuteTryRemoveItem(slots[i], removedStack, removedStack.Clone(), cause) == QueryEventResult.Allow && removedStack.quantity > 0)
+                    if (Hooks.TryRemoveItem.Process(h => h(slots[i], removedStack, removedStack.Clone(), cause)) == QueryEventResult.Allow && removedStack.quantity > 0)
                     {
                         //Make sure we aren't overcharging and leaving the slot with negative quantities
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
@@ -201,7 +197,7 @@ namespace rmMinusR.ItemAnvil
                 }
             }
 
-            Hooks.ExecutePostRemove(cause);
+            Hooks.PostRemove.Process(h => h(cause));
             return nRemoved;
         }
 
@@ -221,7 +217,7 @@ namespace rmMinusR.ItemAnvil
 
             //Find what slots can be sorted, and sort them
             List<InventorySlot> sortables = new List<InventorySlot>(slots);
-            sortables.RemoveAll(slot => Hooks.ExecuteTrySort(slot, cause) != QueryEventResult.Allow);
+            sortables.RemoveAll(slot => Hooks.TrySortSlot.Process(h => h(slot, cause)) != QueryEventResult.Allow);
             sortables.Sort(new ItemStackToSlotComparer(comparer));
             
             //Rearrange the sortable set in the original slots
@@ -238,7 +234,7 @@ namespace rmMinusR.ItemAnvil
 
             ValidateIDs();
 
-            if (Hooks.ExecutePostSort(cause) == PostEventResult.Retry) goto retry;
+            if (Hooks.PostSort.Process(h => h(cause)) == PostEventResult.Retry) goto retry;
         }
 
         public override void DoSetup()
@@ -250,25 +246,9 @@ namespace rmMinusR.ItemAnvil
                 if (!slots[i].IsEmpty) slots[i].InstallHooks();
             }
         }
-
-        #region Hook interface
+        
         [SerializeField, HideInInspector] private InventoryHooksImplDetail _hooks;
-        protected InventoryHooksImplDetail Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
-        public override void HookCanAddItem   (CanAddItemHook    listener, int priority) => Hooks.canAddItem      .InsertHook(listener, priority);
-        public override void HookCanSlotAccept(CanSlotAcceptHook listener, int priority) => Hooks.canSlotAccept   .InsertHook(listener, priority);
-        public override void HookPostAddItem  (PostAddItemHook   listener, int priority) => Hooks.postAddItem     .InsertHook(listener, priority);
-        public override void HookTryRemoveItem(TryRemoveItemHook    listener, int priority) => Hooks.tryRemoveItem.InsertHook(listener, priority);
-        public override void HookPostRemove   (PostRemoveHook    listener, int priority) => Hooks.postRemove      .InsertHook(listener, priority);
-        public override void HookTrySortSlot  (TrySortSlotHook   listener, int priority) => Hooks.trySortSlot     .InsertHook(listener, priority);
-        public override void HookPostSort     (PostSortHook      listener, int priority) => Hooks.postSort        .InsertHook(listener, priority);
-        public override void UnhookCanAddItem   (CanAddItemHook    listener) => Hooks.canAddItem      .RemoveHook(listener);
-        public override void UnhookCanSlotAccept(CanSlotAcceptHook listener) => Hooks.canSlotAccept   .RemoveHook(listener);
-        public override void UnhookPostAddItem  (PostAddItemHook   listener) => Hooks.postAddItem     .RemoveHook(listener);
-        public override void UnhookTryRemoveItem(TryRemoveItemHook    listener) => Hooks.tryRemoveItem.RemoveHook(listener);
-        public override void UnhookPostRemove   (PostRemoveHook    listener) => Hooks.postRemove      .RemoveHook(listener);
-        public override void UnhookTrySort      (TrySortSlotHook   listener) => Hooks.trySortSlot     .RemoveHook(listener);
-        public override void UnhookPostSort     (PostSortHook      listener) => Hooks.postSort        .RemoveHook(listener);
-        #endregion
+        public override IInventoryHooks Hooks => _hooks != null ? _hooks : (_hooks = ScriptableObject.CreateInstance<InventoryHooksImplDetail>());
 
 
         #region Obsolete functions/variables, and upgrader

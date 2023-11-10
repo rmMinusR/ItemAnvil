@@ -24,7 +24,7 @@ namespace rmMinusR.ItemAnvil
         public string displayName = "Item";
         public Sprite displayIcon;
         [TextArea] public string displayTooltip;
-
+        
         [Space]
         public List<ItemCategory> categories = new List<ItemCategory>();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using rmMinusR.ItemAnvil.Hooks;
 using rmMinusR.ItemAnvil.Hooks.Inventory;
 using UnityEngine;
 
@@ -140,7 +141,7 @@ namespace rmMinusR.ItemAnvil
         /// Should be called exactly once when the inventory is created. Handles stuff like installing hooks.
         /// </summary>
         public abstract void DoSetup();
-        
+
         #region Hook interface
 
         /*
@@ -148,20 +149,7 @@ namespace rmMinusR.ItemAnvil
          * See StandardInventory for a reusable implementation using InventoryHooksImplDetail
          */
 
-        public abstract void HookCanAddItem   (CanAddItemHook    listener, int priority);
-        public abstract void HookCanSlotAccept(CanSlotAcceptHook listener, int priority);
-        public abstract void HookPostAddItem  (PostAddItemHook   listener, int priority);
-        public abstract void HookTryRemoveItem(TryRemoveItemHook listener, int priority);
-        public abstract void HookPostRemove   (PostRemoveHook    listener, int priority);
-        public abstract void HookTrySortSlot  (TrySortSlotHook   listener, int priority);
-        public abstract void HookPostSort     (PostSortHook      listener, int priority);
-        public abstract void UnhookCanAddItem   (CanAddItemHook    listener);
-        public abstract void UnhookCanSlotAccept(CanSlotAcceptHook listener);
-        public abstract void UnhookPostAddItem  (PostAddItemHook   listener);
-        public abstract void UnhookTryRemoveItem(TryRemoveItemHook listener);
-        public abstract void UnhookPostRemove   (PostRemoveHook    listener);
-        public abstract void UnhookTrySort      (TrySortSlotHook   listener);
-        public abstract void UnhookPostSort     (PostSortHook      listener);
+        public abstract IInventoryHooks Hooks { get; }
 
         #endregion
     }

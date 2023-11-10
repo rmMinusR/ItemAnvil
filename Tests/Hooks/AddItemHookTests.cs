@@ -25,7 +25,7 @@ namespace rmMinusR.ItemAnvil.Tests
             Item item = ScriptableObject.CreateInstance<Item>();
             
             int fireCount = 0;
-            inventory.HookCanAddItem((ItemStack final, ReadOnlyItemStack original, object cause) =>
+            inventory.Hooks.CanAddItem.InsertHook((ItemStack final, ReadOnlyItemStack original, object cause) =>
             {
                 fireCount++;
                 return QueryEventResult.Allow;
@@ -46,7 +46,7 @@ namespace rmMinusR.ItemAnvil.Tests
             Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
 
-            inventory.HookCanAddItem((ItemStack final, ReadOnlyItemStack original, object cause) => QueryEventResult.Deny, int.MaxValue);
+            inventory.Hooks.CanAddItem.InsertHook((ItemStack final, ReadOnlyItemStack original, object cause) => QueryEventResult.Deny, int.MaxValue);
             
             // Act
             inventory.AddItem(item, null);
@@ -62,7 +62,7 @@ namespace rmMinusR.ItemAnvil.Tests
             Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
 
-            inventory.HookCanAddItem((ItemStack final, ReadOnlyItemStack original, object cause) =>
+            inventory.Hooks.CanAddItem.InsertHook((ItemStack final, ReadOnlyItemStack original, object cause) =>
             {
                 final.quantity++;
                 return QueryEventResult.Allow;
@@ -85,7 +85,7 @@ namespace rmMinusR.ItemAnvil.Tests
             inventory.AddItem(item, null);
 
             int fireCount = 0;
-            inventory.HookCanSlotAccept((ReadOnlyInventorySlot slot, ReadOnlyItemStack stack, object cause) =>
+            inventory.Hooks.CanSlotAccept.InsertHook((ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
             {
                 fireCount++;
                 return QueryEventResult.Allow;
@@ -109,7 +109,7 @@ namespace rmMinusR.ItemAnvil.Tests
             inventory.AddItem(item, null);
 
             bool fired = false;
-            inventory.HookCanSlotAccept((ReadOnlyInventorySlot slot, ReadOnlyItemStack stack, object cause) =>
+            inventory.Hooks.CanSlotAccept.InsertHook((ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
             {
                 //Reject first attempt to merge
                 if (!fired)
@@ -136,7 +136,7 @@ namespace rmMinusR.ItemAnvil.Tests
             Item item = ScriptableObject.CreateInstance<Item>();
             
             int fireCount = 0;
-            inventory.HookPostAddItem((ItemStack stack, object cause) =>
+            inventory.Hooks.PostAddItem.InsertHook((ItemStack stack, object cause) =>
             {
                 fireCount++;
                 return PostEventResult.Continue;
@@ -158,7 +158,7 @@ namespace rmMinusR.ItemAnvil.Tests
             Item item = ScriptableObject.CreateInstance<Item>();
             
             int fireCount = 0;
-            inventory.HookPostAddItem((ItemStack stack, object cause) =>
+            inventory.Hooks.PostAddItem.InsertHook((ItemStack stack, object cause) =>
             {
                 fireCount++;
                 return fireCount == 1 ? PostEventResult.Retry : PostEventResult.Continue;
