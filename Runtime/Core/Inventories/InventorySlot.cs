@@ -81,6 +81,8 @@ namespace rmMinusR.ItemAnvil
 
         public void TryAccept(ItemStack newStack, object cause)
         {
+            if (!ItemStack.CanMerge(newStack, Contents)) return;
+
             ItemStack finalToMerge = newStack.Clone();
             if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
             {

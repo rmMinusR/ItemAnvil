@@ -42,7 +42,7 @@ namespace rmMinusR.ItemAnvil
         }
 
         /// <summary>
-        /// Can two ItemStacks be merged?
+        /// Can two ItemStacks be merged using default behaviour only?
         /// </summary>
         /// <param name="src">Stack that will be merged from, and will be consumed in the process</param>
         /// <param name="dst">Stack that will be merged into</param>
@@ -57,11 +57,12 @@ namespace rmMinusR.ItemAnvil
         }
 
         /// <summary>
-        /// Attempt to merge two ItemStacks
+        /// Attempt to merge two ItemStacks, using default behaviour only. Does NOT fire hooks--prefer InventorySlot.TryAccept where available.
         /// </summary>
         /// <param name="src">Stack that will be merged from, and will be consumed in the process</param>
         /// <param name="dst">Stack that will be merged into</param>
         /// <returns>Whether the merge was performed. If false, no changes to either stack were made.</returns>
+        [Obsolete]
         public static bool TryMerge(ItemStack src, ItemStack dst)
         {
             if (!CanMerge(src, dst)) return false;

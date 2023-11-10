@@ -69,7 +69,7 @@ namespace rmMinusR.ItemAnvil.Tests
             Item nonMatch = CreateItem("NonMatch");
 
             FilterMatchTypes filter = new FilterMatchTypes();
-            filter.matches = new Item[] { match1, match2, nonMatch };
+            filter.matches = new Item[] { match1, match2 };
 
             // Act
             bool match1_result = filter.Matches(CreateItemStack(match1));
