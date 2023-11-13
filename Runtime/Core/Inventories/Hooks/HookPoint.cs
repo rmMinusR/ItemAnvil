@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
+using static UnityEngine.UI.Image;
+using UnityEditor.PackageManager.UI;
 
 namespace rmMinusR.ItemAnvil.Hooks
 {
@@ -11,14 +13,16 @@ namespace rmMinusR.ItemAnvil.Hooks
         public struct OrderedHook
         {
             public THook hook;
-            public int priority;
+            public int execOrder;
             public static implicit operator THook(OrderedHook h) => h.hook;
         }
         public abstract IEnumerable<OrderedHook> GetHooks();
 
         #region Hook processing
 
-        // Func is a lambda passing variables to individual hooks (cross between a thunk and bind-expression). Can be thought of like a visitor, except the ones that return EventResults are allowed to halt early.
+        // Func is a lambda passing variables to individual hooks (cross between a thunk and bind-expression).
+        // For example: CanAddItem.Process(hook => hook(final, original, cause));
+        // Can be thought of like a visitor, except the ones that return EventResults are allowed to halt early.
         public virtual void Process(Action<THook> func)
         {
             foreach (THook h in GetHooks()) func(h);
@@ -51,7 +55,8 @@ namespace rmMinusR.ItemAnvil.Hooks
 
     public abstract class IHookPoint<THook> : IExecuteOnlyHookPoint<THook> where THook : class
     {
-        public abstract void InsertHook(THook hook, int priority);
+        public abstract void InsertHook(THook hook, int execOrder);
+        public abstract void InsertFinalizer(THook hook);
         public abstract void RemoveHook(THook hook);
 
 
@@ -65,26 +70,33 @@ namespace rmMinusR.ItemAnvil.Hooks
     #endregion
 
     /// <summary>
-    /// Helper class to manage hooks
+    /// Helper class to manage hooks.
     /// </summary>
+    /// <remarks>
+    /// Hooks execute in ascending priority. For events that only listen
+    /// for a final result without modifying behavior (such as UI),
+    /// priority is int.MaxValue.
+    /// </remarks>
     /// <typeparam name="THook">Hook type</typeparam>
     public sealed class HookPoint<THook> : IHookPoint<THook> where THook : class
     {
         private List<OrderedHook> hooks = new List<OrderedHook>();
         public override IEnumerable<OrderedHook> GetHooks() => hooks;
 
-        public override void InsertHook(THook hook, int priority)
+        public override void InsertFinalizer(THook hook) => InsertHook(hook, int.MaxValue);
+
+        public override void InsertHook(THook hook, int execOrder)
         {
             OrderedHook container = new OrderedHook()
             {
                 hook = hook,
-                priority = priority
+                execOrder = execOrder
             };
 
             if (hooks.Count == 0) hooks.Add(container);
             else
             {
-                int insertIndex = hooks.FindIndex(x => x.priority >= priority);
+                int insertIndex = hooks.FindIndex(x => x.execOrder >= execOrder);
                 if (insertIndex != -1) hooks.Insert(insertIndex, container); //There exist hooks that should execute after this one. Insert before them.
                 else hooks.Add(container); //This hooks should execute after all others. Append.
             }
@@ -123,7 +135,7 @@ namespace rmMinusR.ItemAnvil.Hooks
             while(true)
             {
                 //Find next hook to execute
-                int? idx = FindMin(wrapped, i => i?.Current.priority);
+                int? idx = FindMin(wrapped, i => i?.Current.execOrder);
                 if (!idx.HasValue) break;
 
                 //Yield hook

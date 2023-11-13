@@ -21,13 +21,16 @@ namespace rmMinusR.ItemAnvil.Hooks
 
 namespace rmMinusR.ItemAnvil.Hooks.Inventory
 {
+    //Hooks for Inventory.AddItem family
     public delegate QueryEventResult CanAddItemHook   (ItemStack final, ReadOnlyItemStack original,                                      object cause);
     public delegate QueryEventResult CanSlotAcceptHook(ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original,  object cause);
     public delegate PostEventResult  PostAddItemHook  (ItemStack stack,                                                                  object cause); //Overflow handling etc
 
+    //Hooks for Inventory.TryRemove and Inventory.RemoveAll
     public delegate QueryEventResult TryRemoveItemHook(ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause);
     public delegate void             PostRemoveHook   (                                                                                  object cause);
     
+    //Hooks for Inventory.Sort
     public delegate QueryEventResult TrySortSlotHook  (ReadOnlyInventorySlot slot,                                                       object cause);
     public delegate PostEventResult  PostSortHook     (                                                                                  object cause);
 

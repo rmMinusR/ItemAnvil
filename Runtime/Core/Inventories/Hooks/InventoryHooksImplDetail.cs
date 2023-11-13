@@ -42,18 +42,6 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         public HookPoint<PostRemoveHook   > PostRemove    { get; } = new HookPoint<PostRemoveHook   >();
         public HookPoint<TrySortSlotHook  > TrySortSlot   { get; } = new HookPoint<TrySortSlotHook  >();
         public HookPoint<PostSortHook     > PostSort      { get; } = new HookPoint<PostSortHook     >();
-
-        /*
-         * Hooks execute in ascending priority. For events that only listen for a final result without modifying behavior (such as UI), register for priority = int.MaxValue.
-         */
-        
-        public QueryEventResult ExecuteCanAddItem   (ItemStack final, ReadOnlyItemStack original                                     , object cause) => CanAddItem   .Process(hook => hook(final, original,                cause));
-        public QueryEventResult ExecuteCanSlotAccept(ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original , object cause) => CanSlotAccept.Process(hook => hook(slot, finalToAccept, original,  cause));
-        public PostEventResult  ExecutePostAddItem  (ItemStack stack                                                                 , object cause) => PostAddItem  .Process(hook => hook(stack,                          cause));
-        public QueryEventResult ExecuteTryRemoveItem(ReadOnlyInventorySlot slot, ItemStack removed, ReadOnlyItemStack originalRemoved, object cause) => TryRemoveItem.Process(hook => hook(slot, removed, originalRemoved, cause));
-        public void             ExecutePostRemove   (                                                                                  object cause) => PostRemove   .Process(hook => hook(                                cause));
-        public QueryEventResult ExecuteTrySort      (ReadOnlyInventorySlot slot                                                      , object cause) => TrySortSlot  .Process(hook => hook(slot,                           cause));
-        public PostEventResult  ExecutePostSort     (                                                                                  object cause) => PostSort     .Process(hook => hook(                                cause));
     }
-
+    
 }
