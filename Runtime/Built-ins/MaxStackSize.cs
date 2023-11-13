@@ -1,4 +1,5 @@
 ﻿using rmMinusR.ItemAnvil.Hooks;
+using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
@@ -14,20 +15,29 @@ namespace rmMinusR.ItemAnvil
     {
         [Min(1)] public int size = 10;
 
-        private QueryEventResult LimitStackSize(ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause)
+        private CanSlotAcceptHook MakeHook(ReadOnlyInventorySlot slot)
         {
-            if (!slot.IsEmpty) finalToAccept.quantity = Mathf.Min(size-slot.Contents.quantity, finalToAccept.quantity);
-            return QueryEventResult.Allow;
+            int owningSlotID = slot.ID;
+            return (ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
+            {
+                //Only execute on our current slot
+                if (owningSlotID != slot.ID) return QueryEventResult.Allow;
+                
+                //Do work
+                int currentQuantity = slot.IsEmpty ? 0 : slot.Contents.quantity;
+                finalToAccept.quantity = Mathf.Min(size-currentQuantity, finalToAccept.quantity);
+                return QueryEventResult.Allow;
+            };
         }
 
         protected internal override void InstallHooks(InventorySlot context)
         {
-            //context.Hooks.CanSlotAccept.InsertHook(LimitStackSize, 0);
+            context.inventory.Hooks.CanSlotAccept.InsertHook(MakeHook(context), 0);
         }
 
         protected internal override void UninstallHooks(InventorySlot context)
         {
-            //context.Hooks.CanSlotAccept.RemoveHook(LimitStackSize);
+            context.inventory.Hooks.CanSlotAccept.RemoveHook(MakeHook(context));
         }
     }
 

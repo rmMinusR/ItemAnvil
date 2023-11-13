@@ -13,6 +13,8 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         public HookPoint<PostRemoveHook   > PostRemove    { get; }
         public HookPoint<TrySortSlotHook  > TrySortSlot   { get; }
         public HookPoint<PostSortHook     > PostSort      { get; }
+        public HookPoint<TrySwapSlotsHook > TrySwapSlots  { get; }
+        public HookPoint<PostSwapSlotsHook> PostSwapSlots { get; }
     }
 
     /// <summary>
@@ -42,6 +44,8 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
         public HookPoint<PostRemoveHook   > PostRemove    { get; } = new HookPoint<PostRemoveHook   >();
         public HookPoint<TrySortSlotHook  > TrySortSlot   { get; } = new HookPoint<TrySortSlotHook  >();
         public HookPoint<PostSortHook     > PostSort      { get; } = new HookPoint<PostSortHook     >();
+        public HookPoint<TrySwapSlotsHook > TrySwapSlots  { get; } = new HookPoint<TrySwapSlotsHook >();
+        public HookPoint<PostSwapSlotsHook> PostSwapSlots { get; } = new HookPoint<PostSwapSlotsHook>();
     }
     
 }

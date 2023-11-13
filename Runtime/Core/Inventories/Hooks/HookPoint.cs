@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using static UnityEngine.UI.Image;
 using UnityEditor.PackageManager.UI;
+using System.Linq;
 
 namespace rmMinusR.ItemAnvil.Hooks
 {
@@ -117,7 +118,7 @@ namespace rmMinusR.ItemAnvil.Hooks
         private IHookPoint<THook>[] hookPoints;
         public AggregateHookPoint(IHookPoint<THook>[] hookPoints)
         {
-            this.hookPoints = hookPoints;
+            this.hookPoints = new HashSet<IHookPoint<THook>>(hookPoints).ToArray(); //Deduplicate
         }
 
         public override IEnumerable<OrderedHook> GetHooks()

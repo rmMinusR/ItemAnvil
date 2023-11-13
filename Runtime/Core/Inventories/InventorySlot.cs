@@ -1,12 +1,7 @@
 using rmMinusR.ItemAnvil.Hooks;
 using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using UnityEditor.Graphs;
 using UnityEngine;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace rmMinusR.ItemAnvil
 {
@@ -59,17 +54,16 @@ namespace rmMinusR.ItemAnvil
         public static bool SwapContents(InventorySlot a, InventorySlot b, object cause)
         {
             //Run pre hook
-            if (a.Hooks.ExecuteTrySwapSlots(a, b, cause) != QueryEventResult.Allow || b.Hooks.ExecuteTrySwapSlots(a, b, cause) != QueryEventResult.Allow) return false;
-
+            IExecuteOnlyHookPoint<TrySwapSlotsHook> pre = HookPoint<TrySwapSlotsHook>.Aggregate(a.inventory.Hooks.TrySwapSlots, b.inventory.Hooks.TrySwapSlots);
+            if (pre.Process(h => h(a, b, cause)) != QueryEventResult.Allow) return false;
+            
             //Swap (setter will handle hook refreshing)
-            ItemStack tmp = a.Contents;
-            a.Contents = b.Contents;
-            b.Contents = tmp;
+            (b.Contents, a.Contents) = (a.Contents, b.Contents);
 
             //Run post hook
-            a.Hooks.ExecutePostSwapSlots(a, b, cause);
-            b.Hooks.ExecutePostSwapSlots(a, b, cause);
-
+            IExecuteOnlyHookPoint<PostSwapSlotsHook> post = HookPoint<PostSwapSlotsHook>.Aggregate(a.inventory.Hooks.PostSwapSlots, b.inventory.Hooks.PostSwapSlots);
+            post.Process(h => h(a, b, cause));
+            
             return true;
         }
 
@@ -84,17 +78,26 @@ namespace rmMinusR.ItemAnvil
             if (!ItemStack.CanMerge(newStack, Contents)) return;
 
             ItemStack finalToMerge = newStack.Clone();
-            if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
+            if (IsEmpty)
             {
-                if (IsEmpty)
-                {
-                    //Create a dummy object to transfer so ItemStack.TryMerge works out of the gate
-                    Contents = finalToMerge.Clone();
-                    Contents.quantity = 0;
-                }
+                //Create a dummy object to transfer so ItemStack.MergeUnchecked works out of the gate
+                Contents = finalToMerge.Clone();
+                Contents.quantity = 0;
 
-                newStack.quantity -= finalToMerge.quantity;
-                ItemStack.MergeUnchecked(finalToMerge, Contents);
+                if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
+                {
+                    newStack.quantity -= finalToMerge.quantity;
+                    ItemStack.MergeUnchecked(finalToMerge, Contents);
+                }
+                else Contents = null;
+            }
+            else
+            {
+                if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
+                {
+                    newStack.quantity -= finalToMerge.quantity;
+                    ItemStack.MergeUnchecked(finalToMerge, Contents);
+                }
             }
 
         }
@@ -147,13 +150,6 @@ namespace rmMinusR.ItemAnvil
             if (hookedItemType != null) hookedItemType.UninstallHooks(this);
             hookedItemType = null;
         }
-
-#endregion
-
-        #region Hooks interface
-
-        [SerializeField, HideInInspector] private SlotHooksImplDetail _hooksImpl;
-        public SlotHooksImplDetail Hooks => _hooksImpl != null ? _hooksImpl : (_hooksImpl = ScriptableObject.CreateInstance<SlotHooksImplDetail>());
 
         #endregion
     }
