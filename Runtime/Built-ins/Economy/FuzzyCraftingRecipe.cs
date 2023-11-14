@@ -9,8 +9,15 @@ namespace rmMinusR.ItemAnvil
     [CreateAssetMenu(menuName = "Item Anvil/Fuzzy Crafting Recipe")]
     public sealed class FuzzyCraftingRecipe : CraftingRecipe
     {
+        public FuzzyCraftingRecipe(IEnumerable<Ingredient> inputs, IEnumerable<ItemStack> outputs, bool copyInstancePropertiesToOutputs = false)
+        {
+            this.inputs = new List<Ingredient>(inputs);
+            this.outputs = new List<ItemStack>(outputs);
+            this.copyInstancePropertiesToOutputs = copyInstancePropertiesToOutputs;
+        }
+
         [Serializable]
-        private class Ingredient // Almost an ItemStack, but fuzzy
+        public class Ingredient // Almost an ItemStack, but fuzzy
         {
             [SerializeReference] [TypeSwitcher] public ItemFilter filter;
             [Min(1)] public int quantity;
