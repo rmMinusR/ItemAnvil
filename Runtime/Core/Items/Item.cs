@@ -28,6 +28,7 @@ namespace rmMinusR.ItemAnvil
         [Space]
         public List<ItemCategory> categories = new List<ItemCategory>();
 
+        // DO NOT modify while game is running, as hooks will not be installed!
         [field: Space, SerializeField] public PropertyBag<ItemProperty> Properties { get; private set; } = new PropertyBag<ItemProperty>();
 
         internal void InstallHooks(InventorySlot inventorySlot)
