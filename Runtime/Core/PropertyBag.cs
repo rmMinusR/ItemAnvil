@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -8,13 +9,23 @@ using UnityEngine;
 
 namespace rmMinusR.ItemAnvil
 {
+    public interface ReadOnlyPropertyBag<TBase> : IReadOnlyCollection<TBase> where TBase : class, ICloneable
+    {
+        public T Get<T>() where T : TBase;
+        public TBase Get(Type type);
+
+        public bool Contains<T>() where T : TBase;
+
+        public bool TryGet<T>(out T val) where T : TBase;
+    }
+
 
     /// <summary>
     /// A unified way to store properties. In general, only one property of each type may exist per bag. Used in Items to store ItemProperties, ItemStacks store ItemInstanceProperties, and Inventories store InventoryProperties.
     /// </summary>
     /// <typeparam name="TBase">Base class of all properties</typeparam>
     [Serializable]
-    public sealed class PropertyBag<TBase> : ISet<TBase>, ICloneable
+    public sealed class PropertyBag<TBase> : ReadOnlyPropertyBag<TBase>, ISet<TBase>, ICloneable
                               where TBase : class, ICloneable // Exclude structs and POD, since they don't have inheritance. ICloneable to fix inappropriate ref sharing
     {
         [Serializable]

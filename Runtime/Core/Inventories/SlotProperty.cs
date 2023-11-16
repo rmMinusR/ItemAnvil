@@ -9,7 +9,29 @@ namespace rmMinusR.ItemAnvil
             return MemberwiseClone();
         }
 
-        protected internal abstract void InstallHooks(InventorySlot inventorySlot);
-        protected internal abstract void UninstallHooks(InventorySlot inventorySlot);
+        protected abstract void InstallHooks(InventorySlot inventorySlot);
+        protected abstract void UninstallHooks(InventorySlot inventorySlot);
+
+
+
+        private bool installed = false;
+
+        internal void _InstallHooks(InventorySlot inventorySlot)
+        {
+            if (!installed)
+            {
+                installed = true;
+                InstallHooks(inventorySlot);
+            }
+        }
+        
+        internal void _UninstallHooks(InventorySlot inventorySlot)
+        {
+            if (installed)
+            {
+                installed = false;
+                UninstallHooks(inventorySlot);
+            }
+        }
     }
 }

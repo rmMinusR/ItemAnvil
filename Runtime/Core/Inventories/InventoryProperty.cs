@@ -21,7 +21,7 @@ namespace rmMinusR.ItemAnvil
 
         internal void _InstallHooks(Inventory _inventory)
         {
-            if (_inventory == null)
+            if (this._inventory == null)
             {
                 this._inventory = _inventory;
                 InstallHooks();

@@ -12,8 +12,8 @@ namespace rmMinusR.ItemAnvil.Tests
         private Inventory CreateInventory(params InventoryProperty[] properties)
         {
             StandardInventory inv = new StandardInventory(30);
-            foreach (InventoryProperty i in properties) inv.properties.Add(i);
             inv.DoSetup();
+            foreach (InventoryProperty i in properties) inv.AddProperty(i);
             return inv;
         }
 

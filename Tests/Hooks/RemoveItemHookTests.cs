@@ -14,8 +14,8 @@ namespace rmMinusR.ItemAnvil.Tests
         private (Inventory, Item) Arrange(int itemCount = 1, params InventoryProperty[] properties)
         {
             StandardInventory inv = new StandardInventory(30);
-            foreach (InventoryProperty i in properties) inv.properties.Add(i);
             inv.DoSetup();
+            foreach (InventoryProperty i in properties) inv.AddProperty(i);
 
             Item item = ScriptableObject.CreateInstance<Item>();
             inv.AddItem(item, itemCount, null);

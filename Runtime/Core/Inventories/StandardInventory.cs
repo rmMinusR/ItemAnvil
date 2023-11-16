@@ -3,10 +3,7 @@ using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Graphs;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 namespace rmMinusR.ItemAnvil
 {
@@ -22,7 +19,25 @@ namespace rmMinusR.ItemAnvil
         public override InventorySlot GetSlot(int id) => slots[id];
         public override int SlotCount => slots.Count;
 
-        public PropertyBag<InventoryProperty> properties = new PropertyBag<InventoryProperty>();
+        #region Inventory-scoped properties
+
+        [SerializeField] private PropertyBag<InventoryProperty> _properties = new PropertyBag<InventoryProperty>();
+        public ReadOnlyPropertyBag<InventoryProperty> Properties => _properties;
+
+        public T AddProperty<T>() where T : InventoryProperty, new()
+        {
+            T prop = _properties.Add<T>();
+            prop._InstallHooks(this);
+            return prop;
+        }
+
+        public void AddProperty(InventoryProperty prop)
+        {
+            _properties.Add(prop);
+            prop._InstallHooks(this);
+        }
+
+        #endregion
 
         public StandardInventory() { }
         public StandardInventory(int size) : this()
@@ -239,7 +254,7 @@ namespace rmMinusR.ItemAnvil
 
         public override void DoSetup()
         {
-            foreach (InventoryProperty i in properties) i._InstallHooks(this);
+            foreach (InventoryProperty i in Properties) i._InstallHooks(this);
 
             for (int i = 0; i < slots.Count; i++)
             {
@@ -261,7 +276,7 @@ namespace rmMinusR.ItemAnvil
 
         public override void Validate()
         {
-            foreach (InventoryProperty i in properties) i._InstallHooks(this);
+            foreach (InventoryProperty i in Properties) i._InstallHooks(this);
 
             ValidateIDs();
         }

@@ -1,6 +1,7 @@
 using rmMinusR.ItemAnvil.Hooks;
 using rmMinusR.ItemAnvil.Hooks.Inventory;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 namespace rmMinusR.ItemAnvil
@@ -47,7 +48,35 @@ namespace rmMinusR.ItemAnvil
         /// <summary>
         /// Properties of this slot. Not to be confused with item properties.
         /// </summary>
-        public PropertyBag<SlotProperty> SlotProperties => _slotProperties;
+        public ReadOnlyPropertyBag<SlotProperty> SlotProperties => _slotProperties;
+
+        public T AddProperty<T>() where T : SlotProperty, new()
+        {
+            T prop = _slotProperties.Add<T>();
+            prop._InstallHooks(this);
+            return prop;
+        }
+
+        public void AddProperty(SlotProperty prop)
+        {
+            _slotProperties.Add(prop);
+            prop._InstallHooks(this);
+        }
+
+        public bool RemoveProperty<T>() where T : SlotProperty, new()
+        {
+            return _slotProperties.TryGet(out T prop) && RemoveProperty(prop);
+        }
+
+        public bool RemoveProperty(SlotProperty prop)
+        {
+            if (_slotProperties.Remove(prop))
+            {
+                prop._UninstallHooks(this);
+                return true;
+            }
+            else return false;
+        }
 
         ReadOnlyItemStack ReadOnlyInventorySlot.Contents => _contents; //Interface compat
 
@@ -124,7 +153,7 @@ namespace rmMinusR.ItemAnvil
             if (!slotHooksInstalled)
             {
                 slotHooksInstalled = true;
-                foreach (SlotProperty p in SlotProperties) p.InstallHooks(this);
+                foreach (SlotProperty p in SlotProperties) p._InstallHooks(this);
             }
         }
 
@@ -133,7 +162,7 @@ namespace rmMinusR.ItemAnvil
             if (slotHooksInstalled)
             {
                 slotHooksInstalled = false;
-                foreach (SlotProperty p in SlotProperties) p.UninstallHooks(this);
+                foreach (SlotProperty p in SlotProperties) p._UninstallHooks(this);
             }
         }
 
