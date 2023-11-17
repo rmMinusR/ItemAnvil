@@ -52,12 +52,21 @@ namespace rmMinusR.ItemAnvil
             return s;
         }
 
+        private void RemoveSlot(int id, bool fixIDs = true)
+        {
+            slots[id].UninstallHooks();
+            slots.RemoveAt(id);
+
+            //Fix IDs
+            if (fixIDs) Validate();
+        }
+
         protected internal virtual void Condense()
         {
             //Remove empty slots
             for (int i = slots.Count-1; i >= 0; --i)
             {
-                if (slots[i].IsEmpty) slots.RemoveAt(i);
+                if (slots[i].IsEmpty) RemoveSlot(i, fixIDs: false);
             }
 
             //Fix IDs
@@ -99,6 +108,72 @@ namespace rmMinusR.ItemAnvil
             if (Hooks.PostAddItem.Process(h => h(newStack, cause)) == PostEventResult.Retry) goto retry;
         }
 
+        public override bool TryAddItem(ItemStack originalStack, object cause)
+        {
+            if (ItemStack.IsEmpty(originalStack)) throw new ArgumentException("Cannot add nothing!");
+
+            //Create snapshot in case we need to revert
+            ItemStack newStack = originalStack.Clone();
+            Inventory.Snapshot snapshot = CreateSnapshot();
+
+            //Check hooks to see if we're allowed to add this item
+            if (Hooks.CanAddItem.Process(h => h(newStack, originalStack, cause)) != QueryEventResult.Allow) return false;
+
+        retry: //NOTE: Not great performance, but re-run both for loops just in case
+
+            //First try to merge with existing stacks
+            foreach (InventorySlot slot in slots)
+            {
+                //Check hooks to see if slot can accept this stack
+                if (!slot.IsEmpty) slot.TryAccept(newStack, cause);
+                if (newStack.quantity == 0) goto done;
+            }
+            
+            //Then try to merge into empty slots
+            foreach (InventorySlot slot in slots)
+            {
+                //Check hooks to see if slot can accept this stack
+                if (slot.IsEmpty) slot.TryAccept(newStack, cause);
+                if (newStack.quantity == 0) goto done;
+            }
+
+        done:
+            //Run post hook. Handles stuff like overflow.
+            if (Hooks.PostAddItem.Process(h => h(newStack, cause)) == PostEventResult.Retry) goto retry;
+
+            if (newStack.quantity != 0)
+            {
+                //Success. Reflect changes.
+                originalStack.quantity = newStack.quantity;
+                return true;
+            }
+            else
+            {
+                //Failed to add all. Revert operation.
+                ApplySnapshot(snapshot);
+                return false;
+            }
+        }
+
+        public override void ApplySnapshot(Inventory.Snapshot snapshot)
+        {
+            //Ensure same size
+            while (SlotCount < snapshot.Items.Count) AppendSlot();
+            while (SlotCount > snapshot.Items.Count) RemoveSlot(SlotCount-1, fixIDs: false);
+            Validate();
+
+            //Write contents
+            for (int i = 0; i < SlotCount; ++i)
+            {
+                GetSlot(i).Contents = snapshot.Items[i];
+            }
+        }
+        public override Inventory.Snapshot CreateSnapshot() => new Snapshot(this);
+        private new class Snapshot : Inventory.Snapshot
+        {
+            public Snapshot(StandardInventory inventory) : base(inventory) { }
+        }
+
         /// <summary>
         /// Dump the contents of this inventory. Note that these the original instances.
         /// </summary>
@@ -124,8 +199,11 @@ namespace rmMinusR.ItemAnvil
         /// <returns>If enough items were present, an IEnumerable of those items. Otherwise null, and no changes were made.</returns>
         public override IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause)
         {
+            //Snapshot in case we need to roll back
+            Inventory.Snapshot snapshot = CreateSnapshot();
+
             //Item removal routine
-            List<(ItemStack, InventorySlot)> everythingRemoved = new List<(ItemStack, InventorySlot)>();
+            List<ItemStack> everythingRemoved = new List<ItemStack>();
             for (int i = 0; i < slots.Count; ++i)
             {
                 if (!slots[i].IsEmpty && filter(slots[i].Contents))
@@ -141,7 +219,7 @@ namespace rmMinusR.ItemAnvil
                         removedStack.quantity = Mathf.Min(removedStack.quantity, slots[i].Contents.quantity);
 
                         //Log it
-                        everythingRemoved.Add((removedStack, slots[i]));
+                        everythingRemoved.Add(removedStack);
 
                         //Update slot
                         slots[i].Contents.quantity -= removedStack.quantity;
@@ -161,19 +239,13 @@ namespace rmMinusR.ItemAnvil
             if (totalToRemove > 0)
             {
                 //Undo operation to prevent covariants
-                foreach ((ItemStack stack, InventorySlot slot) in everythingRemoved)
-                {
-                    //Should not call add hook here, since we're reverting a failed operation
-                    if (slot.Contents == null) slot.Contents = stack;
-                    else slot.Contents.quantity += stack.quantity;
-                }
-
+                ApplySnapshot(snapshot);
                 return null;
             }
             else
             {
                 Hooks.PostRemove.Process(h => h(cause));
-                return everythingRemoved.Select(i => i.Item1);
+                return everythingRemoved;
             }
         }
 

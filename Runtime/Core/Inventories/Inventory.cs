@@ -37,7 +37,9 @@ namespace rmMinusR.ItemAnvil
         /// quantity will be zeroed.
         /// </summary>
         /// <param name="newStack">Stack to add</param>
-        //public abstract bool TryAddItem(ItemStack newStack, object cause);
+        public abstract bool TryAddItem(ItemStack newStack, object cause);
+        public virtual bool TryAddItem(Item itemType, int quantity, object cause) => TryAddItem(new ItemStack(itemType, quantity), cause);
+        public virtual bool TryAddItem(Item itemType, object cause) => TryAddItem(itemType, 1, cause);
 
         /// <summary>
         /// Attempt to remove items. If not enough are available, no changes will be made.
@@ -48,6 +50,38 @@ namespace rmMinusR.ItemAnvil
         public abstract IEnumerable<ItemStack> TryRemove(Predicate<ItemStack> filter, int totalToRemove, object cause);
         public virtual IEnumerable<ItemStack> TryRemove(ItemFilter filter, int totalToRemove, object cause) => TryRemove(filter.Matches, totalToRemove, cause);
         public virtual IEnumerable<ItemStack> TryRemove(Item typeToRemove, int totalToRemove, object cause) => TryRemove(s => s.itemType == typeToRemove, totalToRemove, cause);
+
+        /// <summary>
+        /// Create a snapshot that can be applied to the inventory again later.
+        /// </summary>
+        /// <remarks>
+        /// Used heavily for revertable operations like Inventory.TryAdd/Remove and Transaction
+        /// </remarks>
+        /// <seealso cref="ApplySnapshot(Snapshot)"/>
+        public abstract Snapshot CreateSnapshot();
+
+        /// <summary>
+        /// Apply an snapshot to an inventory. Must have been created by this inventory.
+        /// </summary>
+        /// <remarks>
+        /// Used heavily for revertable operations like Inventory.TryAdd/Remove and Transaction
+        /// </remarks>
+        /// <seealso cref="CreateSnapshot"/>
+        public abstract void ApplySnapshot(Snapshot snapshot);
+
+        /// <remarks>
+        /// Used heavily for revertable operations like Inventory.TryAdd/Remove and Transaction
+        /// </remarks>
+        public class Snapshot
+        {
+            protected List<ItemStack> _items;
+            public virtual IReadOnlyList<ItemStack> Items => _items;
+
+            protected Snapshot(Inventory inventory)
+            {
+                _items = inventory.Slots.Select(i => i.Contents?.Clone()).ToList();
+            }
+        }
 
         /// <summary>
         /// Remove all items that match the given filter

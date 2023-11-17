@@ -52,6 +52,9 @@ namespace rmMinusR.ItemAnvil
         /// </summary>
         private void DoExchange(Inventory inventoryA, Inventory inventoryB)
         {
+            Inventory.Snapshot snapshotA = inventoryA.CreateSnapshot();
+            Inventory.Snapshot snapshotB = inventoryB.CreateSnapshot();
+
             List<ItemStack> itemsAToB_instanced = new List<ItemStack>();
             List<ItemStack> itemsBToA_instanced = new List<ItemStack>();
 
@@ -63,9 +66,9 @@ namespace rmMinusR.ItemAnvil
             }
             catch(Exception e)
             {
-                //Something went wrong! Refund items.
-                foreach (ItemStack i in itemsAToB_instanced) inventoryA.AddItem(i, null);
-                foreach (ItemStack i in itemsBToA_instanced) inventoryB.AddItem(i, null);
+                //Something went wrong! Revert
+                inventoryA.ApplySnapshot(snapshotA);
+                inventoryB.ApplySnapshot(snapshotB);
 
                 throw new Exception("Something went wrong while processing Transaction!", e);
             }
