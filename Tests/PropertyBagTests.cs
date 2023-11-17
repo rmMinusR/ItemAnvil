@@ -155,7 +155,7 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
-        public void Contains_Existing_ReturnsTrue()
+        public void Contains_Existing_ByTypeParameter_ReturnsTrue()
         {
             // Arrange
             PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
@@ -169,7 +169,7 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
-        public void Contains_Nonexisting_ReturnsFalse()
+        public void Contains_Nonexisting_ByTypeParameter_ReturnsFalse()
         {
             // Arrange
             PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
@@ -177,6 +177,34 @@ namespace rmMinusR.ItemAnvil.Tests
 
             // Act
             bool ret = bag.Contains<MaxStackSize>();
+
+            // Assert
+            Assert.IsFalse(ret);
+        }
+
+        [Test]
+        public void Contains_Existing_ByValue_ReturnsTrue()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            ItemProperty prop = bag.Add<Marketable>();
+
+            // Act
+            bool ret = bag.Contains(prop);
+
+            // Assert
+            Assert.IsTrue(ret);
+        }
+
+        [Test]
+        public void Contains_Nonexisting_ByValue_ReturnsFalse()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+
+            // Act
+            bool ret = bag.Contains(new MaxStackSize());
 
             // Assert
             Assert.IsFalse(ret);
