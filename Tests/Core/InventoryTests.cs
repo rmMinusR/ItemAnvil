@@ -86,6 +86,81 @@ namespace rmMinusR.ItemAnvil.Tests
             Assert.AreEqual(stackLimit, inventory.Count(item));
             Assert.AreEqual(additionalToAdd, stack.quantity);
         }
+
+        [Test]
+        public void TryAddItem_Trivial_HasSpace_Succeeds()
+        {
+            // Arrange
+            Inventory inventory = new StandardInventory(1);
+            inventory.DoSetup();
+            Item item = ScriptableObject.CreateInstance<Item>();
+
+            // Act
+            ItemStack testStack = new ItemStack(item);
+            bool ret = inventory.TryAddItem(testStack, null);
+
+            // Assert
+            Assert.IsTrue(ret);
+            Assert.AreEqual(1, inventory.Count(item));
+            Assert.AreEqual(0, testStack.quantity);
+        }
+
+        [Test]
+        public void TryAddItem_Trivial_NoSpace_Fails()
+        {
+            // Arrange
+            Inventory inventory = new StandardInventory(0);
+            inventory.DoSetup();
+            Item item = ScriptableObject.CreateInstance<Item>();
+
+            // Act
+            ItemStack testStack = new ItemStack(item);
+            bool ret = inventory.TryAddItem(testStack, null);
+
+            // Assert
+            Assert.IsFalse(ret);
+            Assert.AreEqual(0, inventory.Count(item));
+            Assert.AreEqual(1, testStack.quantity);
+        }
+
+        [Test]
+        public void TryAddItem_PreFilled_NoSpace_Fails()
+        {
+            // Arrange
+            Inventory inventory = CreateInventory();
+            Item blocker = ScriptableObject.CreateInstance<Item>();
+            foreach (InventorySlot s in inventory.Slots) s.Contents = new ItemStack(blocker); //Pre-fill
+            Item item = ScriptableObject.CreateInstance<Item>();
+
+            // Act
+            ItemStack stack = new ItemStack(item);
+            bool ret = inventory.TryAddItem(stack, null);
+
+            // Assert
+            Assert.IsFalse(ret);
+            Assert.AreEqual(0, inventory.Count(item));
+            Assert.AreEqual(1, stack.quantity);
+        }
+
+        [Test, Combinatorial]
+        public void TryAddItem_PreFilled_NotEnoughSlots_Fails([Values(1, 2, 5, 10)] int additionalToAdd, [Values(1, 2, 5)] int stackLimit)
+        {
+            // Arrange
+            Inventory inventory = CreateInventory();
+            Item blocker = ScriptableObject.CreateInstance<Item>();
+            for (int i = 0; i < inventory.SlotCount - 1; ++i) inventory.GetSlot(i).Contents = new ItemStack(blocker); //Pre-fill
+            Item item = ScriptableObject.CreateInstance<Item>();
+            item.Properties.Add<MaxStackSize>().size = stackLimit;
+
+            // Act
+            ItemStack stack = new ItemStack(item, stackLimit + additionalToAdd);
+            bool ret = inventory.TryAddItem(stack, null);
+
+            // Assert
+            Assert.IsFalse(ret);
+            Assert.AreEqual(0, inventory.Count(item));
+            Assert.AreEqual(stackLimit + additionalToAdd, stack.quantity);
+        }
     }
 
     [TestFixture]

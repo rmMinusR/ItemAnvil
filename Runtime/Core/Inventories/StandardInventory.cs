@@ -141,7 +141,7 @@ namespace rmMinusR.ItemAnvil
             //Run post hook. Handles stuff like overflow.
             if (Hooks.PostAddItem.Process(h => h(newStack, cause)) == PostEventResult.Retry) goto retry;
 
-            if (newStack.quantity != 0)
+            if (newStack.quantity == 0)
             {
                 //Success. Reflect changes.
                 originalStack.quantity = newStack.quantity;
