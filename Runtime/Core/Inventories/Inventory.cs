@@ -25,10 +25,19 @@ namespace rmMinusR.ItemAnvil
         public virtual void AddItem(Item itemType, int quantity, object cause) => AddItem(new ItemStack(itemType, quantity), cause);
 
         /// <summary>
-        /// Attempt to add an ItemStack. If the stack can't be fully transferred, the ItemStack will be changed to reflect that.
+        /// Attempt to add an ItemStack. The given ItemStack will be changed to reflect how many
+        /// items were successfully transferred, including if the stack can't be fully transferred.
         /// </summary>
         /// <param name="newStack">Stack to add</param>
         public abstract void AddItem(ItemStack newStack, object cause);
+
+        /// <summary>
+        /// Attempt to add an ItemStack. If the transfer fails, no changes will be made to either
+        /// the inventory or the given stack. If the transfer succeeds, the given ItemStack's
+        /// quantity will be zeroed.
+        /// </summary>
+        /// <param name="newStack">Stack to add</param>
+        //public abstract bool TryAddItem(ItemStack newStack, object cause);
 
         /// <summary>
         /// Attempt to remove items. If not enough are available, no changes will be made.

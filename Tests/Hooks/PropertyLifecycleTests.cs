@@ -88,7 +88,7 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
-        public void Slot_AddProperty_BeforeSetup()
+        public void Slot_AddProperty_ByTypeParameter_BeforeSetup()
         {
             // Arrange
             Inventory inv = new StandardInventory(30);
@@ -99,10 +99,11 @@ namespace rmMinusR.ItemAnvil.Tests
 
             // Assert
             Assert.AreEqual(1, canary.installCount);
+            Assert.IsTrue(inv.GetSlot(0).SlotProperties.Contains<SlotCanary>());
         }
 
         [Test]
-        public void Slot_AddProperty_AfterSetup()
+        public void Slot_AddProperty_ByTypeParameter_AfterSetup()
         {
             // Arrange
             Inventory inv = new StandardInventory(30);
@@ -113,6 +114,39 @@ namespace rmMinusR.ItemAnvil.Tests
 
             // Assert
             Assert.AreEqual(1, canary.installCount);
+            Assert.IsTrue(inv.GetSlot(0).SlotProperties.Contains<SlotCanary>());
+        }
+
+        [Test]
+        public void Slot_AddProperty_ByValue_BeforeSetup()
+        {
+            // Arrange
+            Inventory inv = new StandardInventory(30);
+
+            // Act
+            SlotCanary canary = new SlotCanary();
+            inv.GetSlot(0).AddProperty(canary);
+            inv.DoSetup();
+
+            // Assert
+            Assert.AreEqual(1, canary.installCount);
+            Assert.IsTrue(inv.GetSlot(0).SlotProperties.Contains<SlotCanary>());
+        }
+
+        [Test]
+        public void Slot_AddProperty_ByValue_AfterSetup()
+        {
+            // Arrange
+            Inventory inv = new StandardInventory(30);
+
+            // Act
+            inv.DoSetup();
+            SlotCanary canary = new SlotCanary();
+            inv.GetSlot(0).AddProperty(canary);
+
+            // Assert
+            Assert.AreEqual(1, canary.installCount);
+            Assert.IsTrue(inv.GetSlot(0).SlotProperties.Contains<SlotCanary>());
         }
 
         [Test]
@@ -129,6 +163,22 @@ namespace rmMinusR.ItemAnvil.Tests
             // Assert
             Assert.IsTrue(removed);
             Assert.AreEqual(1, canary.uninstallCount);
+            Assert.IsFalse(inv.GetSlot(0).SlotProperties.Contains<SlotCanary>());
+        }
+
+        [Test]
+        public void Slot_RemoveProperty_NonExistent()
+        {
+            // Arrange
+            Inventory inv = new StandardInventory(30);
+            inv.DoSetup();
+
+            // Act
+            bool removed = inv.GetSlot(0).RemoveProperty<SlotCanary>();
+
+            // Assert
+            Assert.IsFalse(removed);
+            Assert.IsFalse(inv.GetSlot(0).SlotProperties.Contains<SlotCanary>());
         }
 
         #endregion

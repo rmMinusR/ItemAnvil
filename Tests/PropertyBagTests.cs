@@ -3,6 +3,7 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace rmMinusR.ItemAnvil.Tests
 {
@@ -43,7 +44,7 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
-        public void Get_ExistingProperty_ReturnsProperty()
+        public void Get_ExistingProperty_ByGeneric_ReturnsProperty()
         {
             // Arrange
             PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
@@ -57,7 +58,7 @@ namespace rmMinusR.ItemAnvil.Tests
         }
 
         [Test]
-        public void Get_NonExistingProperty_ReturnsNull()
+        public void Get_MissingProperty_ByGeneric_ReturnsNull()
         {
             // Arrange
             PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
@@ -66,6 +67,62 @@ namespace rmMinusR.ItemAnvil.Tests
             Marketable property = bag.Get<Marketable>();
 
             // Assert
+            Assert.IsNull(property);
+        }
+
+        [Test]
+        public void Get_ExistingProperty_ByTypeVar_ReturnsProperty()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+
+            // Act
+            Marketable property = (Marketable)bag.Get(typeof(Marketable));
+
+            // Assert
+            Assert.IsNotNull(property);
+        }
+
+        [Test]
+        public void Get_MissingProperty_ByTypeVar_ReturnsNull()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+
+            // Act
+            Marketable property = (Marketable)bag.Get(typeof(Marketable));
+
+            // Assert
+            Assert.IsNull(property);
+        }
+
+        [Test]
+        public void TryGet_ExistingProperty_ReturnsTrueAndProperty()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+
+            // Act
+            bool ret = bag.TryGet(out Marketable property);
+
+            // Assert
+            Assert.IsTrue(ret);
+            Assert.IsNotNull(property);
+        }
+
+        [Test]
+        public void TryGet_MissingProperty_ReturnsFalseAndNull()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            
+            // Act
+            bool ret = bag.TryGet(out Marketable property);
+            
+            // Assert
+            Assert.IsFalse(ret);
             Assert.IsNull(property);
         }
 
@@ -95,6 +152,147 @@ namespace rmMinusR.ItemAnvil.Tests
 
             // Assert
             Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Contains_Existing_ReturnsTrue()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+
+            // Act
+            bool ret = bag.Contains<Marketable>();
+
+            // Assert
+            Assert.IsTrue(ret);
+        }
+
+        [Test]
+        public void Contains_Nonexisting_ReturnsFalse()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+
+            // Act
+            bool ret = bag.Contains<MaxStackSize>();
+
+            // Assert
+            Assert.IsFalse(ret);
+        }
+
+        [Test]
+        public void Clear_RemovesAll()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+
+            // Act
+            bag.Clear();
+
+            // Assert
+            Assert.AreEqual(0, bag.Count);
+        }
+
+        [Test]
+        public void CopyTo_ExactlyEnoughSpace_NoOffset_CopiesElements()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+            bag.Add<MaxStackSize>();
+
+            // Act
+            ItemProperty[] props = new ItemProperty[2];
+            bag.CopyTo(props, 0);
+
+            // Assert
+            Assert.AreEqual(1, props.Count(i => i is Marketable));
+            Assert.AreEqual(1, props.Count(i => i is MaxStackSize));
+        }
+
+        [Test]
+        public void CopyTo_MoreThanEnoughSpace_NoOffset_CopiesElements()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+            bag.Add<MaxStackSize>();
+
+            // Act
+            ItemProperty[] props = new ItemProperty[4];
+            bag.CopyTo(props, 0);
+
+            // Assert
+            Assert.AreEqual(1, props.Count(i => i is Marketable));
+            Assert.AreEqual(1, props.Count(i => i is MaxStackSize));
+            Assert.IsNull(props[2]);
+            Assert.IsNull(props[3]);
+        }
+
+        [Test]
+        public void CopyTo_NotEnoughSpace_NoOffset_CopiesElements()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+            bag.Add<MaxStackSize>();
+
+            // Act & Assert
+            ItemProperty[] props = new ItemProperty[1];
+            Assert.Throws<IndexOutOfRangeException>(() => bag.CopyTo(props, 0));
+        }
+
+        [Test]
+        public void CopyTo_ExactlyEnoughSpace_WithOffset_CopiesElements()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+            bag.Add<MaxStackSize>();
+
+            // Act
+            ItemProperty[] props = new ItemProperty[3];
+            bag.CopyTo(props, 1);
+
+            // Assert
+            Assert.AreEqual(1, props.Count(i => i is Marketable));
+            Assert.AreEqual(1, props.Count(i => i is MaxStackSize));
+        }
+
+        [Test]
+        public void CopyTo_MoreThanEnoughSpace_WithOffset_CopiesElements()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+            bag.Add<MaxStackSize>();
+
+            // Act
+            ItemProperty[] props = new ItemProperty[5];
+            bag.CopyTo(props, 1);
+
+            // Assert
+            Assert.IsNull(props[0]);
+            Assert.AreEqual(1, props.Count(i => i is Marketable));
+            Assert.AreEqual(1, props.Count(i => i is MaxStackSize));
+            Assert.IsNull(props[3]);
+            Assert.IsNull(props[4]);
+        }
+
+        [Test]
+        public void CopyTo_NotEnoughSpace_WithOffset_CopiesElements()
+        {
+            // Arrange
+            PropertyBag<ItemProperty> bag = new PropertyBag<ItemProperty>();
+            bag.Add<Marketable>();
+            bag.Add<MaxStackSize>();
+
+            // Act & Assert
+            ItemProperty[] props = new ItemProperty[2];
+            Assert.Throws<IndexOutOfRangeException>(() => bag.CopyTo(props, 1));
         }
 
         [Test]

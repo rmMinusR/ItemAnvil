@@ -11,6 +11,81 @@ namespace rmMinusR.ItemAnvil.Tests
     public class StandardInventoryTests : InventoryTests
     {
         protected override Inventory _CreateInventory() => new StandardInventory(30);
+
+        [Test]
+        public void AddItem_Trivial_NoSpace_Fails()
+        {
+            // Arrange
+            Inventory inventory = new StandardInventory(0);
+            inventory.DoSetup();
+            Item item = ScriptableObject.CreateInstance<Item>();
+
+            // Act
+            ItemStack testStack = new ItemStack(item);
+            inventory.AddItem(testStack, null);
+
+            // Assert
+            Assert.AreEqual(0, inventory.Count(item));
+            Assert.AreEqual(0, inventory.SlotCount);
+            Assert.AreEqual(1, testStack.quantity);
+        }
+
+        [Test]
+        public void AddItem_Trivial_NotEnoughSpace_Fails()
+        {
+            // Arrange
+            Inventory inventory = new StandardInventory(1);
+            inventory.DoSetup();
+            Item itemA = ScriptableObject.CreateInstance<Item>();
+            Item itemB = ScriptableObject.CreateInstance<Item>();
+            inventory.AddItem(itemA, 1, null);
+
+            // Act
+            ItemStack testStack = new ItemStack(itemB);
+            inventory.AddItem(testStack, null);
+
+            // Assert
+            Assert.AreEqual(0, inventory.Count(itemB));
+            Assert.AreEqual(1, inventory.SlotCount);
+            Assert.AreEqual(1, testStack.quantity);
+        }
+
+        [Test]
+        public void AddItem_PreFilled_NoSlots_Overflows()
+        {
+            // Arrange
+            Inventory inventory = CreateInventory();
+            Item blocker = ScriptableObject.CreateInstance<Item>();
+            foreach (InventorySlot s in inventory.Slots) s.Contents = new ItemStack(blocker); //Pre-fill
+            Item item = ScriptableObject.CreateInstance<Item>();
+
+            // Act
+            ItemStack stack = new ItemStack(item);
+            inventory.AddItem(stack, null);
+
+            // Assert
+            Assert.AreEqual(0, inventory.Count(item));
+            Assert.AreEqual(1, stack.quantity);
+        }
+        
+        [Test, Combinatorial]
+        public void AddItem_PreFilled_NotEnoughSlots_PartiallyOverflows([Values(1, 2, 5, 10)] int additionalToAdd, [Values(1, 2, 5)] int stackLimit)
+        {
+            // Arrange
+            Inventory inventory = CreateInventory();
+            Item blocker = ScriptableObject.CreateInstance<Item>();
+            for (int i = 0; i < inventory.SlotCount-1; ++i) inventory.GetSlot(i).Contents = new ItemStack(blocker); //Pre-fill
+            Item item = ScriptableObject.CreateInstance<Item>();
+            item.Properties.Add<MaxStackSize>().size = stackLimit;
+
+            // Act
+            ItemStack stack = new ItemStack(item, stackLimit+additionalToAdd);
+            inventory.AddItem(stack, null);
+
+            // Assert
+            Assert.AreEqual(stackLimit, inventory.Count(item));
+            Assert.AreEqual(additionalToAdd, stack.quantity);
+        }
     }
 
     [TestFixture]
@@ -18,11 +93,11 @@ namespace rmMinusR.ItemAnvil.Tests
     {
         protected override Inventory _CreateInventory() => new CondensingInventory();
     }
-
+    
     public abstract class InventoryTests
     {
         protected abstract Inventory _CreateInventory();
-        private Inventory CreateInventory()
+        protected Inventory CreateInventory()
         {
             Inventory inv = _CreateInventory();
             inv.DoSetup();
@@ -49,13 +124,14 @@ namespace rmMinusR.ItemAnvil.Tests
             // Arrange
             Inventory inventory = CreateInventory();
             Item item = ScriptableObject.CreateInstance<Item>();
-            ItemStack stack = new ItemStack(item, nToAdd);
 
             // Act
+            ItemStack stack = new ItemStack(item, nToAdd);
             inventory.AddItem(stack, null);
 
             // Assert
             Assert.AreEqual(nToAdd, inventory.Count(item));
+            Assert.AreEqual(0, stack.quantity);
         }
 
         [Test, Combinatorial]
