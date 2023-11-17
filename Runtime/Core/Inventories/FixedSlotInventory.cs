@@ -26,8 +26,9 @@ namespace rmMinusR.ItemAnvil
 #pragma warning disable CS0612
             if (contents.Count != 0)
             {
-                if (slots.Count != 0) throw new InvalidOperationException("Cannot update storage -- destination 'slots' must be empty");
+                if (slots.Any(s => !s.IsEmpty || s.SlotProperties.Count!=0)) throw new InvalidOperationException("Cannot update storage -- destination 'slots' must be empty");
 
+                slots.Clear();
                 for (int i = 0; i < contents.Count; ++i)
                 {
                     AppendSlot().Contents = contents[i];

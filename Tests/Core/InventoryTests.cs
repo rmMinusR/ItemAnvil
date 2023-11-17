@@ -2,6 +2,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using UnityEngine;
 
 namespace rmMinusR.ItemAnvil.Tests
@@ -167,8 +169,98 @@ namespace rmMinusR.ItemAnvil.Tests
     public class CondensingInventoryTests : InventoryTests
     {
         protected override Inventory _CreateInventory() => new CondensingInventory();
+        
+        private class DummyInstanceProp : ItemInstanceProperty { }
+
+        [Test]
+        public void Upgrader_HasParity()
+        {
+            // Arrange
+            List<ItemStack> source = new List<ItemStack>();
+            Item itemA = ScriptableObject.CreateInstance<Item>();
+            Item itemB = ScriptableObject.CreateInstance<Item>();
+            itemB.Properties.Add<MaxStackSize>().size = 2;
+
+            Inventory inventory = CreateInventory();
+
+            source.Add(new ItemStack(itemA, 1));
+            source.Add(new ItemStack(itemB, 5));
+            ItemStack stack = new ItemStack(itemA, 2);
+            stack.instanceProperties.Add<DummyInstanceProp>();
+            source.Add(stack);
+            source.Add(new ItemStack(itemA, 0));
+            source.Add(new ItemStack(null, 0));
+            while (source.Count < inventory.SlotCount) source.Add(null);
+
+            // Act
+            inventory.GetType()
+                     .GetField("contents", BindingFlags.NonPublic | BindingFlags.Instance)
+                     .SetValue(inventory, source.Select(i => i?.Clone()).ToList());
+            inventory.Validate();
+
+            // Assert
+            Assert.AreEqual(itemA, inventory.GetSlot(0).Contents.itemType);
+            Assert.AreEqual(1    , inventory.GetSlot(0).Contents.quantity);
+            Assert.AreEqual(0    , inventory.GetSlot(0).Contents.instanceProperties.Count);
+
+            Assert.AreEqual(itemB, inventory.GetSlot(1).Contents.itemType);
+            Assert.AreEqual(5    , inventory.GetSlot(1).Contents.quantity);
+            Assert.AreEqual(0    , inventory.GetSlot(1).Contents.instanceProperties.Count);
+
+            Assert.AreEqual(itemA, inventory.GetSlot(2).Contents.itemType);
+            Assert.AreEqual(2    , inventory.GetSlot(2).Contents.quantity);
+            Assert.IsTrue  (       inventory.GetSlot(2).Contents.instanceProperties.Contains<DummyInstanceProp>());
+        }
     }
-    
+
+    [TestFixture]
+    public class FixedInventoryTests : InventoryTests
+    {
+        protected override Inventory _CreateInventory() => new FixedSlotInventory(30);
+        
+        private class DummyInstanceProp : ItemInstanceProperty { }
+
+        [Test]
+        public void Upgrader_HasParity()
+        {
+            // Arrange
+            List<ItemStack> source = new List<ItemStack>();
+            Item itemA = ScriptableObject.CreateInstance<Item>();
+            Item itemB = ScriptableObject.CreateInstance<Item>();
+            itemB.Properties.Add<MaxStackSize>().size = 2;
+
+            Inventory inventory = CreateInventory();
+
+            source.Add(new ItemStack(itemA, 1));
+            source.Add(new ItemStack(itemB, 5));
+            ItemStack stack = new ItemStack(itemA, 2);
+            stack.instanceProperties.Add<DummyInstanceProp>();
+            source.Add(stack);
+            source.Add(new ItemStack(itemA, 0));
+            source.Add(new ItemStack(null, 0));
+            while (source.Count < inventory.SlotCount) source.Add(null);
+
+            // Act
+            inventory.GetType()
+                     .GetField("contents", BindingFlags.NonPublic | BindingFlags.Instance)
+                     .SetValue(inventory, source.Select(i => i?.Clone()).ToList());
+            inventory.Validate();
+
+            // Assert
+            Assert.AreEqual(itemA, inventory.GetSlot(0).Contents.itemType);
+            Assert.AreEqual(1    , inventory.GetSlot(0).Contents.quantity);
+            Assert.AreEqual(0    , inventory.GetSlot(0).Contents.instanceProperties.Count);
+
+            Assert.AreEqual(itemB, inventory.GetSlot(1).Contents.itemType);
+            Assert.AreEqual(5    , inventory.GetSlot(1).Contents.quantity);
+            Assert.AreEqual(0    , inventory.GetSlot(1).Contents.instanceProperties.Count);
+
+            Assert.AreEqual(itemA, inventory.GetSlot(2).Contents.itemType);
+            Assert.AreEqual(2    , inventory.GetSlot(2).Contents.quantity);
+            Assert.IsTrue  (       inventory.GetSlot(2).Contents.instanceProperties.Contains<DummyInstanceProp>());
+        }
+    }
+
     public abstract class InventoryTests
     {
         protected abstract Inventory _CreateInventory();
