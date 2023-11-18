@@ -8,7 +8,7 @@ namespace rmMinusR.ItemAnvil.Tests
     [TestFixture]
     public sealed class FilterSlotContentsTests
     {
-        [Test, Combinatorial]
+        [Test]
         public void AddItem_ItemAllowed_SlotChosen()
         {
             // Arrange
@@ -56,6 +56,66 @@ namespace rmMinusR.ItemAnvil.Tests
                 Assert.AreEqual(item, inv.GetSlot(1).Contents.itemType);
                 Assert.AreEqual(1   , inv.GetSlot(1).Contents.quantity);
             }
+        }
+
+        [Test]
+        public void SwapSlots_ItemAllowed_Succeeds()
+        {
+            // Arrange
+            StandardInventory inv = new StandardInventory(2);
+            inv.DoSetup();
+
+            ItemCategory category = ScriptableObject.CreateInstance<ItemCategory>();
+            Item itemA = ScriptableObject.CreateInstance<Item>();
+            itemA.categories.Add(category);
+            Item itemB = ScriptableObject.CreateInstance<Item>();
+            itemB.categories.Add(category);
+
+            inv.AddItem(itemA, null);
+            inv.AddItem(itemB, null);
+
+            FilterSlotContents filterer = inv.GetSlot(0).AddProperty<FilterSlotContents>();
+            filterer.allowedItems = new FilterMatchCategory { category = category };
+
+            // Act
+            bool ret = InventorySlot.SwapContents(inv.GetSlot(0), inv.GetSlot(1), null);
+
+            // Assert
+            Assert.IsTrue(ret);
+            Assert.AreEqual(itemB, inv.GetSlot(0).Contents.itemType);
+            Assert.AreEqual(1    , inv.GetSlot(0).Contents.quantity);
+            Assert.AreEqual(itemA, inv.GetSlot(1).Contents.itemType);
+            Assert.AreEqual(1    , inv.GetSlot(1).Contents.quantity);
+        }
+
+        [Test]
+        public void SwapSlots_ItemNotAllowed_Fails()
+        {
+            // Arrange
+            StandardInventory inv = new StandardInventory(2);
+            inv.DoSetup();
+
+            ItemCategory category = ScriptableObject.CreateInstance<ItemCategory>();
+            Item itemA = ScriptableObject.CreateInstance<Item>();
+            itemA.categories.Add(category);
+            Item itemB = ScriptableObject.CreateInstance<Item>();
+            itemB.categories.Add(category);
+
+            inv.AddItem(itemA, null);
+            inv.AddItem(itemB, null);
+
+            FilterSlotContents filterer = inv.GetSlot(0).AddProperty<FilterSlotContents>();
+            filterer.allowedItems = new FilterMatchType { match = itemA };
+
+            // Act
+            bool ret = InventorySlot.SwapContents(inv.GetSlot(0), inv.GetSlot(1), null);
+
+            // Assert
+            Assert.IsFalse(ret);
+            Assert.AreEqual(itemA, inv.GetSlot(0).Contents.itemType);
+            Assert.AreEqual(1    , inv.GetSlot(0).Contents.quantity);
+            Assert.AreEqual(itemB, inv.GetSlot(1).Contents.itemType);
+            Assert.AreEqual(1    , inv.GetSlot(1).Contents.quantity);
         }
     }
 
