@@ -23,7 +23,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
 {
     //Hooks for Inventory.AddItem family
     public delegate QueryEventResult CanAddItemHook   (ItemStack final, ReadOnlyItemStack original,                                      object cause);
-    public delegate QueryEventResult CanSlotAcceptHook(ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original,  object cause);
+    public delegate QueryEventResult TryAddToSlotHook(ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original,  object cause);
     public delegate PostEventResult  PostAddItemHook  (ItemStack stack,                                                                  object cause); //Overflow handling etc
 
     //Hooks for Inventory.TryRemove and Inventory.RemoveAll

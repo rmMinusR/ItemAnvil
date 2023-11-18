@@ -15,7 +15,7 @@ namespace rmMinusR.ItemAnvil
     {
         [Min(1)] public int size = 10;
 
-        private CanSlotAcceptHook MakeHook(ReadOnlyInventorySlot slot)
+        private TryAddToSlotHook MakeHook(ReadOnlyInventorySlot slot)
         {
             int owningSlotID = slot.ID;
             return (ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
@@ -32,12 +32,12 @@ namespace rmMinusR.ItemAnvil
 
         protected internal override void InstallHooks(InventorySlot context)
         {
-            context.inventory.Hooks.CanSlotAccept.InsertHook(MakeHook(context), 0);
+            context.inventory.Hooks.TryAddToSlot.InsertHook(MakeHook(context), 0);
         }
 
         protected internal override void UninstallHooks(InventorySlot context)
         {
-            context.inventory.Hooks.CanSlotAccept.RemoveHook(MakeHook(context));
+            context.inventory.Hooks.TryAddToSlot.RemoveHook(MakeHook(context));
         }
     }
 

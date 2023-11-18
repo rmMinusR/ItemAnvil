@@ -99,7 +99,7 @@ namespace rmMinusR.ItemAnvil
         public bool CanAccept(ItemStack newStack, object cause)
         {
             return ItemStack.CanMerge(newStack, Contents)
-                && inventory.Hooks.CanSlotAccept.Process(h => h(this, newStack.Clone(), newStack, cause)) == QueryEventResult.Allow;
+                && inventory.Hooks.TryAddToSlot.Process(h => h(this, newStack.Clone(), newStack, cause)) == QueryEventResult.Allow;
         }
 
         public void TryAccept(ItemStack newStack, object cause)
@@ -113,7 +113,7 @@ namespace rmMinusR.ItemAnvil
                 Contents = finalToMerge.Clone();
                 Contents.quantity = 0;
 
-                if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
+                if (inventory.Hooks.TryAddToSlot.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
                 {
                     newStack.quantity -= finalToMerge.quantity;
                     ItemStack.MergeUnchecked(finalToMerge, Contents);
@@ -122,7 +122,7 @@ namespace rmMinusR.ItemAnvil
             }
             else
             {
-                if (inventory.Hooks.CanSlotAccept.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
+                if (inventory.Hooks.TryAddToSlot.Process(h => h(this, finalToMerge, newStack, cause)) == QueryEventResult.Allow)
                 {
                     newStack.quantity -= finalToMerge.quantity;
                     ItemStack.MergeUnchecked(finalToMerge, Contents);

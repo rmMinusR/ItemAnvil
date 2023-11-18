@@ -17,16 +17,16 @@ namespace rmMinusR.ItemAnvil
         protected override void InstallHooks(InventorySlot slot)
         {
             slotID = slot.ID;
-            slot.inventory.Hooks.CanSlotAccept.InsertHook(_DoFilterOnAdd, 0);
-            slot.inventory.Hooks.TrySwapSlots .InsertHook(_DoFilterOnSwap, 0);
-            slot.inventory.Hooks.TrySortSlot  .InsertHook(_PreventSort, 0);
+            slot.inventory.Hooks.TryAddToSlot.InsertHook(_DoFilterOnAdd, 0);
+            slot.inventory.Hooks.TrySwapSlots.InsertHook(_DoFilterOnSwap, 0);
+            slot.inventory.Hooks.TrySortSlot .InsertHook(_PreventSort, 0);
         }
 
         protected override void UninstallHooks(InventorySlot slot)
         {
-            slot.inventory.Hooks.CanSlotAccept.RemoveHook(_DoFilterOnAdd);
-            slot.inventory.Hooks.TrySwapSlots .RemoveHook(_DoFilterOnSwap);
-            slot.inventory.Hooks.TrySortSlot  .RemoveHook(_PreventSort);
+            slot.inventory.Hooks.TryAddToSlot.RemoveHook(_DoFilterOnAdd);
+            slot.inventory.Hooks.TrySwapSlots.RemoveHook(_DoFilterOnSwap);
+            slot.inventory.Hooks.TrySortSlot .RemoveHook(_PreventSort);
         }
 
         private QueryEventResult _DoFilterOnAdd(ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause)

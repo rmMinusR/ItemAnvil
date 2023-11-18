@@ -85,7 +85,7 @@ namespace rmMinusR.ItemAnvil.Tests
             inventory.AddItem(item, null);
 
             int fireCount = 0;
-            inventory.Hooks.CanSlotAccept.InsertHook((ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
+            inventory.Hooks.TryAddToSlot.InsertHook((ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
             {
                 fireCount++;
                 return QueryEventResult.Allow;
@@ -109,7 +109,7 @@ namespace rmMinusR.ItemAnvil.Tests
             inventory.AddItem(item, null);
 
             bool fired = false;
-            inventory.Hooks.CanSlotAccept.InsertHook((ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
+            inventory.Hooks.TryAddToSlot.InsertHook((ReadOnlyInventorySlot slot, ItemStack finalToAccept, ReadOnlyItemStack original, object cause) =>
             {
                 //Reject first attempt to merge
                 if (!fired)

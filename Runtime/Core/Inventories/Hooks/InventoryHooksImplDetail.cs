@@ -7,7 +7,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
     public interface IInventoryHooks
     {
         public HookPoint<CanAddItemHook   > CanAddItem    { get; }
-        public HookPoint<CanSlotAcceptHook> CanSlotAccept { get; }
+        public HookPoint<TryAddToSlotHook > TryAddToSlot  { get; }
         public HookPoint<PostAddItemHook  > PostAddItem   { get; }
         public HookPoint<TryRemoveItemHook> TryRemoveItem { get; }
         public HookPoint<PostRemoveHook   > PostRemove    { get; }
@@ -38,7 +38,7 @@ namespace rmMinusR.ItemAnvil.Hooks.Inventory
     public class InventoryHooksImplDetail : ScriptableObject, IInventoryHooks
     {
         public HookPoint<CanAddItemHook   > CanAddItem    { get; } = new HookPoint<CanAddItemHook   >();
-        public HookPoint<CanSlotAcceptHook> CanSlotAccept { get; } = new HookPoint<CanSlotAcceptHook>();
+        public HookPoint<TryAddToSlotHook> TryAddToSlot { get; } = new HookPoint<TryAddToSlotHook>();
         public HookPoint<PostAddItemHook  > PostAddItem   { get; } = new HookPoint<PostAddItemHook  >();
         public HookPoint<TryRemoveItemHook> TryRemoveItem { get; } = new HookPoint<TryRemoveItemHook>();
         public HookPoint<PostRemoveHook   > PostRemove    { get; } = new HookPoint<PostRemoveHook   >();
