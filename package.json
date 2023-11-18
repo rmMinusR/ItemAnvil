@@ -1,13 +1,13 @@
 {
   "name": "com.rmminusr.items",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT License",
   "author": {
     "name": "Robert Christensen / rmMinusR",
     "url": "https://rmMinusR.com/"
   },
   "displayName": "Item Anvil",
-  "description": "Drag-and-drop designer-friendly item ecosystem, using Component-like properties to add modular functionality.",
+  "description": "An intuitive and highly customizable RPG-style item ecosystem, using Component-like properties to add modular functionality.",
   "hideInEditor": false,
   "dependencies": {
     "com.unity.textmeshpro": ""
